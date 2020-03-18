@@ -1,10 +1,15 @@
+// Main Class File
 #include <SFML/Graphics.hpp>
+#include "engine.h"
+#include "game.h"
 
 using namespace sf;
 using namespace std;
 
 int gameWidth = 800;
 int gameHeight = 600;
+
+MenuScene menu;
 
 void Render(RenderWindow &window)
 {
@@ -38,15 +43,15 @@ void Update(RenderWindow &window)
 
 int main()
 {
-	RenderWindow window(VideoMode(gameWidth, gameHeight), "");
+	Engine::Start(gameWidth, gameHeight, "Toy Tank Battles", &menu);
 	Load();
 
-	while (window.isOpen())
+	/*while (window.isOpen())
 	{
 		window.clear();
 		Update(window);
 		Render(window);
 		window.display();
 	}
-	return 0;
+	return 0;*/
 }

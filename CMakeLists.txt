@@ -64,7 +64,7 @@ target_link_libraries(lib_ecm PRIVATE lib_maths)
 
 
 ## Toy Tank BATTLES
-file(GLOB_RECURSE SOURCES toy_tank_battles/*.cpp toy_tank_battles/*/*.h)
+file(GLOB_RECURSE SOURCES toy_tank_battles/*.cpp toy_tank_battles/*.h)
 file(GLOB_RECURSE CMPNTS toy_tank_battles/components/*.cpp toy_tank_battles/components/*.h)
 file(GLOB_RECURSE SCENES toy_tank_battles/scenes/*.cpp toy_tank_battles/scenes/*.h)
 add_executable(TOY_TANK_BATTLES ${SOURCES} ${RESOURCE_FILES})
