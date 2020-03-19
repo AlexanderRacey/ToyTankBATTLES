@@ -1,12 +1,11 @@
 #pragma once
-#include "engine.h"
 #include "SFML/Graphics.hpp"
+#include "engine.h"
 
-// Variable for items on menu
-#define MAX_MENU_ITEMS 4
+#define MAX_NUMBER_OF_SETTINGS 5
 
-// Create menu scene from class Scene
-class MenuScene : public Scene 
+// Create settings scene from class Scene
+class SettingsScene : public Scene 
 {
     public:
       void Load() override;
@@ -16,12 +15,12 @@ class MenuScene : public Scene
 
       void MoveUp();
       void MoveDown();
-      int GetPressedItem() { return selectedItemIndex; }
+      int GetPressedItem() { return selectedItemIndex2; }
 
       IntRect uvRect;
 
     private:
-        int selectedItemIndex;
+        int selectedItemIndex2;
         Font font;
-        Text menu[MAX_MENU_ITEMS];
+        Text settingsmenu[MAX_NUMBER_OF_SETTINGS];
 };

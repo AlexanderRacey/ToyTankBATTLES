@@ -1,17 +1,20 @@
-// Main Class File
 #include <SFML/Graphics.hpp>
+#include "scenes/scene_menu.h"
 #include "engine.h"
 #include "game.h"
 
 using namespace sf;
 using namespace std;
 
-int gameWidth = 800;
-int gameHeight = 600;
+int gameWidth = 1280;
+int gameHeight = 720;
 
 MenuScene menu;
+Level1Scene level1;
+HighScoresScene highscores;
+SettingsScene settings;
 
-void Render(RenderWindow &window)
+/*void Render(RenderWindow &window)
 {
 }
 
@@ -35,16 +38,17 @@ void Update(RenderWindow &window)
 		}
 	}
 
+	// Press escape to close window
 	if (Keyboard::isKeyPressed(Keyboard::Escape))
 	{
 		window.close();
 	}
-}
+}*/
 
 int main()
 {
 	Engine::Start(gameWidth, gameHeight, "Toy Tank Battles", &menu);
-	Load();
+	//Load();
 
 	/*while (window.isOpen())
 	{
