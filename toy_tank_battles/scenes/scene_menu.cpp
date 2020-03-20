@@ -13,10 +13,42 @@ using namespace std;
 using namespace sf;
 
 // Resources
+Sprite titleSprite;
+Texture titleTexture;
+Vector2f targetCoords;
+Vector2u titleTextureSize;
+Vector2u windowSizeMenu;
+
+Sprite backgroundSprite;
+Texture backgroundTexture;
+Vector2u backgroundSize;
+
 Texture tankTexture;
 IntRect tankSource(0, 0, 400, 300);
 Sprite titleTank(tankTexture, tankSource);
 int fadeCounter = 0;
+
+// Display menu title
+void MenuScene::SetTitle()
+{
+    titleTexture = *Resources::load<Texture>("titleName.png");
+    float x = Engine::GetWindow().getSize().x;
+    float y = Engine::GetWindow().getSize().y;
+    titleTextureSize = titleTexture.getSize();
+    windowSizeMenu = Engine::GetWindow().getSize();
+    float scaleX = (float)windowSizeMenu.x / titleTextureSize.x;
+    float scaleY = (float)windowSizeMenu.y / titleTextureSize.y;
+    targetCoords = { x, y };
+    titleSprite.setTexture(titleTexture);
+    titleSprite.setPosition(windowSizeMenu.x / 2, windowSizeMenu.y / 3);
+    titleSprite.setOrigin(titleTextureSize.x / 2, titleTextureSize.y / 2);
+}
+
+// Display background
+void MenuScene::SetBackground()
+{
+
+}
 
 void MenuScene::Load()
 {
@@ -26,6 +58,7 @@ void MenuScene::Load()
         // Get size of window
         float x2 = Engine::getWindowSize().x;
         float y2 = Engine::getWindowSize().y;
+        SetTitle();
 
         titleTank.setPosition(x2 - 400.0f, 200.0f);
         tankTexture.loadFromFile("res/img/titleTank.png");
@@ -75,6 +108,7 @@ void MenuScene::Update(const double& dt)
         }
     }
 
+    // Resets menu
     if (Keyboard::isKeyPressed(Keyboard::R)) 
     {
         fadeCounter = 0;
@@ -82,12 +116,12 @@ void MenuScene::Update(const double& dt)
         Load();
     }
 
+    // Menu selection
     if (Keyboard::isKeyPressed(Keyboard::Up))
     {
         MoveUp();
         this_thread::sleep_for(chrono::milliseconds(170));
     }
-
     else if (Keyboard::isKeyPressed(Keyboard::Down))
     {
         MoveDown();
@@ -116,19 +150,20 @@ void MenuScene::Update(const double& dt)
     }
 }
 
+// Render function
 void MenuScene::Render()
 {
     Scene::Render();
 
     if (fadeCounter <= 250) {
-        titleTank.setColor(sf::Color(255, 255, 255, fadeCounter));
+        titleSprite.setColor(Color(255, 255, 255, fadeCounter));
         fadeCounter++;
-        Renderer::queue(&titleTank);
+        Renderer::queue(&titleSprite);
     }
     else 
     {
-        titleTank.setColor(sf::Color(255, 255, 255, 255));
-        Renderer::queue(&titleTank);
+        titleSprite.setColor(Color(255, 255, 255, 255));
+        Renderer::queue(&titleSprite );
         for (int i = 0; i < MAX_MENU_ITEMS; i++)
         {
             Renderer::queue(&menu[i]);
