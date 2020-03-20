@@ -47,7 +47,17 @@ void MenuScene::SetTitle()
 // Display background
 void MenuScene::SetBackground()
 {
-
+    backgroundTexture = *Resources::load<Texture>("background.png");
+    float x1 = Engine::GetWindow().getSize().x;
+    float y1 = Engine::GetWindow().getSize().x;
+    backgroundSize = backgroundTexture.getSize();
+    windowSizeMenu = Engine::GetWindow().getSize();
+    float scaleX1 = (float)windowSizeMenu.x / backgroundSize.x;
+    float scaleY1 = (float)windowSizeMenu.y / backgroundSize.y;
+    backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setPosition(0, 0);
+    backgroundSprite.setScale(scaleX1, scaleY1);
+    backgroundSprite.setOrigin(0, 0);
 }
 
 void MenuScene::Load()
@@ -58,6 +68,7 @@ void MenuScene::Load()
         // Get size of window
         float x2 = Engine::getWindowSize().x;
         float y2 = Engine::getWindowSize().y;
+        SetBackground();
         SetTitle();
 
         titleTank.setPosition(x2 - 400.0f, 200.0f);
@@ -158,11 +169,13 @@ void MenuScene::Render()
     if (fadeCounter <= 250) {
         titleSprite.setColor(Color(255, 255, 255, fadeCounter));
         fadeCounter++;
+        Renderer::queue(&backgroundSprite);
         Renderer::queue(&titleSprite);
     }
     else 
     {
         titleSprite.setColor(Color(255, 255, 255, 255));
+        Renderer::queue(&backgroundSprite);
         Renderer::queue(&titleSprite );
         for (int i = 0; i < MAX_MENU_ITEMS; i++)
         {
