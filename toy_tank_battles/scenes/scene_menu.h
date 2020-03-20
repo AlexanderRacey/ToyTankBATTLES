@@ -13,6 +13,7 @@ class MenuScene : public Scene
       void UnLoad() override;
       void Update(const double& dt) override;
       void Render() override;
+
       void SetTitle();
       void SetBackground();
       void MoveUp();

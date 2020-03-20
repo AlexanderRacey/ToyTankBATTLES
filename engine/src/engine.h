@@ -43,6 +43,7 @@ class Engine
       static RenderWindow& GetWindow();
       static Vector2u getWindowSize();
       static void setVsync(bool b);
+      static void setNewWindowSize(const Vector2u& res, const int wantFullscreen);
 
     private:
       static Scene* _activeScene;

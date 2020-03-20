@@ -187,7 +187,8 @@ namespace timing {
             .count();
     }
     // Return time since last() was last called.
-    long long last() {
+    long long last()
+    {
         auto n = now();
         static auto then = now();
         auto dt = n - then;
@@ -197,3 +198,23 @@ namespace timing {
 } // namespace timing
 
 Scene::~Scene() { UnLoad(); }
+
+void Engine::setNewWindowSize(const Vector2u& res, const int wantFullscreen) 
+{
+    auto temp = wantFullscreen;
+    if (temp == 1) 
+    {
+        _window->create(VideoMode(1920, 1080), _gameName, Style::Fullscreen);
+        _activeScene->UnLoad();
+        _activeScene->Load();
+        Engine::GetWindow().setFramerateLimit(60);
+    }
+    else if (temp == 2)
+    {
+        _window->create(VideoMode(res.x, res.y), _gameName, Style::Default);
+        _activeScene->UnLoad();
+        _activeScene->Load();
+        Engine::GetWindow().setFramerateLimit(60);
+    }
+    temp = 0;
+}

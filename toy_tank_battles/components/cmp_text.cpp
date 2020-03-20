@@ -15,7 +15,10 @@ TextComponent::TextComponent(Entity* const p, const string& str) : Component(p),
     _text.setString(_string);
     _font = Resources::get<Font>("OdibeeSans-Regular.ttf");
     _text.setFont(*_font);
+    _text.setCharacterSize(20);
 }
+
+Text& TextComponent::getText() { return _text; }
 
 void TextComponent::SetText(const string& str)
 {

@@ -1,13 +1,16 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <iostream>
+#include "engine.h"
 #include "levelsystem.h"
 #include "maths.h"
 #include "system_renderer.h"
 #include "system_resources.h"
 #include "scene_menu.h"
-#include "../components/cmp_text.h"
+#include "scene_settings.h"
+#include "../add_entity.h"
 #include "../game.h"
+#include "../components/cmp_text.h"
 
 using namespace std;
 using namespace sf;
@@ -71,29 +74,26 @@ void MenuScene::Load()
         SetBackground();
         SetTitle();
 
-        titleTank.setPosition(x2 - 400.0f, 200.0f);
-        tankTexture.loadFromFile("res/img/titleTank.png");
-
         font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
         // Create menu
         menu[0].setFont(font);
-        menu[0].setFillColor(Color::Red);
+        menu[0].setFillColor(Color(0, 168, 243, 255));
         menu[0].setString("New Game");
         menu[0].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 40));
 
         menu[1].setFont(font);
-        menu[1].setFillColor(Color::White);
+        menu[1].setFillColor(Color(255, 127, 39, 255));
         menu[1].setString("High Scores");
         menu[1].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 80));
 
         menu[2].setFont(font);
-        menu[2].setFillColor(Color::White);
+        menu[2].setFillColor(Color(255, 127, 39, 255));
         menu[2].setString("Settings");
         menu[2].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 120));
 
         menu[3].setFont(font);
-        menu[3].setFillColor(Color::White);
+        menu[3].setFillColor(Color(255, 127, 39, 255));
         menu[3].setString("Quit");
         menu[3].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 160));
 
@@ -176,7 +176,7 @@ void MenuScene::Render()
     {
         titleSprite.setColor(Color(255, 255, 255, 255));
         Renderer::queue(&backgroundSprite);
-        Renderer::queue(&titleSprite );
+        Renderer::queue(&titleSprite);
         for (int i = 0; i < MAX_MENU_ITEMS; i++)
         {
             Renderer::queue(&menu[i]);
@@ -196,9 +196,9 @@ void MenuScene::MoveUp()
 {
     if (selectedItemIndex - 1 >= 0)
     {
-        menu[selectedItemIndex].setFillColor(Color::White);
+        menu[selectedItemIndex].setFillColor(Color(255, 127, 39, 255));
         selectedItemIndex--;
-        menu[selectedItemIndex].setFillColor(Color::Red);
+        menu[selectedItemIndex].setFillColor(Color(0, 168, 243, 255));
     }
 }
 
@@ -206,8 +206,8 @@ void MenuScene::MoveDown()
 {
     if (selectedItemIndex + 1 < MAX_MENU_ITEMS)
     {
-        menu[selectedItemIndex].setFillColor(Color::White);
+        menu[selectedItemIndex].setFillColor(Color(255, 127, 39, 255));
         selectedItemIndex++;
-        menu[selectedItemIndex].setFillColor(Color::Red);
+        menu[selectedItemIndex].setFillColor(Color(0, 168, 243, 255));
     }
 }
