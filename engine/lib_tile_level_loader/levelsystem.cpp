@@ -2,12 +2,25 @@
 #include "levelsystem.h"
 #include <fstream>
 #include <iostream>
+#include "../src/system_resources.h"
 
 using namespace std;
 using namespace sf;
 
+sf::Texture LevelSystem::sand;
+sf::Texture LevelSystem::house1;
+sf::Texture LevelSystem::house2;
+sf::Texture LevelSystem::house3;
+sf::Texture LevelSystem::house4;
+sf::Texture LevelSystem::brokenH;
+
 std::map<LevelSystem::Tile, sf::Color> LevelSystem::_colours{
-    {WALL, Color::White}, {END, Color::Red} };
+    {WALL, Color::Blue}, {END, Color::Red}, {EMPTY, Color::White} };
+
+std::map<LevelSystem::Tile, sf::Texture> LevelSystem::_textures;
+
+vector<std::unique_ptr<sf::Sprite>> LevelSystem::_sprites;
+
 
 sf::Color LevelSystem::getColor(LevelSystem::Tile t) {
     auto it = _colours.find(t);
@@ -16,6 +29,30 @@ sf::Color LevelSystem::getColor(LevelSystem::Tile t) {
     }
     return _colours[t];
 }
+
+sf::Texture LevelSystem::getTexture(LevelSystem::Tile t) {
+    auto it = _textures.find(t);
+    if (it == _textures.end()) {
+        _textures[t] = sand;
+    }
+    return _textures[t];
+}
+
+void LevelSystem::loadTextures() {
+    sand = *Resources::load<Texture>("sand.png");
+    house1 = *Resources::load<Texture>("BlueHouse.png");
+    house2 = *Resources::load<Texture>("BlueHouse2.png");
+    house3 = *Resources::load<Texture>("YellowHouse.png");
+    house4 = *Resources::load<Texture>("OrangeHouse.png");
+    brokenH = *Resources::load<Texture>("BrokenHouse.png");
+
+    _textures = { {EMPTY, sand}, {WALL, house1}, {BROKEN, brokenH} };
+}
+
+void LevelSystem::setTexture(LevelSystem::Tile t, sf::Texture tex) {
+    _textures[t] = tex;
+}
+
 
 void LevelSystem::setColor(LevelSystem::Tile t, sf::Color c) {
     _colours[t] = c;
@@ -28,13 +65,14 @@ size_t LevelSystem::_height;
 float LevelSystem::_tileSize(100.f);
 Vector2f LevelSystem::_offset(0.0f, 30.0f);
 // Vector2f LevelSystem::_offset(0,0);
-vector<std::unique_ptr<sf::RectangleShape>> LevelSystem::_sprites;
+
+
 
 void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
     _tileSize = tileSize;
     size_t w = 0, h = 0;
     string buffer;
-
+    ls::loadTextures();
     // Load in file to buffer
     ifstream f(path);
     if (f.good()) {
@@ -79,108 +117,28 @@ void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
     std::copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
     cout << "Level " << path << " Loaded. " << w << "x" << h << std::endl;
     buildSprites();
+    
 }
 
-void LevelSystem::buildSprites(bool optimise) {
+void LevelSystem::buildSprites() {
     _sprites.clear();
-
-    struct tp {
-        sf::Vector2f p;
-        sf::Vector2f s;
-        sf::Color c;
-    };
-    vector<tp> tps;
-    const auto tls = Vector2f(_tileSize, _tileSize);
-    for (size_t y = 0; y < _height; ++y) {
-        for (size_t x = 0; x < _width; ++x) {
-            Tile t = getTile({ x, y });
-            if (t == EMPTY) {
-                continue;
-            }
-            tps.push_back({ getTilePosition({x, y}), tls, getColor(t) });
+    for (size_t y = 0; y < LevelSystem::getHeight(); ++y) {
+        for (size_t x = 0; x < LevelSystem::getWidth(); ++x) {
+            auto s = make_unique<sf::Sprite>();
+            sf::Texture tex = ls::getTexture(getTile({ x, y }));
+            s->setPosition(getTilePosition({ x,y }));
+            s->setTexture(tex);
+            s->setTextureRect(sf::IntRect(0, 0, _tileSize, _tileSize));
+            s->setOrigin(0, 0);
+            _sprites.push_back(move(s));
         }
     }
-
-    const auto nonempty = tps.size();
-
-    // If tile of the same type are next to each other,
-    // We can use one large sprite instead of two.
-    if (optimise && nonempty) {
-
-        vector<tp> tpo;
-        tp last = tps[0];
-        size_t samecount = 0;
-
-        for (size_t i = 1; i < nonempty; ++i) {
-            // Is this tile compressible with the last?
-            bool same = ((tps[i].p.y == last.p.y) &&
-                (tps[i].p.x == last.p.x + (tls.x * (1 + samecount))) &&
-                (tps[i].c == last.c));
-            if (same) {
-                ++samecount; // Yes, keep going
-                // tps[i].c = Color::Green;
-            }
-            else {
-                if (samecount) {
-                    last.s.x = (1 + samecount) * tls.x; // Expand tile
-                }
-                // write tile to list
-                tpo.push_back(last);
-                samecount = 0;
-                last = tps[i];
-            }
-        }
-        // catch the last tile
-        if (samecount) {
-            last.s.x = (1 + samecount) * tls.x;
-            tpo.push_back(last);
-        }
-
-        // No scan down Y, using different algo now that compressible blocks may
-        // not be contiguous
-        const auto xsave = tpo.size();
-        samecount = 0;
-        vector<tp> tpox;
-        for (size_t i = 0; i < tpo.size(); ++i) {
-            last = tpo[i];
-            for (size_t j = i + 1; j < tpo.size(); ++j) {
-                bool same = ((tpo[j].p.x == last.p.x) && (tpo[j].s == last.s) &&
-                    (tpo[j].p.y == last.p.y + (tls.y * (1 + samecount))) &&
-                    (tpo[j].c == last.c));
-                if (same) {
-                    ++samecount;
-                    tpo.erase(tpo.begin() + j);
-                    --j;
-                }
-            }
-            if (samecount) {
-                last.s.y = (1 + samecount) * tls.y; // Expand tile
-            }
-            // write tile to list
-            tpox.push_back(last);
-            samecount = 0;
-        }
-
-        tps.swap(tpox);
-    }
-
-    for (auto& t : tps) {
-        auto s = make_unique<sf::RectangleShape>();
-        s->setPosition(t.p);
-        s->setSize(t.s);
-        s->setFillColor(Color::Red);
-        s->setFillColor(t.c);
-        // s->setFillColor(Color(rand()%255,rand()%255,rand()%255));
-        _sprites.push_back(move(s));
-    }
-
-    cout << "Level with " << (_width * _height) << " Tiles, With " << nonempty
-        << " Not Empty, using: " << _sprites.size() << " Sprites\n";
 }
+
 
 void LevelSystem::render(RenderWindow& window) {
-    for (auto& t : _sprites) {
-        window.draw(*t);
+    for (auto& s : _sprites) {
+        window.draw(*s);
     }
 }
 
@@ -248,3 +206,9 @@ void LevelSystem::unload() {
 const Vector2f& LevelSystem::getOffset() { return _offset; }
 
 float LevelSystem::getTileSize() { return _tileSize; }
+
+/*
+vector<unique_ptr<sf::Sprite>> LevelSystem::getSprites()
+{
+    return _sprites;
+}*/
