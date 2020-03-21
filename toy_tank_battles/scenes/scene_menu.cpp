@@ -51,15 +51,15 @@ void MenuScene::SetTitle()
 void MenuScene::SetBackground()
 {
     backgroundTexture = *Resources::load<Texture>("background.png");
-    float x1 = Engine::GetWindow().getSize().x;
-    float y1 = Engine::GetWindow().getSize().x;
+    //float x2 = Engine::GetWindow().getSize().x;
+    //float y2 = Engine::GetWindow().getSize().x;
     backgroundSize = backgroundTexture.getSize();
     windowSizeMenu = Engine::GetWindow().getSize();
-    float scaleX1 = (float)windowSizeMenu.x / backgroundSize.x;
-    float scaleY1 = (float)windowSizeMenu.y / backgroundSize.y;
+    float scaleX2 = (float)windowSizeMenu.x / backgroundSize.x;
+    float scaleY2 = (float)windowSizeMenu.y / backgroundSize.y;
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setPosition(0, 0);
-    backgroundSprite.setScale(scaleX1, scaleY1);
+    backgroundSprite.setScale(scaleX2, scaleY2);
     backgroundSprite.setOrigin(0, 0);
 }
 
@@ -69,8 +69,8 @@ void MenuScene::Load()
     cout << "Menu Load \n";
     {
         // Get size of window
-        float x2 = Engine::getWindowSize().x;
-        float y2 = Engine::getWindowSize().y;
+        float x3 = Engine::getWindowSize().x;
+        float y3 = Engine::getWindowSize().y;
         SetBackground();
         SetTitle();
 
@@ -80,22 +80,22 @@ void MenuScene::Load()
         menu[0].setFont(font);
         menu[0].setFillColor(Color(0, 168, 243, 255));
         menu[0].setString("New Game");
-        menu[0].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 40));
+        menu[0].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 40));
 
         menu[1].setFont(font);
         menu[1].setFillColor(Color(255, 127, 39, 255));
         menu[1].setString("High Scores");
-        menu[1].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 80));
+        menu[1].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 80));
 
         menu[2].setFont(font);
         menu[2].setFillColor(Color(255, 127, 39, 255));
         menu[2].setString("Settings");
-        menu[2].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 120));
+        menu[2].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 120));
 
         menu[3].setFont(font);
         menu[3].setFillColor(Color(255, 127, 39, 255));
         menu[3].setString("Quit");
-        menu[3].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 160));
+        menu[3].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 160));
 
         // Refers to currently selected menu item
         selectedItemIndex = 0;

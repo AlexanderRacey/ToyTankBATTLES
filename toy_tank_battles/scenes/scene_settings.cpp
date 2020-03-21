@@ -2,6 +2,7 @@
 #include "scene_settings.h"
 #include "../game.h"
 #include "system_renderer.h"
+#include "system_resources.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -14,6 +15,49 @@ using namespace std;
 using namespace sf;
 
 static shared_ptr<Entity> player;
+
+// Resources
+Sprite titleSprite1;
+Texture titleTexture1;
+Vector2f targetCoords1;
+Vector2u titleTextureSize1;
+
+Sprite backgroundSprite1;
+Texture backgroundTexture1;
+Vector2u backgroundSize1;
+Vector2u windowSizeSettings;
+
+// Display settings title
+void SettingsScene::SetTitle()
+{
+	titleTexture1 = *Resources::load<Texture>("titleSettings.png");
+	float x = Engine::GetWindow().getSize().x;
+	float y = Engine::GetWindow().getSize().y;
+	titleTextureSize1 = titleTexture1.getSize();
+	windowSizeSettings = Engine::GetWindow().getSize();
+	float scaleX = (float)windowSizeSettings.x / titleTextureSize1.x;
+	float scaleY = (float)windowSizeSettings.y / titleTextureSize1.y;
+	targetCoords1 = { x, y };
+	titleSprite1.setTexture(titleTexture1);
+	titleSprite1.setPosition(windowSizeSettings.x / 2, windowSizeSettings.y / 3);
+	titleSprite1.setOrigin(titleTextureSize1.x / 2, titleTextureSize1.y / 2);
+}
+
+// Display background
+void SettingsScene::SetBackground()
+{
+	backgroundTexture1 = *Resources::load<Texture>("background.png");
+	float x1 = Engine::GetWindow().getSize().x;
+	float y1 = Engine::GetWindow().getSize().x;
+	backgroundSize1 = backgroundTexture1.getSize();
+	windowSizeSettings = Engine::GetWindow().getSize();
+	float scaleX1 = (float)windowSizeSettings.x / backgroundSize1.x;
+	float scaleY1 = (float)windowSizeSettings.y / backgroundSize1.y;
+	backgroundSprite1.setTexture(backgroundTexture1);
+	backgroundSprite1.setPosition(0, 0);
+	backgroundSprite1.setScale(scaleX1, scaleY1);
+	backgroundSprite1.setOrigin(0, 0);
+}
 
 // Load function
 void SettingsScene::Load()
@@ -30,6 +74,9 @@ void SettingsScene::Load()
 
 	float x2 = Engine::getWindowSize().x;
 	float y2 = Engine::getWindowSize().y;
+	SetBackground();
+	SetTitle();
+
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
 	settingsMenu[0].setFont(font);
@@ -93,11 +140,6 @@ void SettingsScene::Update(const double& dt)
 		Load();
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
-	{
-		Engine::ChangeScene(&menu);
-	}
-
 	if (Keyboard::isKeyPressed(Keyboard::Up))
 	{
 		MoveUp();
@@ -139,6 +181,9 @@ void SettingsScene::Update(const double& dt)
 void SettingsScene::Render()
 {
 	Scene::Render();
+
+	Renderer::queue(&backgroundSprite1);
+	Renderer::queue(&titleSprite1);
 
 	// Display settings menu
 	for (int j = 0; j < MAX_NUMBER_OF_SETTINGS; j++)
