@@ -1,8 +1,8 @@
-// scene_level1.h
 #pragma once
 #include "engine.h"
+#include "SFML/Graphics.hpp"
 
-// Create level scene from class Scene
+// Create level1 scene from class Scene
 class Level1Scene : public Scene 
 {
     public:

@@ -10,6 +10,7 @@
 #include "scene_settings.h"
 #include "../add_entity.h"
 #include "../game.h"
+#include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
 
 using namespace std;
@@ -26,9 +27,8 @@ Sprite backgroundSprite;
 Texture backgroundTexture;
 Vector2u backgroundSize;
 
-Texture tankTexture;
-IntRect tankSource(0, 0, 400, 300);
-Sprite titleTank(tankTexture, tankSource);
+Clock clock1;
+
 int fadeCounter = 0;
 
 // Display menu title
@@ -51,8 +51,8 @@ void MenuScene::SetTitle()
 void MenuScene::SetBackground()
 {
     backgroundTexture = *Resources::load<Texture>("background.png");
-    //float x2 = Engine::GetWindow().getSize().x;
-    //float y2 = Engine::GetWindow().getSize().x;
+    float x2 = Engine::GetWindow().getSize().x;
+    float y2 = Engine::GetWindow().getSize().x;
     backgroundSize = backgroundTexture.getSize();
     windowSizeMenu = Engine::GetWindow().getSize();
     float scaleX2 = (float)windowSizeMenu.x / backgroundSize.x;
@@ -61,6 +61,7 @@ void MenuScene::SetBackground()
     backgroundSprite.setPosition(0, 0);
     backgroundSprite.setScale(scaleX2, scaleY2);
     backgroundSprite.setOrigin(0, 0);
+    setLoaded(true);
 }
 
 void MenuScene::Load()
@@ -106,6 +107,9 @@ void MenuScene::Load()
 void MenuScene::Update(const double& dt) 
 {
     Scene::Update(dt);
+
+    float x4 = Engine::getWindowSize().x;
+    float y4 = Engine::getWindowSize().y;
 
     Event event;
     while (Engine::GetWindow().pollEvent(event))
@@ -166,7 +170,8 @@ void MenuScene::Render()
 {
     Scene::Render();
 
-    if (fadeCounter <= 250) {
+    if (fadeCounter <= 250)
+    {
         titleSprite.setColor(Color(255, 255, 255, fadeCounter));
         fadeCounter++;
         Renderer::queue(&backgroundSprite);
@@ -174,9 +179,11 @@ void MenuScene::Render()
     }
     else 
     {
+        backgroundSprite.setColor(Color(255, 255, 255, 255));
         titleSprite.setColor(Color(255, 255, 255, 255));
         Renderer::queue(&backgroundSprite);
         Renderer::queue(&titleSprite);
+
         for (int i = 0; i < MAX_MENU_ITEMS; i++)
         {
             Renderer::queue(&menu[i]);
@@ -185,7 +192,8 @@ void MenuScene::Render()
 }
 
 // Unload scene function
-void MenuScene::UnLoad() {
+void MenuScene::UnLoad()
+{
     float x2 = Engine::GetWindow().getSize().x;
     float y2 = Engine::GetWindow().getSize().y;
     Engine::GetWindow().setView(View(FloatRect(0, 0, x2, y2)));

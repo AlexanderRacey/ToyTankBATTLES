@@ -21,7 +21,8 @@ class LevelSystem
 
         typedef unsigned char Tile;
 
-        enum TILES {
+        enum TILES
+        {
             EMPTY = ' ',
             START = 's',
             END = 'e',

@@ -13,12 +13,33 @@ using namespace sf;
 using namespace std;
 
 Scene* Engine::_activeScene = nullptr;
-std::string Engine::_gameName;
+string Engine::_gameName;
 
 static bool loading = false;
 static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
+
+Sprite backgroundLoadSprite;
+Texture backgroundLoadTexture;
+Vector2u backgroundLoadSize;
+Vector2u windowSizeLoading;
+
+// Display background
+void SetBackground()
+{
+    backgroundLoadTexture = *Resources::load<Texture>("background.png");
+    float x2 = Engine::GetWindow().getSize().x;
+    float y2 = Engine::GetWindow().getSize().x;
+    backgroundLoadSize = backgroundLoadTexture.getSize();
+    windowSizeLoading = Engine::GetWindow().getSize();
+    float scaleX2 = (float)windowSizeLoading.x / backgroundLoadSize.x;
+    float scaleY2 = (float)windowSizeLoading.y / backgroundLoadSize.y;
+    backgroundLoadSprite.setTexture(backgroundLoadTexture);
+    backgroundLoadSprite.setPosition(0, 0);
+    backgroundLoadSprite.setScale(scaleX2, scaleY2);
+    backgroundLoadSprite.setOrigin(0, 0);
+}
 
 void Loading_update(float dt, const Scene* const scn) {
     //  cout << "Eng: Loading Screen\n";
@@ -31,16 +52,19 @@ void Loading_update(float dt, const Scene* const scn) {
         loadingTime += dt;
     }
 }
-void Loading_render() {
+void Loading_render() 
+{
     // cout << "Eng: Loading Screen Render\n";
     static CircleShape octagon(80, 8);
     octagon.setOrigin(80, 80);
     octagon.setRotation(loadingspinner);
-    octagon.setPosition(Vcast<float>(Engine::getWindowSize()) * .5f);
-    octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
-    static Text t("Loading", *Resources::get<sf::Font>("VCR_OSD_MONO.ttf"));
-    t.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
+    octagon.setPosition(Vcast<float>(Engine::getWindowSize()) * 0.5f);
+    octagon.setFillColor(Color(0, 168, 243, min(255.f, 40.f * loadingTime)));
+    static Text t("Loading . . .", *Resources::get<Font>("OdibeeSans-Regular.ttf"));
+    t.setFillColor(Color(0, 168, 243, min(255.f, 40.f * loadingTime)));
     t.setPosition(Vcast<float>(Engine::getWindowSize()) * Vector2f(0.4f, 0.3f));
+    SetBackground();
+    Renderer::queue(&backgroundLoadSprite);
     Renderer::queue(&t);
     Renderer::queue(&octagon);
 }
@@ -48,15 +72,17 @@ void Loading_render() {
 float frametimes[256] = {};
 uint8_t ftc = 0;
 
-void Engine::Update() {
-    static sf::Clock clock;
+void Engine::Update()
+{
+    static Clock clock;
     float dt = clock.restart().asSeconds();
     {
         frametimes[++ftc] = dt;
         static string avg = _gameName + " FPS:";
         if (ftc % 60 == 0) {
             double davg = 0;
-            for (const auto t : frametimes) {
+            for (const auto t : frametimes) 
+            {
                 davg += t;
             }
             davg = 1.0 / (davg / 255.0);

@@ -22,9 +22,9 @@ Texture titleTexture1;
 Vector2f targetCoords1;
 Vector2u titleTextureSize1;
 
-Sprite backgroundSprite1;
-Texture backgroundTexture1;
-Vector2u backgroundSize1;
+Sprite backgroundSprite2;
+Texture backgroundTexture2;
+Vector2u backgroundSize2;
 Vector2u windowSizeSettings;
 
 // Display settings title
@@ -46,17 +46,17 @@ void SettingsScene::SetTitle()
 // Display background
 void SettingsScene::SetBackground()
 {
-	backgroundTexture1 = *Resources::load<Texture>("background.png");
-	float x1 = Engine::GetWindow().getSize().x;
-	float y1 = Engine::GetWindow().getSize().x;
-	backgroundSize1 = backgroundTexture1.getSize();
+	backgroundTexture2 = *Resources::load<Texture>("background.png");
+	float x2 = Engine::GetWindow().getSize().x;
+	float y2 = Engine::GetWindow().getSize().x;
+	backgroundSize2 = backgroundTexture2.getSize();
 	windowSizeSettings = Engine::GetWindow().getSize();
-	float scaleX1 = (float)windowSizeSettings.x / backgroundSize1.x;
-	float scaleY1 = (float)windowSizeSettings.y / backgroundSize1.y;
-	backgroundSprite1.setTexture(backgroundTexture1);
-	backgroundSprite1.setPosition(0, 0);
-	backgroundSprite1.setScale(scaleX1, scaleY1);
-	backgroundSprite1.setOrigin(0, 0);
+	float scaleX2 = (float)windowSizeSettings.x / backgroundSize2.x;
+	float scaleY2 = (float)windowSizeSettings.y / backgroundSize2.y;
+	backgroundSprite2.setTexture(backgroundTexture2);
+	backgroundSprite2.setPosition(0, 0);
+	backgroundSprite2.setScale(scaleX2, scaleY2);
+	backgroundSprite2.setOrigin(0, 0);
 }
 
 // Load function
@@ -64,13 +64,13 @@ void SettingsScene::Load()
 {
 	// Display settings 
 	cout << "Settings Load \n";
-	{
+	/*{
 		auto txtSettings = makeEntity();
 		auto t = txtSettings->addComponent<TextComponent>("Settings");
 		t->getText().setCharacterSize(54);
 		t->getText().setOrigin(t->getText().getGlobalBounds().width / 2, t->getText().getGlobalBounds().height / 2);
 		txtSettings->setPosition(Vector2f(Engine::GetWindow().getSize().x / 2, 100.0f));
-	}
+	}*/
 
 	float x2 = Engine::getWindowSize().x;
 	float y2 = Engine::getWindowSize().y;
@@ -79,9 +79,10 @@ void SettingsScene::Load()
 
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
+	// Create settings menu
 	settingsMenu[0].setFont(font);
 	settingsMenu[0].setFillColor(Color(0, 168, 243, 255));
-	settingsMenu[0].setString("Default");
+	settingsMenu[0].setString("1280 x 720");
 	settingsMenu[0].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 40));
 
 	settingsMenu[1].setFont(font);
@@ -134,12 +135,14 @@ void SettingsScene::Update(const double& dt)
 		}
 	}
 
+	// Reload scene
 	if (Keyboard::isKeyPressed(Keyboard::R))
 	{
 		UnLoad();
 		Load();
 	}
 
+	// Select options from menu
 	if (Keyboard::isKeyPressed(Keyboard::Up))
 	{
 		MoveUp();
@@ -155,7 +158,7 @@ void SettingsScene::Update(const double& dt)
 		switch (GetPressedItem())
 		{
 			case 0:
-				Engine::setNewWindowSize(Vector2u(1504, 864), 2);
+				Engine::setNewWindowSize(Vector2u(1280, 720), 2);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 1:
@@ -182,7 +185,7 @@ void SettingsScene::Render()
 {
 	Scene::Render();
 
-	Renderer::queue(&backgroundSprite1);
+	Renderer::queue(&backgroundSprite2);
 	Renderer::queue(&titleSprite1);
 
 	// Display settings menu

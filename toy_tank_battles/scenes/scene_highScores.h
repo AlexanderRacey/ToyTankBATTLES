@@ -10,3 +10,4 @@ class HighScoresScene : public Scene
       void Update(const double& dt) override;
       void Render() override;
 };
+#pragma once

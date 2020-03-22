@@ -7,7 +7,7 @@ using namespace sf;
 using namespace std;
 
 int gameWidth = 1280;
-int gameHeight = 1280;
+int gameHeight = 720;
 
 MenuScene menu;
 SettingsScene settings;
