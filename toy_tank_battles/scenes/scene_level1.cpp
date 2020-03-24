@@ -14,7 +14,7 @@
 using namespace std;
 using namespace sf;
 
-Texture house;
+Texture* house;
 Sprite houseSprite;
 
 Sprite backgroundSprite3;
@@ -41,11 +41,11 @@ void Level1Scene::SetBackground()
 void Level1Scene::Load()
 {
 	cout << " Scene 1 Load" << endl;
-	ls::loadLevelFile("res/level1test.txt", 70.0f);
-
+	ls::loadLevelFile("res/level1test.txt", 90.0f);
 	SetBackground();
 
 	//Set level to appear at middle of window
+	//this is not the middle anymore will need to figure somethings out
 	auto ho = (Engine::getWindowSize().y/2) - ((ls::getHeight() * ls::getTileSize()) /2);
 	auto wid = (Engine::getWindowSize().x / 2) - ((ls::getWidth() * ls::getTileSize()) / 2);
 	ls::setOffset(Vector2f(wid, ho));
@@ -54,11 +54,6 @@ void Level1Scene::Load()
 	this_thread::sleep_for(chrono::milliseconds(3000));
 	cout << " Scene 1 Load Done" << endl;
 
-	house = ls::getTexture(ls::WALL);
-	//*Resources::load<Texture>("BlueHouse.png");
-	houseSprite.setTexture(house);
-	houseSprite.setTextureRect(IntRect(0, 0, 100, 100));
-	houseSprite.setPosition(Vector2f(wid, ho));
 	setLoaded(true);
 }
 
@@ -76,9 +71,15 @@ void Level1Scene::Update(const double& dt)
 
 void Level1Scene::Render()
 {
+	//auto & sprit = ls::_sprites.at(0);
 	Scene::Render();
+	//Engine::GetWindow().draw(*sprit);
 	//auto _sprites = ls::getSprites();
 	Renderer::queue(&backgroundSprite3);
-	ls::render(Engine::GetWindow());
+	for (auto& s : ls::_sprites)
+	{
+		Renderer::queue(s.get());
+	}
+	//ls::render(Engine::GetWindow());
 	//Renderer::queue(&houseSprite);
 }

@@ -7,6 +7,7 @@
 #include <vector>
 #include "maths.h"
 
+
 using namespace sf;
 using namespace std;
 
@@ -26,11 +27,13 @@ class LevelSystem
             EMPTY = ' ',
             START = 's',
             END = 'e',
-            WALL = 'w',
+            HOUSE = 'w',
+            HOUSE_R = 'r',
             ENEMY = 'n',
             WAYPOINT = '+',
             PICKUP = 'p',
-            BROKEN = 'b'
+            BROKEN = 'b',
+            BROKEN_R = 'q'
         };
 
         static Tile getTile(Vector2ul);
@@ -41,31 +44,25 @@ class LevelSystem
         static Vector2f getTilePosition(Vector2ul);
         static vector<Vector2ul> findTiles(Tile);
         static Color getColor(Tile t);
-        static sf::Texture getTexture(LevelSystem::Tile t);
+        static shared_ptr<sf::Texture> getTexture(LevelSystem::Tile t);
         static void loadTextures();
-        static void setTexture(Tile t, sf::Texture tex);
+        static void setTexture(Tile t, shared_ptr<sf::Texture> tex);
         static void setColor(Tile t, Color c);
         static void setOffset(const Vector2f& _offset);
         static const Vector2f& getOffset();
         static float getTileSize();
-       // static vector<unique_ptr<sf::Sprite>> getSprites();
+        static vector<unique_ptr<sf::Sprite>> _sprites;
+      // static vector<unique_ptr<sf::Sprite>> getSprites();
     protected:
         static unique_ptr<Tile[]> _tiles;
         static size_t _width;
         static size_t _height;
         static Vector2f _offset;
-        static sf::Texture sand;
-        static sf::Texture house1;
-        static sf::Texture house2;
-        static sf::Texture house3;
-        static sf::Texture house4;
-        static sf::Texture brokenH;
-        static vector<unique_ptr<sf::Sprite>> _sprites;
 
         static void buildSprites();
         static float _tileSize; // for rendering
         static std::map<Tile, sf::Color> _colours;
-        static std::map<Tile, sf::Texture> _textures;
+        static std::map<Tile, shared_ptr<sf::Texture>> _textures;
     private:
         LevelSystem() = delete;
 

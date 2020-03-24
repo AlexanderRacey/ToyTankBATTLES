@@ -7,19 +7,27 @@
 using namespace std;
 using namespace sf;
 
-Texture LevelSystem::sand;
-Texture LevelSystem::house1;
-Texture LevelSystem::house2;
-Texture LevelSystem::house3;
-Texture LevelSystem::house4;
-Texture LevelSystem::brokenH;
+
+shared_ptr<Texture> sand;
+shared_ptr<Texture> house1;
+shared_ptr<Texture> house2;
+shared_ptr<Texture> house3;
+shared_ptr<Texture> house4;
+shared_ptr<Texture> house5;
+shared_ptr<Texture> broken;
+
+vector<shared_ptr<Texture>> houses;
 
 map<LevelSystem::Tile, Color> LevelSystem::_colours
 {
-    {WALL, Color::Blue}, {END, Color::Red}, {EMPTY, Color::White} 
+    {HOUSE, Color::Blue}, {END, Color::Red}, {EMPTY, Color::White} 
 };
 
-map<LevelSystem::Tile, Texture> LevelSystem::_textures;
+
+map<LevelSystem::Tile, shared_ptr<Texture>> LevelSystem::_textures
+{
+   // {EMPTY, Resources::load<Texture>("sand.png") }, {WALL, Resources::load<Texture>("BlueHouse.png")}, {BROKEN, Resources::load<Texture>("BrokenHouse.png")}
+};
 
 vector<unique_ptr<Sprite>> LevelSystem::_sprites;
 
@@ -34,29 +42,40 @@ Color LevelSystem::getColor(LevelSystem::Tile t)
     return _colours[t];
 }
 
-Texture LevelSystem::getTexture(LevelSystem::Tile t)
+
+shared_ptr<Texture> LevelSystem::getTexture(LevelSystem::Tile t)
 {
-    auto it = _textures.find(t);
-    if (it == _textures.end()) 
-    {
-        _textures[t] = sand;
+    if (t == HOUSE || t == HOUSE_R) {
+        return houses[rand() % 5];
     }
-    return _textures[t];
+    else if (t==BROKEN_R) {
+        return _textures[BROKEN];
+    }
+    else {
+        auto it = _textures.find(t);
+        if (it == _textures.end())
+        {
+            _textures[t] = Resources::load<Texture>("sand2.png");
+        }
+        return _textures[t];
+    }
 }
 
 void LevelSystem::loadTextures() 
 {
-    sand = *Resources::load<Texture>("sand.png");
-    house1 = *Resources::load<Texture>("BlueHouse.png");
-    house2 = *Resources::load<Texture>("BlueHouse2.png");
-    house3 = *Resources::load<Texture>("YellowHouse.png");
-    house4 = *Resources::load<Texture>("OrangeHouse.png");
-    brokenH = *Resources::load<Texture>("BrokenHouse.png");
+    sand = Resources::load<Texture>("sand2.png");
+    house1 = Resources::load<Texture>("BlueHouse1.png");
+    house2 = Resources::load<Texture>("BlueHouse2.png");
+    house3 = Resources::load<Texture>("OrangeHouse.png");
+    house4 = Resources::load<Texture>("PurpleHouse.png");
+    house5 = Resources::load<Texture>("YellowHouse.png");
+    broken = Resources::load<Texture>("BrokenHouse.png");
+    houses = { house1, house2, house3, house4, house5 };
+    _textures = { {EMPTY, sand }, {HOUSE, house1}, {BROKEN, broken} };
 
-    _textures = { {EMPTY, sand}, {WALL, house1}, {BROKEN, brokenH} };
 }
 
-void LevelSystem::setTexture(LevelSystem::Tile t, Texture tex)
+void LevelSystem::setTexture(LevelSystem::Tile t, shared_ptr<sf::Texture> tex)
 {
     _textures[t] = tex;
 }
@@ -81,6 +100,7 @@ void LevelSystem::loadLevelFile(const string& path, float tileSize)
     size_t w = 0, h = 0;
     string buffer;
     ls::loadTextures();
+    //sand = Resources::load<Texture>("sand.png");
 
     // Load in file to buffer
     ifstream f(path);
@@ -135,7 +155,7 @@ void LevelSystem::loadLevelFile(const string& path, float tileSize)
     _height = h;
     copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
     cout << "Level " << path << " Loaded. " << w << "x" << h << endl;
-    buildSprites();
+     //buildSprites();
 }
 
 void LevelSystem::buildSprites()
@@ -146,11 +166,15 @@ void LevelSystem::buildSprites()
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
         {
             auto s = make_unique<sf::Sprite>();
-            Texture tex = ls::getTexture(getTile({ x, y }));
+           // Texture tex = ls::getTexture(getTile({ x, y }));
+            s->setTexture(*ls::getTexture(getTile({ x, y })));
+            if (getTile({ x, y }) == BROKEN_R || getTile({ x, y }) == HOUSE_R) {
+                s->setRotation(90.f);
+            }
             s->setPosition(getTilePosition({ x,y }));
-            s->setTexture(tex);
-            s->setTextureRect(sf::IntRect(0, 0, _tileSize, _tileSize));
-            s->setOrigin(0, 0);
+            s->setTextureRect(sf::IntRect(0, 0, 90.f, 90.f));
+            //s->setScale(.7f, .7f);
+            s->setOrigin(_tileSize/2, _tileSize/2);
             _sprites.push_back(move(s));
         }
     }
