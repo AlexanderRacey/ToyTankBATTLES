@@ -10,17 +10,20 @@
 #include "system_renderer.h"
 #include "../components/cmp_text.h"
 #include "../game.h"
+#include "../components/cmp_sprite.h"
 
 using namespace std;
 using namespace sf;
 
-Texture* house;
-Sprite houseSprite;
-
 Sprite backgroundSprite3;
+shared_ptr<Texture> bear;
 Texture backgroundTexture3;
 Vector2u backgroundSize3;
 Vector2u windowSizeLevel1;
+Sprite bearSprite;
+
+vector<shared_ptr<Texture>> picks;
+
 
 // Display background
 void Level1Scene::SetBackground()
@@ -38,6 +41,30 @@ void Level1Scene::SetBackground()
 	backgroundSprite3.setOrigin(0, 0);
 }
 
+void Level1Scene::SetPickups() {
+	//make array of Pickup components based on number represented on map
+	picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("chick.png"), Resources::load<Texture>("giraffe.png"),
+		Resources::load<Texture>("hippo.png"), Resources::load<Texture>("penguin.png")
+	};
+
+	auto pickups = ls::findTiles(ls::PICKUP);
+	for (auto p : pickups) {
+		auto pos = ls::getTilePosition(p);
+		cout << "tile pos " << pos << endl;
+	//	pos += Vector2f(ls::getTileSize() / 2, ls::getTileSize() / 2);
+		cout << "tile pos " << pos << endl;
+		auto e = makeEntity();
+		e->setPosition(pos);
+		e->addComponent<SpriteComponent>();
+		e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(picks[rand() % 5]);
+		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
+		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getGlobalBounds();
+		//not centered... not sure how to fix that
+		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize());
+	}
+
+}
+
 void Level1Scene::Load()
 {
 	cout << " Scene 1 Load" << endl;
@@ -53,6 +80,7 @@ void Level1Scene::Load()
 	//Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
 	cout << " Scene 1 Load Done" << endl;
+	SetPickups();
 
 	setLoaded(true);
 }
@@ -66,20 +94,17 @@ void Level1Scene::UnLoad()
 
 void Level1Scene::Update(const double& dt)
 {
-
+	Scene::Update(dt);
 }
 
 void Level1Scene::Render()
 {
-	//auto & sprit = ls::_sprites.at(0);
-	Scene::Render();
-	//Engine::GetWindow().draw(*sprit);
-	//auto _sprites = ls::getSprites();
+	
 	Renderer::queue(&backgroundSprite3);
 	for (auto& s : ls::_sprites)
 	{
 		Renderer::queue(s.get());
 	}
-	//ls::render(Engine::GetWindow());
-	//Renderer::queue(&houseSprite);
+	Scene::Render();
+
 }

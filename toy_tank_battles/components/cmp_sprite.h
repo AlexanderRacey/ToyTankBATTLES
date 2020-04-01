@@ -10,7 +10,7 @@ class SpriteComponent : public Component
 {
     protected:
         shared_ptr<Sprite> _sprite;
-
+        std::shared_ptr<sf::Texture> _texture;
     public:
         SpriteComponent() = delete;
 
@@ -20,8 +20,10 @@ class SpriteComponent : public Component
 
         Sprite& getSprite() const;
 
+        void setTexture(std::shared_ptr<sf::Texture> tex);
+        /*
         template <typename... Targs> void setSprite(Targs... params) 
         {
             _sprite.reset(new sf::Sprite(params...));
-        }
+        }*/
 };

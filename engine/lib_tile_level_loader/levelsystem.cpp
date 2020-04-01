@@ -28,7 +28,6 @@ map<LevelSystem::Tile, Color> LevelSystem::_colours
 
 map<LevelSystem::Tile, shared_ptr<Texture>> LevelSystem::_textures
 {
-   // {EMPTY, Resources::load<Texture>("sand.png") }, {WALL, Resources::load<Texture>("BlueHouse.png")}, {BROKEN, Resources::load<Texture>("BrokenHouse.png")}
 };
 
 vector<unique_ptr<Sprite>> LevelSystem::_sprites;
@@ -191,7 +190,7 @@ void LevelSystem::buildSprites()
                     s->setRotation(180.f);
             }
             s->setPosition(getTilePosition({ x,y }));
-            s->setTextureRect(sf::IntRect(0, 0, 90.f, 90.f));
+            s->setTextureRect(IntRect(0, 0, _tileSize, _tileSize));
             //s->setScale(.7f, .7f);
             s->setOrigin(_tileSize/2, _tileSize/2);
             _sprites.push_back(move(s));
@@ -283,8 +282,3 @@ const Vector2f& LevelSystem::getOffset() { return _offset; }
 
 float LevelSystem::getTileSize() { return _tileSize; }
 
-/*
-vector<unique_ptr<sf::Sprite>> LevelSystem::getSprites()
-{
-    return _sprites;
-}*/
