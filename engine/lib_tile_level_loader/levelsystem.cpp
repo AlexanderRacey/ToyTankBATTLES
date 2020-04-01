@@ -247,7 +247,7 @@ bool LevelSystem::isOnGrid(sf::Vector2f v)
 
 void LevelSystem::setOffset(const Vector2f& _offset) 
 {
-    LevelSystem::_offset = _offset;
+    LevelSystem::_offset = _offset + Vector2f(_tileSize/2, _tileSize/2);
     buildSprites();
 }
 
