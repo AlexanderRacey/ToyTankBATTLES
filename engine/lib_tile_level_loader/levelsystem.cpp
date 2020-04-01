@@ -15,6 +15,8 @@ shared_ptr<Texture> house3;
 shared_ptr<Texture> house4;
 shared_ptr<Texture> house5;
 shared_ptr<Texture> broken;
+shared_ptr<Texture> broken2;
+shared_ptr<Texture> wall;
 
 vector<shared_ptr<Texture>> houses;
 
@@ -48,8 +50,14 @@ shared_ptr<Texture> LevelSystem::getTexture(LevelSystem::Tile t)
     if (t == HOUSE || t == HOUSE_R) {
         return houses[rand() % 5];
     }
-    else if (t==BROKEN_R) {
-        return _textures[BROKEN];
+    else if (t==BROKEN_R || t==BROKEN) {
+        int num = rand() % 3;
+        if (num == 0) {
+            return broken2;
+        }
+        else {
+            return broken;
+        }
     }
     else {
         auto it = _textures.find(t);
@@ -70,8 +78,10 @@ void LevelSystem::loadTextures()
     house4 = Resources::load<Texture>("PurpleHouse.png");
     house5 = Resources::load<Texture>("YellowHouse.png");
     broken = Resources::load<Texture>("BrokenHouse.png");
+    broken2 = Resources::load<Texture>("brokenHouse2.png");
+    wall = Resources::load<Texture>("GreyWall.png");
     houses = { house1, house2, house3, house4, house5 };
-    _textures = { {EMPTY, sand }, {HOUSE, house1}, {BROKEN, broken} };
+    _textures = { {EMPTY, sand }, {HOUSE, house1}, {BROKEN, broken}, {WALL, wall} };
 
 }
 
@@ -169,7 +179,16 @@ void LevelSystem::buildSprites()
            // Texture tex = ls::getTexture(getTile({ x, y }));
             s->setTexture(*ls::getTexture(getTile({ x, y })));
             if (getTile({ x, y }) == BROKEN_R || getTile({ x, y }) == HOUSE_R) {
-                s->setRotation(90.f);
+                if (x == 0) {
+                    s->setRotation(270.f);
+                }
+                else {
+                    s->setRotation(90.f);
+                }  
+            }
+            if (getTile({ x, y }) == HOUSE)
+                if (y == ls::getHeight() - 1) {
+                    s->setRotation(180.f);
             }
             s->setPosition(getTilePosition({ x,y }));
             s->setTextureRect(sf::IntRect(0, 0, 90.f, 90.f));

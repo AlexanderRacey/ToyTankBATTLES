@@ -33,7 +33,8 @@ class LevelSystem
             WAYPOINT = '+',
             PICKUP = 'p',
             BROKEN = 'b',
-            BROKEN_R = 'q'
+            BROKEN_R = 'q',
+            WALL = 'l'
         };
 
         static Tile getTile(Vector2ul);
