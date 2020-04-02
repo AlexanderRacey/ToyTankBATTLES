@@ -9,7 +9,6 @@ SpriteComponent::SpriteComponent(Entity* p) : Component(p), _sprite(make_shared<
 void SpriteComponent::update(double dt) 
 {
     _sprite->setPosition(_parent->getPosition());
-//    cout << _sprite->getPosition() << endl;
     _sprite->setRotation(_parent->getRotation());
 }
 

@@ -11,16 +11,15 @@
 #include "../components/cmp_text.h"
 #include "../game.h"
 #include "../components/cmp_sprite.h"
+#include "../components/cmp_pickup.h"
 
 using namespace std;
 using namespace sf;
 
 Sprite backgroundSprite3;
-shared_ptr<Texture> bear;
 Texture backgroundTexture3;
 Vector2u backgroundSize3;
 Vector2u windowSizeLevel1;
-Sprite bearSprite;
 
 vector<shared_ptr<Texture>> picks;
 
@@ -49,18 +48,18 @@ void Level1Scene::SetPickups() {
 
 	auto pickups = ls::findTiles(ls::PICKUP);
 	for (auto p : pickups) {
+		int type = rand() % 5;
 		auto pos = ls::getTilePosition(p);
-		cout << "tile pos " << pos << endl;
-	//	pos += Vector2f(ls::getTileSize() / 2, ls::getTileSize() / 2);
-		cout << "tile pos " << pos << endl;
 		auto e = makeEntity();
 		e->setPosition(pos);
 		e->addComponent<SpriteComponent>();
-		e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(picks[rand() % 5]);
+		e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(picks[type]);
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
 		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getGlobalBounds();
 		//not centered... not sure how to fix that
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize());
+		//Add pickup component
+		e->addComponent<PickupComponent>(type);
 	}
 
 }
@@ -88,6 +87,7 @@ void Level1Scene::Load()
 void Level1Scene::UnLoad()
 {
 	cout << "Scene 1 Unload" << endl;
+	picks.clear();
 	ls::unload();
 	Scene::UnLoad();
 }

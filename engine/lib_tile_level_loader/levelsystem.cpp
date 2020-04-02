@@ -20,29 +20,11 @@ shared_ptr<Texture> wall;
 
 vector<shared_ptr<Texture>> houses;
 
-map<LevelSystem::Tile, Color> LevelSystem::_colours
-{
-    {HOUSE, Color::Blue}, {END, Color::Red}, {EMPTY, Color::White} 
-};
-
-
 map<LevelSystem::Tile, shared_ptr<Texture>> LevelSystem::_textures
 {
 };
 
 vector<unique_ptr<Sprite>> LevelSystem::_sprites;
-
-
-Color LevelSystem::getColor(LevelSystem::Tile t) 
-{
-    auto it = _colours.find(t);
-    if (it == _colours.end())
-    {
-        _colours[t] = Color::Transparent;
-    }
-    return _colours[t];
-}
-
 
 shared_ptr<Texture> LevelSystem::getTexture(LevelSystem::Tile t)
 {
@@ -89,11 +71,6 @@ void LevelSystem::setTexture(LevelSystem::Tile t, shared_ptr<sf::Texture> tex)
     _textures[t] = tex;
 }
 
-
-void LevelSystem::setColor(LevelSystem::Tile t, Color c) 
-{
-    _colours[t] = c;
-}
 
 unique_ptr<LevelSystem::Tile[]> LevelSystem::_tiles;
 size_t LevelSystem::_width;
@@ -164,7 +141,7 @@ void LevelSystem::loadLevelFile(const string& path, float tileSize)
     _height = h;
     copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
     cout << "Level " << path << " Loaded. " << w << "x" << h << endl;
-     //buildSprites();
+
 }
 
 void LevelSystem::buildSprites()
@@ -175,7 +152,6 @@ void LevelSystem::buildSprites()
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
         {
             auto s = make_unique<sf::Sprite>();
-           // Texture tex = ls::getTexture(getTile({ x, y }));
             s->setTexture(*ls::getTexture(getTile({ x, y })));
             if (getTile({ x, y }) == BROKEN_R || getTile({ x, y }) == HOUSE_R) {
                 if (x == 0) {
@@ -198,13 +174,14 @@ void LevelSystem::buildSprites()
     }
 }
 
+/*
 void LevelSystem::render(RenderWindow& window)
 {
     for (auto& s : _sprites)
     {
         window.draw(*s);
     }
-}
+}*/
 
 LevelSystem::Tile LevelSystem::getTile(Vector2ul p) 
 {
@@ -271,6 +248,7 @@ void LevelSystem::setOffset(const Vector2f& _offset)
 
 void LevelSystem::unload() {
     cout << "LevelSystem unloading\n";
+    _textures.clear();
     _sprites.clear();
     _tiles.reset();
     _width = 0;

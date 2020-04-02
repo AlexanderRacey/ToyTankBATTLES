@@ -18,7 +18,7 @@ class LevelSystem
     public:
         static void loadLevelFile(const string&, float tileSize = 100.0f);
         static void unload();
-        static void render(RenderWindow& window);
+     //   static void render(RenderWindow& window);
 
         typedef unsigned char Tile;
 
@@ -44,11 +44,9 @@ class LevelSystem
         static size_t getHeight();
         static Vector2f getTilePosition(Vector2ul);
         static vector<Vector2ul> findTiles(Tile);
-        static Color getColor(Tile t);
         static shared_ptr<sf::Texture> getTexture(LevelSystem::Tile t);
         static void loadTextures();
         static void setTexture(Tile t, shared_ptr<sf::Texture> tex);
-        static void setColor(Tile t, Color c);
         static void setOffset(const Vector2f& _offset);
         static const Vector2f& getOffset();
         static float getTileSize();

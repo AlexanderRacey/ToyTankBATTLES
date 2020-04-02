@@ -149,6 +149,10 @@ std::shared_ptr<Entity> Scene::makeEntity() {
     return std::move(e);
 }
 
+vector<std::shared_ptr<Entity>> Engine::findEntity(string tag) {
+    return _activeScene->ents.find(tag);
+}
+
 void Engine::setVsync(bool b) { _window->setVerticalSyncEnabled(b); }
 
 void Engine::ChangeScene(Scene* s) {
