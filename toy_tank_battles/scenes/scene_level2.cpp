@@ -6,7 +6,7 @@
 #include <thread>
 #include "engine.h"
 #include "maths.h"
-#include "scene_level1.h"
+#include "scene_level2.h"
 #include "system_renderer.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
@@ -30,7 +30,7 @@ Vector2u windowSizeLevel1;
 static shared_ptr<Entity> player;
 
 // Display background
-void Level1Scene::SetBackground()
+void Level2Scene::SetBackground()
 {
 	backgroundTexture3 = *Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
@@ -45,9 +45,9 @@ void Level1Scene::SetBackground()
 	backgroundSprite3.setOrigin(0, 0);
 }
 
-void Level1Scene::Load()
+void Level2Scene::Load()
 {
-	cout << " Scene 1 Load" << endl;
+	cout << " Scene 2 Load" << endl;
 	ls::loadLevelFile("res/Level1test.txt", 90.0f);
 	SetBackground();
 
@@ -68,36 +68,31 @@ void Level1Scene::Load()
 
 	//Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
-	cout << " Scene 1 Load Done" << endl;
+	cout << " Scene 2 Load Done" << endl;
 
 	setLoaded(true);
 }
 
-void Level1Scene::UnLoad()
+void Level2Scene::UnLoad()
 {
 	// Get player position
 	const auto pp = player->getPosition();
 	if (ls::getTileAt(pp) == ls::END) 
 	{
-		Engine::ChangeScene((Scene*)&level2);
-	}
-	else if (!player->isAlive()) 
-	{
-		this_thread::sleep_for(chrono::milliseconds(200));
-		Engine::ChangeScene((Scene*)&level1);
+		Engine::ChangeScene((Scene*)&menu);
 	}
 
-	cout << "Scene 1 Unload" << endl;
+	cout << "Scene 2 Unload" << endl;
 	ls::unload();
 	Scene::UnLoad();
 }
 
-void Level1Scene::Update(const double& dt)
+void Level2Scene::Update(const double& dt)
 {
 
 }
 
-void Level1Scene::Render()
+void Level2Scene::Render()
 {
 	//auto & sprit = ls::_sprites.at(0);
 	Scene::Render();

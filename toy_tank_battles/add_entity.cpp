@@ -10,6 +10,9 @@ using namespace std;
 shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 {
 	auto player = scene->makeEntity();
+	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
+	player->addTag("player");
+	Texture s = *Resources::load<Texture>("playerTank.png");
 
 	return player;
 }
