@@ -45,7 +45,7 @@ void ShapeComponent::render()
     Renderer::queue(_shape.get()); 
 }
 
-sf::Shape& ShapeComponent::getShape() const 
+Shape& ShapeComponent::getShape() const 
 {
     return *_shape;
 }

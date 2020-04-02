@@ -23,11 +23,10 @@ class SpriteComponent : public Component
 
         void setTexture(shared_ptr<Texture> tex);
 
-        /*
         template <typename... Targs> void setSprite(Targs... params) 
         {
             _sprite.reset(new sf::Sprite(params...));
-        }*/
+        }
 };
 
 // Create shape component from class Component

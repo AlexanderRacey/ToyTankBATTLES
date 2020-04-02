@@ -2,6 +2,7 @@
 #include <levelsystem.h>
 #include "add_entity.h"
 #include "system_resources.h"
+#include "components/cmp_sprite.h"
 
 using namespace sf;
 using namespace std;

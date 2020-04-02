@@ -1,4 +1,3 @@
-// LevelSystem Header file
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <map>
@@ -6,7 +5,6 @@
 #include <string>
 #include <vector>
 #include "maths.h"
-
 
 using namespace sf;
 using namespace std;
@@ -18,7 +16,7 @@ class LevelSystem
     public:
         static void loadLevelFile(const string&, float tileSize = 100.0f);
         static void unload();
-     //   static void render(RenderWindow& window);
+        static void render(RenderWindow& window);
 
         typedef unsigned char Tile;
 

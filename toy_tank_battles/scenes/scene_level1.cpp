@@ -1,19 +1,18 @@
+#include "engine.h"
+#include "../game.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <iostream>
-#include <levelsystem.h>
 #include <system_resources.h>
+#include <levelsystem.h>
+#include <iostream>
 #include <thread>
-#include "engine.h"
-#include "maths.h"
-#include "scene_level1.h"
-#include "system_renderer.h"
+#include "../components/cmp_pickup.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
+//#include "maths.h"
+#include "scene_level1.h"
+#include "system_renderer.h"
 #include "../add_entity.h"
-#include "../game.h"
-#include "../components/cmp_sprite.h"
-#include "../components/cmp_pickup.h"
 
 using namespace std;
 using namespace sf;
@@ -48,7 +47,8 @@ void Level1Scene::SetBackground()
 	backgroundSprite3.setOrigin(0, 0);
 }
 
-void Level1Scene::SetPickups() {
+/*void Level1Scene::SetPickups() 
+{
 	//make array of Pickup components based on number represented on map
 	picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("chick.png"), Resources::load<Texture>("giraffe.png"),
 		Resources::load<Texture>("hippo.png"), Resources::load<Texture>("penguin.png")
@@ -64,13 +64,12 @@ void Level1Scene::SetPickups() {
 		e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(picks[type]);
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
 		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getGlobalBounds();
-		//not centered... not sure how to fix that
+		// not centered... not sure how to fix that
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize());
-		//Add pickup component
+		// Add pickup component
 		e->addComponent<PickupComponent>(type);
 	}
-
-}
+}*/
 
 void Level1Scene::Load()
 {
@@ -96,44 +95,65 @@ void Level1Scene::Load()
 	//Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
 	cout << " Scene 1 Load Done" << endl;
-	SetPickups();
+	//SetPickups();
 
 	setLoaded(true);
 }
 
 void Level1Scene::UnLoad()
 {
-	// Get player position
-	const auto pp = player->getPosition();
-	if (ls::getTileAt(pp) == ls::END) 
-	{
-		Engine::ChangeScene((Scene*)&level2);
-	}
-	else if (!player->isAlive()) 
-	{
-		this_thread::sleep_for(chrono::milliseconds(200));
-		Engine::ChangeScene((Scene*)&level1);
-	}
+	float x2 = Engine::GetWindow().getSize().x;
+	float y2 = Engine::GetWindow().getSize().y;
+	Engine::GetWindow().setView(View(FloatRect(0, 0, x2, y2)));
 
-	cout << "Scene 1 Unload" << endl;
+	// Reset player and remove pickups
+	player.reset();
 	picks.clear();
+
+	// Finish Unload
 	ls::unload();
+	cout << "Scene 1 Unload" << endl;
 	Scene::UnLoad();
 }
 
 void Level1Scene::Update(const double& dt)
 {
+	// Get player position
+	const auto pp = player->getPosition();
+	if (ls::getTileAt(pp) == ls::END)
+	{
+		Engine::ChangeScene((Scene*)&level2);
+	}
+	else if (!player->isAlive())
+	{
+		this_thread::sleep_for(chrono::milliseconds(200));
+		Engine::ChangeScene((Scene*)&level1);
+	}
+
+	// Reset scene
+	if (Keyboard::isKeyPressed(Keyboard::R)) 
+	{
+		UnLoad();
+		Load();
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Escape))
+	{
+		Engine::ChangeScene(&menu);
+	}
+
+	// Update scene
 	Scene::Update(dt);
 }
 
 void Level1Scene::Render()
 {
-	
+	ls::render(Engine::GetWindow());
+	Scene::Render();
+
+	// Render game items
 	Renderer::queue(&backgroundSprite3);
 	for (auto& s : ls::_sprites)
 	{
 		Renderer::queue(s.get());
 	}
-	Scene::Render();
-
 }

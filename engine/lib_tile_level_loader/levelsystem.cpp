@@ -174,14 +174,13 @@ void LevelSystem::buildSprites()
     }
 }
 
-/*
 void LevelSystem::render(RenderWindow& window)
 {
-    for (auto& s : _sprites)
+    for (auto& t : _sprites)
     {
-        window.draw(*s);
+        window.draw(*t);
     }
-}*/
+}
 
 LevelSystem::Tile LevelSystem::getTile(Vector2ul p) 
 {

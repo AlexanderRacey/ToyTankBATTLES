@@ -4,15 +4,14 @@
 using namespace sf;
 using namespace std;
 
-//create pickup component from class component
+// Create pickup component from class component
 class PickupComponent : public Component
 {
-protected:
-    int type;
-public:
-    PickupComponent() = delete;
-    explicit PickupComponent(Entity* p, int t);
-    void update(double dt) override;
-    void render() override {};
-
+    protected:
+        int type;
+    public:
+        PickupComponent() = delete;
+        explicit PickupComponent(Entity* p, int t);
+        void update(double dt) override;
+        void render() override {};
 };

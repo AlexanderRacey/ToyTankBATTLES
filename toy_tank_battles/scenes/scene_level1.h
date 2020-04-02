@@ -11,6 +11,6 @@ class Level1Scene : public Scene
       void Update(const double& dt) override;
       void Render() override;
       void SetTitle();
-      void SetPickups();
+      //void SetPickups();
       void SetBackground();
 };

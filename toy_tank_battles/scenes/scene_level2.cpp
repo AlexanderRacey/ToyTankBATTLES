@@ -16,7 +16,7 @@
 using namespace std;
 using namespace sf;
 
-Texture* house;
+/*Texture* house;
 Sprite houseSprite;
 
 Texture blueTank;
@@ -25,11 +25,11 @@ Sprite playerTank;
 Sprite backgroundSprite3;
 Texture backgroundTexture3;
 Vector2u backgroundSize3;
-Vector2u windowSizeLevel1;
+Vector2u windowSizeLevel1;*/
 
 static shared_ptr<Entity> player;
 
-// Display background
+/* Display background
 void Level2Scene::SetBackground()
 {
 	backgroundTexture3 = *Resources::load<Texture>("background.png");
@@ -43,13 +43,13 @@ void Level2Scene::SetBackground()
 	backgroundSprite3.setPosition(0, 0);
 	backgroundSprite3.setScale(scaleX2, scaleY2);
 	backgroundSprite3.setOrigin(0, 0);
-}
+}*/
 
 void Level2Scene::Load()
 {
 	cout << " Scene 2 Load" << endl;
 	ls::loadLevelFile("res/Level1test.txt", 90.0f);
-	SetBackground();
+	//SetBackground();
 
 	// Get window size
 	float x2 = Engine::getWindowSize().x;
@@ -98,11 +98,11 @@ void Level2Scene::Render()
 	Scene::Render();
 	//Engine::GetWindow().draw(*sprit);
 	//auto _sprites = ls::getSprites();
-	Renderer::queue(&backgroundSprite3);
+	/*Renderer::queue(&backgroundSprite3);
 	for (auto& s : ls::_sprites)
 	{
 		Renderer::queue(s.get());
-	}
+	}*/
 	//ls::render(Engine::GetWindow());
 	//Renderer::queue(&houseSprite);
 }
