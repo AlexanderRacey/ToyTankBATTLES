@@ -14,8 +14,8 @@ shared_ptr<Texture> house2;
 shared_ptr<Texture> house3;
 shared_ptr<Texture> house4;
 shared_ptr<Texture> house5;
-shared_ptr<Texture> broken;
-shared_ptr<Texture> broken2;
+//shared_ptr<Texture> broken;
+//shared_ptr<Texture> broken2;
 shared_ptr<Texture> wall;
 
 vector<shared_ptr<Texture>> houses;
@@ -31,6 +31,7 @@ shared_ptr<Texture> LevelSystem::getTexture(LevelSystem::Tile t)
     if (t == HOUSE || t == HOUSE_R) {
         return houses[rand() % 5];
     }
+    /*
     else if (t==BROKEN_R || t==BROKEN) {
         int num = rand() % 3;
         if (num == 0) {
@@ -39,7 +40,7 @@ shared_ptr<Texture> LevelSystem::getTexture(LevelSystem::Tile t)
         else {
             return broken;
         }
-    }
+    }*/
     else {
         auto it = _textures.find(t);
         if (it == _textures.end())
@@ -58,11 +59,11 @@ void LevelSystem::loadTextures()
     house3 = Resources::load<Texture>("OrangeHouse.png");
     house4 = Resources::load<Texture>("PurpleHouse.png");
     house5 = Resources::load<Texture>("YellowHouse.png");
-    broken = Resources::load<Texture>("BrokenHouse.png");
-    broken2 = Resources::load<Texture>("brokenHouse2.png");
+   // broken = Resources::load<Texture>("BrokenHouse.png");
+    //broken2 = Resources::load<Texture>("brokenHouse2.png");
     wall = Resources::load<Texture>("GreyWall.png");
     houses = { house1, house2, house3, house4, house5 };
-    _textures = { {EMPTY, sand }, {HOUSE, house1}, {BROKEN, broken}, {WALL, wall} };
+    _textures = { {EMPTY, sand }, {HOUSE, house1}, {WALL, wall} };
 
 }
 
@@ -153,7 +154,7 @@ void LevelSystem::buildSprites()
         {
             auto s = make_unique<sf::Sprite>();
             s->setTexture(*ls::getTexture(getTile({ x, y })));
-            if (getTile({ x, y }) == BROKEN_R || getTile({ x, y }) == HOUSE_R) {
+            if (getTile({ x, y }) == HOUSE_R) {
                 if (x == 0) {
                     s->setRotation(270.f);
                 }
@@ -174,14 +175,6 @@ void LevelSystem::buildSprites()
     }
 }
 
-/*
-void LevelSystem::render(RenderWindow& window)
-{
-    for (auto& s : _sprites)
-    {
-        window.draw(*s);
-    }
-}*/
 
 LevelSystem::Tile LevelSystem::getTile(Vector2ul p) 
 {
@@ -248,7 +241,7 @@ void LevelSystem::setOffset(const Vector2f& _offset)
 
 void LevelSystem::unload() {
     cout << "LevelSystem unloading\n";
-   // _textures.clear();
+    _textures.clear();
     _sprites.clear();
     _tiles.reset();
     _width = 0;

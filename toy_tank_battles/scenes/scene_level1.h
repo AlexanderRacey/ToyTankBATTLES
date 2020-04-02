@@ -12,5 +12,6 @@ class Level1Scene : public Scene
       void Render() override;
       void SetTitle();
       void SetPickups();
+      void SetBreakables();
       void SetBackground();
 };

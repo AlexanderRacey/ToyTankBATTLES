@@ -19,6 +19,7 @@ class SpriteComponent : public Component
         void update(double dt) override;
         void render() override;
 
+
         Sprite& getSprite() const;
 
         void setTexture(shared_ptr<Texture> tex);

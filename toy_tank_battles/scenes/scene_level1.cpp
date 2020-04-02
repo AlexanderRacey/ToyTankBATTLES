@@ -19,19 +19,14 @@
 using namespace std;
 using namespace sf;
 
-Texture* house;
-Sprite houseSprite;
-
-Texture blueTank;
-Sprite playerTank;
+Texture blueTank1;
+Sprite playerTank1;
 
 Sprite backgroundSprite3;
 Texture backgroundTexture3;
 Vector2u backgroundSize3;
-Vector2u windowSizeLevel1;
 
-static shared_ptr<Entity> player;
-vector<shared_ptr<Texture>> picks;
+
 
 // Display background
 void Level1Scene::SetBackground()
@@ -40,7 +35,7 @@ void Level1Scene::SetBackground()
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().x;
 	backgroundSize3 = backgroundTexture3.getSize();
-	windowSizeLevel1 = Engine::GetWindow().getSize();
+	Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
 	float scaleX2 = (float)windowSizeLevel1.x / backgroundSize3.x;
 	float scaleY2 = (float)windowSizeLevel1.y / backgroundSize3.y;
 	backgroundSprite3.setTexture(backgroundTexture3);
@@ -51,7 +46,7 @@ void Level1Scene::SetBackground()
 
 void Level1Scene::SetPickups() {
 	//make array of Pickup components based on number represented on map
-	picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("giraffe.png"),
+	vector<shared_ptr<Texture>> picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("giraffe.png"),
 		Resources::load<Texture>("hippo.png"), Resources::load<Texture>("penguin.png"), Resources::load<Texture>("parrot.png")
 	};
 
@@ -70,9 +65,41 @@ void Level1Scene::SetPickups() {
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize());
 		//Add pickup component
 		e->addComponent<PickupComponent>(type);
-		//e->addComponent<BreakableComponent>();
 	}
 
+}
+
+//ADDs breakable houses to tiles
+void Level1Scene::SetBreakables() {
+
+	auto brokenHouses = ls::findTiles(ls::BROKEN);
+	auto brokenHouses2 = ls::findTiles(ls::BROKEN_R);
+	brokenHouses.insert(end(brokenHouses), begin(brokenHouses2), end(brokenHouses2));
+	int type;
+	for (auto b : brokenHouses) {
+		type = rand() % 3;
+		auto pos = ls::getTilePosition(b);
+		auto e = makeEntity();
+		e->setPosition(pos);
+		//ADD Breakable Component
+		e->addComponent<BreakableComponent>();
+		//ADD house sprite
+		e->addComponent<SpriteComponent>();
+		if (type == 0) {
+			e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("BrokenH.png"));
+		}
+		else {
+			e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("BrokenH1.png"));
+		}
+		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getGlobalBounds();
+		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize().x/2, bounds.getSize().y / 2);
+		//Rotate Broken houses on tile Broken_R
+		if (ls::getTile(b) == ls::BROKEN_R) {
+			e->setRotation(90.f);
+		}
+
+	}
+	
 }
 
 void Level1Scene::Load()
@@ -100,7 +127,7 @@ void Level1Scene::Load()
 	this_thread::sleep_for(chrono::milliseconds(3000));
 	cout << " Scene 1 Load Done" << endl;
 	SetPickups();
-
+	SetBreakables();
 	setLoaded(true);
 }
 
@@ -119,7 +146,7 @@ void Level1Scene::UnLoad()
 	}
 
 	cout << "Scene 1 Unload" << endl;
-//	picks.clear();
+   // picks.clear();
 	ls::unload();
 	Scene::UnLoad();
 }

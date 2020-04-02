@@ -9,7 +9,7 @@
 using namespace std;
 using namespace sf;
 
-static shared_ptr<Entity> player;
+//static shared_ptr<Entity> player;
 
 void HighScoresScene::Load()
 {
