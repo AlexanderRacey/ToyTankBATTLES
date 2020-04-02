@@ -17,32 +17,36 @@ using namespace std;
 using namespace sf;
 
 /*Texture* house;
-Sprite houseSprite;
+Sprite houseSprite;*/
 
-Texture blueTank;
-Sprite playerTank;
 
-Sprite backgroundSprite3;
-Texture backgroundTexture3;
-Vector2u backgroundSize3;
-Vector2u windowSizeLevel1;*/
+Texture blueTank2;
+Sprite playerTank2;
 
-static shared_ptr<Entity> player;
+Sprite backgroundSprite4;
+Texture backgroundTexture4;
+Vector2u backgroundSize4;
+Vector2u windowSizeLevel1;
+
+vector<shared_ptr<Texture>> picks;
+
+//shared_ptr<Entity> player;
+
 
 /* Display background
 void Level2Scene::SetBackground()
 {
-	backgroundTexture3 = *Resources::load<Texture>("background.png");
+	backgroundTexture4 = *Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().x;
-	backgroundSize3 = backgroundTexture3.getSize();
+	backgroundSize4 = backgroundTexture4.getSize();
 	windowSizeLevel1 = Engine::GetWindow().getSize();
-	float scaleX2 = (float)windowSizeLevel1.x / backgroundSize3.x;
-	float scaleY2 = (float)windowSizeLevel1.y / backgroundSize3.y;
-	backgroundSprite3.setTexture(backgroundTexture3);
-	backgroundSprite3.setPosition(0, 0);
-	backgroundSprite3.setScale(scaleX2, scaleY2);
-	backgroundSprite3.setOrigin(0, 0);
+	float scaleX2 = (float)windowSizeLevel1.x / backgroundSize4.x;
+	float scaleY2 = (float)windowSizeLevel1.y / backgroundSize4.y;
+	backgroundSprite4.setTexture(backgroundTexture4);
+	backgroundSprite4.setPosition(0, 0);
+	backgroundSprite4.setScale(scaleX2, scaleY2);
+	backgroundSprite4.setOrigin(0, 0);
 }*/
 
 void Level2Scene::Load()
@@ -98,11 +102,11 @@ void Level2Scene::Render()
 	Scene::Render();
 	//Engine::GetWindow().draw(*sprit);
 	//auto _sprites = ls::getSprites();
-	/*Renderer::queue(&backgroundSprite3);
+	Renderer::queue(&backgroundSprite4);
 	for (auto& s : ls::_sprites)
 	{
 		Renderer::queue(s.get());
-	}*/
+	}
 	//ls::render(Engine::GetWindow());
-	//Renderer::queue(&houseSprite);
+
 }

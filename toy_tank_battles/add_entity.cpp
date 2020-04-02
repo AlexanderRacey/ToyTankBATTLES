@@ -13,7 +13,9 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	auto player = scene->makeEntity();
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	player->addTag("player");
-	Texture s = *Resources::load<Texture>("playerTank.png");
+	//Texture s = *Resources::load<Texture>("playerTank.png");
+	player->addComponent<SpriteComponent>();
+	player->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("playerTank.png"));
 
 	return player;
 }

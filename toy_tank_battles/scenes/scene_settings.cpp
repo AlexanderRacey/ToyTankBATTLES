@@ -14,7 +14,7 @@
 using namespace std;
 using namespace sf;
 
-static shared_ptr<Entity> player;
+//static shared_ptr<Entity> player;
 
 // Resources
 Sprite titleSprite1;
