@@ -12,6 +12,7 @@
 #include "../game.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_pickup.h"
+#include "../components/cmp_breakable.h"
 
 using namespace std;
 using namespace sf;
@@ -42,8 +43,8 @@ void Level1Scene::SetBackground()
 
 void Level1Scene::SetPickups() {
 	//make array of Pickup components based on number represented on map
-	picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("chick.png"), Resources::load<Texture>("giraffe.png"),
-		Resources::load<Texture>("hippo.png"), Resources::load<Texture>("penguin.png")
+	picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("giraffe.png"),
+		Resources::load<Texture>("hippo.png"), Resources::load<Texture>("penguin.png"), Resources::load<Texture>("parrot.png")
 	};
 
 	auto pickups = ls::findTiles(ls::PICKUP);
@@ -52,6 +53,7 @@ void Level1Scene::SetPickups() {
 		auto pos = ls::getTilePosition(p);
 		auto e = makeEntity();
 		e->setPosition(pos);
+		
 		e->addComponent<SpriteComponent>();
 		e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(picks[type]);
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
@@ -60,6 +62,7 @@ void Level1Scene::SetPickups() {
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize());
 		//Add pickup component
 		e->addComponent<PickupComponent>(type);
+		//e->addComponent<BreakableComponent>();
 	}
 
 }
@@ -87,7 +90,7 @@ void Level1Scene::Load()
 void Level1Scene::UnLoad()
 {
 	cout << "Scene 1 Unload" << endl;
-	picks.clear();
+//	picks.clear();
 	ls::unload();
 	Scene::UnLoad();
 }

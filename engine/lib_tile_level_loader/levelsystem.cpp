@@ -248,7 +248,7 @@ void LevelSystem::setOffset(const Vector2f& _offset)
 
 void LevelSystem::unload() {
     cout << "LevelSystem unloading\n";
-    _textures.clear();
+   // _textures.clear();
     _sprites.clear();
     _tiles.reset();
     _width = 0;
