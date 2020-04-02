@@ -12,6 +12,7 @@ int gameHeight = 720;
 MenuScene menu;
 SettingsScene settings;
 Level1Scene level1;
+Level2Scene level2;
 HighScoresScene highscores;
 
 // Start game
