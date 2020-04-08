@@ -24,19 +24,15 @@ class LevelSystem
         {
             EMPTY = ' ',
             START = 's',
-            //END = 'e',
-            WALL = 'w',
-            HEALTH = 'h',
-            BROKEN = 'b'
-
-            /*HOUSE = 'h',
+            END = 'e',
+            HOUSE = 'w',
             HOUSE_R = 'r',
             ENEMY = 'n',
             WAYPOINT = '+',
             PICKUP = 'p',
             BROKEN = 'b',
             BROKEN_R = 'q',
-            WALL = 'w'*/
+            WALL = 'l'
         };
 
         static Tile getTile(Vector2ul);
@@ -46,15 +42,14 @@ class LevelSystem
         static size_t getHeight();
         static Vector2f getTilePosition(Vector2ul);
         static vector<Vector2ul> findTiles(Tile);
-        static shared_ptr<Texture> getTexture(LevelSystem::Tile t);
+        static shared_ptr<sf::Texture> getTexture(LevelSystem::Tile t);
         static void loadTextures();
-        static void setTexture(Tile t, shared_ptr<Texture> tex);
+        static void setTexture(Tile t, shared_ptr<sf::Texture> tex);
         static void setOffset(const Vector2f& _offset);
         static const Vector2f& getOffset();
         static float getTileSize();
-        static vector<unique_ptr<Sprite>> _sprites;
-        static vector<unique_ptr<Sprite>> getSprites();
-
+        static vector<unique_ptr<sf::Sprite>> _sprites;
+      // static vector<unique_ptr<sf::Sprite>> getSprites();
     protected:
         static unique_ptr<Tile[]> _tiles;
         static size_t _width;
@@ -63,10 +58,10 @@ class LevelSystem
 
         static void buildSprites();
         static float _tileSize; // for rendering
-        static map<Tile, Color> _colours;
-        static map<Tile, shared_ptr<sf::Texture>> _textures;
-
+        static std::map<Tile, sf::Color> _colours;
+        static std::map<Tile, shared_ptr<sf::Texture>> _textures;
     private:
         LevelSystem() = delete;
+
         ~LevelSystem() = delete;
 };
