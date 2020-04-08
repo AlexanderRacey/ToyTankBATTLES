@@ -1,5 +1,10 @@
-// LevelSyatem Class file
+#pragma once
 #include "levelsystem.h"
+#include <SFML/Graphics.hpp>
+#include <maths.h>
+#include <memory>
+#include <string>
+#include <vector>
 #include <fstream>
 #include <iostream>
 #include "../src/system_resources.h"
@@ -20,8 +25,10 @@ shared_ptr<Texture> wall;
 
 vector<shared_ptr<Texture>> houses;
 
+
 map<LevelSystem::Tile, shared_ptr<Texture>> LevelSystem::_textures
 {
+    { WALL, Resources::load<Texture>("BlueHouse1.png") }
 };
 
 vector<unique_ptr<Sprite>> LevelSystem::_sprites;
@@ -59,15 +66,14 @@ void LevelSystem::loadTextures()
     house3 = Resources::load<Texture>("OrangeHouse.png");
     house4 = Resources::load<Texture>("PurpleHouse.png");
     house5 = Resources::load<Texture>("YellowHouse.png");
-   // broken = Resources::load<Texture>("BrokenHouse.png");
+    /*broken = Resources::load<Texture>("BrokenHouse.png");
     //broken2 = Resources::load<Texture>("brokenHouse2.png");
     wall = Resources::load<Texture>("GreyWall.png");
     houses = { house1, house2, house3, house4, house5 };
-    _textures = { {EMPTY, sand }, {HOUSE, house1}, {WALL, wall} };
-
+    _textures = { {EMPTY, sand }, {HOUSE, house1}, {WALL, wall} };*/
 }
 
-void LevelSystem::setTexture(LevelSystem::Tile t, shared_ptr<sf::Texture> tex)
+void LevelSystem::setTexture(LevelSystem::Tile t, shared_ptr<Texture> tex)
 {
     _textures[t] = tex;
 }
@@ -87,7 +93,6 @@ void LevelSystem::loadLevelFile(const string& path, float tileSize)
     size_t w = 0, h = 0;
     string buffer;
     ls::loadTextures();
-    //sand = Resources::load<Texture>("sand.png");
 
     // Load in file to buffer
     ifstream f(path);
@@ -142,17 +147,18 @@ void LevelSystem::loadLevelFile(const string& path, float tileSize)
     _height = h;
     copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
     cout << "Level " << path << " Loaded. " << w << "x" << h << endl;
-
+    buildSprites();
 }
 
 void LevelSystem::buildSprites()
 {
     _sprites.clear();
+
     for (size_t y = 0; y < LevelSystem::getHeight(); ++y) 
     {
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
         {
-            auto s = make_unique<sf::Sprite>();
+            auto s = make_unique<Sprite>();
             s->setTexture(*ls::getTexture(getTile({ x, y })));
             if (getTile({ x, y }) == HOUSE_R) {
                 if (x == 0) {
@@ -203,7 +209,7 @@ sf::Vector2f LevelSystem::getTilePosition(Vector2ul p)
 
 vector<Vector2ul> LevelSystem::findTiles(LevelSystem::Tile type) 
 {
-    auto v = vector<sf::Vector2ul>();
+    auto v = vector<Vector2ul>();
     for (size_t i = 0; i < _width * _height; ++i) 
     {
         if (_tiles[i] == type) 
@@ -225,7 +231,7 @@ LevelSystem::Tile LevelSystem::getTileAt(Vector2f v)
     return getTile(Vector2ul((v - _offset) / (_tileSize)));
 }
 
-bool LevelSystem::isOnGrid(sf::Vector2f v) 
+bool LevelSystem::isOnGrid(Vector2f v) 
 {
     auto a = v - _offset;
     if (a.x < 0 || a.y < 0)
@@ -259,4 +265,3 @@ void LevelSystem::unload() {
 const Vector2f& LevelSystem::getOffset() { return _offset; }
 
 float LevelSystem::getTileSize() { return _tileSize; }
-

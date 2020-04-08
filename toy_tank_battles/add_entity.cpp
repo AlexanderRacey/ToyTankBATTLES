@@ -1,8 +1,9 @@
-#include <SFML/Graphics/Transformable.hpp>
-#include <levelsystem.h>
 #include "add_entity.h"
+#include "animation.h"
 #include "system_resources.h"
 #include "components/cmp_sprite.h"
+#include <SFML/Graphics/Transformable.hpp>
+#include <levelsystem.h>
 
 using namespace sf;
 using namespace std;
@@ -13,9 +14,12 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	auto player = scene->makeEntity();
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	player->addTag("player");
-	//Texture s = *Resources::load<Texture>("playerTank.png");
-	player->addComponent<SpriteComponent>();
-	player->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("playerTank.png"));
+
+	auto animation = player->addComponent<AnimationComponent>(Vector2f(83.0f, 78.0f));
+	Texture texture = *Resources::load<Texture>("playerSpritesheet.png");
+	animation->setSpritesheet(texture);
+	animation->setFrameCount(12);
+	animation->setFrameTime(0.06f);
 
 	return player;
 }
@@ -38,4 +42,33 @@ shared_ptr<Entity> AddEntity::makeFakePlayer2(Scene* scene, const Vector2f& pos,
 	fakePlayer2->addTag("fakePlayer2");
 
 	return fakePlayer2;
+}
+
+// Create game walls
+void AddEntity::makeWalls(Scene* scene) 
+{
+	auto walls = ls::findTiles(ls::WALL);
+	for (auto w : walls) 
+	{
+		auto pos = ls::getTilePosition(w);
+		pos += Vector2f(10.f, 10.f);
+		auto e = scene->makeEntity();
+		e->setPosition(pos);
+	}
+}
+
+// Make health pickup
+shared_ptr<Entity> AddEntity::makeHealthPickup(Scene* scene, const Vector2f& pos)
+{
+	auto makeHealthPickup = scene->makeEntity();
+	makeHealthPickup->setPosition(pos);
+	makeHealthPickup->addTag("health");
+
+	auto animation = makeHealthPickup->addComponent<AnimationComponent>(Vector2f(30.0f, 30.0f));
+	Texture texture = *Resources::load<Texture>("bear.png");
+	animation->setSpritesheet(texture);
+	animation->setFrameCount(1);
+	animation->setFrameTime(0.06f);
+	
+	return makeHealthPickup;
 }

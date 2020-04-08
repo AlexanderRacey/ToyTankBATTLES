@@ -25,7 +25,7 @@ Texture backgroundLoadTexture;
 Vector2u backgroundLoadSize;
 Vector2u windowSizeLoading;
 
-// Display background
+// Display background for loading screens
 void SetBackground()
 {
     backgroundLoadTexture = *Resources::load<Texture>("background.png");
@@ -42,19 +42,22 @@ void SetBackground()
 }
 
 void Loading_update(float dt, const Scene* const scn) {
-    //  cout << "Eng: Loading Screen\n";
-    if (scn->isLoaded()) {
+    cout << "Eng: Loading Screen\n";
+    if (scn->isLoaded()) 
+    {
         cout << "Eng: Exiting Loading Screen\n";
         loading = false;
     }
-    else {
+    else 
+    {
         loadingspinner += 220.0f * dt;
         loadingTime += dt;
     }
 }
+
 void Loading_render() 
 {
-    // cout << "Eng: Loading Screen Render\n";
+    cout << "Eng: Loading Screen Render\n";
     static CircleShape octagon(80, 8);
     octagon.setOrigin(80, 80);
     octagon.setRotation(loadingspinner);
@@ -155,16 +158,19 @@ vector<std::shared_ptr<Entity>> Engine::findEntity(string tag) {
 
 void Engine::setVsync(bool b) { _window->setVerticalSyncEnabled(b); }
 
-void Engine::ChangeScene(Scene* s) {
+void Engine::ChangeScene(Scene* s)
+{
     cout << "Eng: changing scene: " << s << endl;
     auto old = _activeScene;
     _activeScene = s;
 
-    if (old != nullptr) {
+    if (old != nullptr) 
+    {
         old->UnLoad(); // todo: Unload Async
     }
 
-    if (!s->isLoaded()) {
+    if (!s->isLoaded()) 
+    {
         cout << "Eng: Entering Loading Screen\n";
         loadingTime = 0;
         _activeScene->LoadAsync();
@@ -193,21 +199,22 @@ bool Scene::isLoaded() const {
 }
 void Scene::setLoaded(bool b) {
     {
-        std::lock_guard<std::mutex> lck(_loaded_mtx);
+        lock_guard<mutex> lck(_loaded_mtx);
         _loaded = b;
     }
 }
 
-void Scene::UnLoad() {
+void Scene::UnLoad() 
+{
     ents.list.clear();
     setLoaded(false);
 }
 
-void Scene::LoadAsync() { _loaded_future = std::async(&Scene::Load, this); }
+void Scene::LoadAsync() { _loaded_future = async(&Scene::Load, this); }
 
-sf::Vector2u Engine::getWindowSize() { return _window->getSize(); }
+Vector2u Engine::getWindowSize() { return _window->getSize(); }
 
-sf::RenderWindow& Engine::GetWindow() { return *_window; }
+RenderWindow& Engine::GetWindow() { return *_window; }
 
 namespace timing {
     // Return time since Epoc

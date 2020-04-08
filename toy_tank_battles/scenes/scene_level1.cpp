@@ -9,7 +9,7 @@
 #include "../components/cmp_pickup.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
-//#include "maths.h"
+#include "maths.h"
 #include "scene_level1.h"
 #include "system_renderer.h"
 #include "../add_entity.h"
@@ -43,7 +43,7 @@ void Level1Scene::SetBackground()
 	backgroundSprite3.setOrigin(0, 0);
 }
 
-/void Level1Scene::SetPickups() 
+/*void Level1Scene::SetPickups() 
 {
 	//make array of Pickup components based on number represented on map
 	vector<shared_ptr<Texture>> picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("giraffe.png"),
@@ -68,8 +68,9 @@ void Level1Scene::SetBackground()
 	}
 }
 
-//ADDs breakable houses to tiles
-void Level1Scene::SetBreakables() {
+/* ADDs breakable houses to tiles
+void Level1Scene::SetBreakables() 
+{
 
 	auto brokenHouses = ls::findTiles(ls::BROKEN);
 	auto brokenHouses2 = ls::findTiles(ls::BROKEN_R);
@@ -96,16 +97,13 @@ void Level1Scene::SetBreakables() {
 		if (ls::getTile(b) == ls::BROKEN_R) {
 			e->setRotation(90.f);
 		}
-
 	}
-	
-}
+}*/
 
 void Level1Scene::Load()
 {
+	// Loading level
 	cout << " Scene 1 Load" << endl;
-	ls::loadLevelFile("res/Level1test.txt", 90.0f);
-	SetBackground();
 
 	// Get window size
 	float x2 = Engine::getWindowSize().x;
@@ -113,20 +111,32 @@ void Level1Scene::Load()
 	Engine::GetWindow().setSize(Vector2u(x2, y2));
 	Engine::GetWindow().display();
 
+	float temp = y2 / 44;
+	ls::loadLevelFile("res/level_1.txt", temp);
+	auto ho = Engine::getWindowSize().y - (ls::getHeight() * temp);
+	ls::setOffset(Vector2f(x2 / 4.72, ho));
+
+	SetBackground();
+
 	//Set level to appear at middle of window
 	//this is not the middle anymore will need to figure somethings out
-	auto ho = (Engine::getWindowSize().y/2) - ((ls::getHeight() * ls::getTileSize()) /2);
-	auto wid = (Engine::getWindowSize().x / 2) - ((ls::getWidth() * ls::getTileSize()) / 2);
-	ls::setOffset(Vector2f(wid, ho));
+	//auto ho = (Engine::getWindowSize().y/2) - ((ls::getHeight() * ls::getTileSize()) /2);
+	//auto wid = (Engine::getWindowSize().x / 2) - ((ls::getWidth() * ls::getTileSize()) / 2);
+	//ls::setOffset(Vector2f(wid, ho));
 
 	// Create player object
 	player = AddEntity::makePlayer(this, Vector2f(x2 / 2, y2 / 2));
 
+	AddEntity::makeWalls(this);
+
+	// Create pickups
+	auto healthPickups = ls::findTiles(ls::)
+
 	//Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
 	cout << " Scene 1 Load Done" << endl;
-	SetPickups();
-	SetBreakables();
+	//SetPickups();
+	//SetBreakables();
 	setLoaded(true);
 }
 
@@ -138,7 +148,7 @@ void Level1Scene::UnLoad()
 
 	// Reset player and remove pickups
 	player.reset();
-	picks.clear();
+	//picks.clear();
 
 	// Finish Unload
 	ls::unload();
@@ -171,9 +181,10 @@ void Level1Scene::Update(const double& dt)
 		Engine::ChangeScene(&menu);
 	}
 	cout << "Scene 1 Unload" << endl;
-   // picks.clear();
+    //picks.clear();
 	ls::unload();
 	Scene::UnLoad();
+
 	// Update scene
 	Scene::Update(dt);
 }
