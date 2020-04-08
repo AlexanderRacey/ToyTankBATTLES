@@ -21,10 +21,10 @@ Sprite titleSprite1;
 Texture titleTexture1;
 Vector2f targetCoords1;
 Vector2u titleTextureSize1;
-
+/*
 Sprite backgroundSprite2;
 Texture backgroundTexture2;
-Vector2u backgroundSize2;
+Vector2u backgroundSize2;*/
 Vector2u windowSizeSettings;
 
 // Display settings title
@@ -46,17 +46,18 @@ void SettingsScene::SetTitle()
 // Display background
 void SettingsScene::SetBackground()
 {
-	backgroundTexture2 = *Resources::load<Texture>("background.png");
+	Background = Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().x;
-	backgroundSize2 = backgroundTexture2.getSize();
-	windowSizeSettings = Engine::GetWindow().getSize();
-	float scaleX2 = (float)windowSizeSettings.x / backgroundSize2.x;
-	float scaleY2 = (float)windowSizeSettings.y / backgroundSize2.y;
-	backgroundSprite2.setTexture(backgroundTexture2);
-	backgroundSprite2.setPosition(0, 0);
-	backgroundSprite2.setScale(scaleX2, scaleY2);
-	backgroundSprite2.setOrigin(0, 0);
+	Vector2u BackgroundSize = Background->getSize();
+	Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
+	float scaleX2 = (float)windowSizeLevel1.x / BackgroundSize.x;
+	float scaleY2 = (float)windowSizeLevel1.y / BackgroundSize.y;
+	BackgroundSprite = make_unique<sf::Sprite>();
+	BackgroundSprite->setTexture(*Background);
+	BackgroundSprite->setPosition(0, 0);
+	BackgroundSprite->setScale(scaleX2, scaleY2);
+	BackgroundSprite->setOrigin(0, 0);
 }
 
 // Load function
@@ -115,6 +116,8 @@ void SettingsScene::UnLoad()
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().y;
 	Engine::GetWindow().setView(View(FloatRect(0, 0, x2, y2)));
+	BackgroundSprite.reset();
+	Background.reset();
 	Scene::UnLoad();
 }
 
@@ -185,7 +188,7 @@ void SettingsScene::Render()
 {
 	Scene::Render();
 
-	Renderer::queue(&backgroundSprite2);
+	Renderer::queue(BackgroundSprite.get());
 	Renderer::queue(&titleSprite1);
 
 	// Display settings menu

@@ -9,5 +9,6 @@ class HighScoresScene : public Scene
       void UnLoad() override;
       void Update(const double& dt) override;
       void Render() override;
+      void SetBackground();
 };
 #pragma once
