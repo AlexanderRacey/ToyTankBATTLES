@@ -38,16 +38,6 @@ shared_ptr<Texture> LevelSystem::getTexture(LevelSystem::Tile t)
     if (t == HOUSE || t == HOUSE_R) {
         return houses[rand() % 5];
     }
-    /*
-    else if (t==BROKEN_R || t==BROKEN) {
-        int num = rand() % 3;
-        if (num == 0) {
-            return broken2;
-        }
-        else {
-            return broken;
-        }
-    }*/
     else {
         auto it = _textures.find(t);
         if (it == _textures.end())
@@ -174,7 +164,6 @@ void LevelSystem::buildSprites()
             }
             s->setPosition(getTilePosition({ x,y }));
             s->setTextureRect(IntRect(0, 0, _tileSize, _tileSize));
-            //s->setScale(.7f, .7f);
             s->setOrigin(_tileSize/2, _tileSize/2);
             _sprites.push_back(move(s));
         }

@@ -23,9 +23,6 @@ Vector2f targetCoords;
 Vector2u titleTextureSize;
 Vector2u windowSizeMenu;
 
-Sprite backgroundSprite;
-Texture backgroundTexture;
-Vector2u backgroundSize;
 
 Clock clock1;
 
@@ -50,18 +47,19 @@ void MenuScene::SetTitle()
 // Display background
 void MenuScene::SetBackground()
 {
-    backgroundTexture = *Resources::load<Texture>("background.png");
+    Background = Resources::load<Texture>("background.png");
     float x2 = Engine::GetWindow().getSize().x;
     float y2 = Engine::GetWindow().getSize().x;
-    backgroundSize = backgroundTexture.getSize();
-    windowSizeMenu = Engine::GetWindow().getSize();
-    float scaleX2 = (float)windowSizeMenu.x / backgroundSize.x;
-    float scaleY2 = (float)windowSizeMenu.y / backgroundSize.y;
-    backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setPosition(0, 0);
-    backgroundSprite.setScale(scaleX2, scaleY2);
-    backgroundSprite.setOrigin(0, 0);
-    setLoaded(true);
+    Vector2u BackgroundSize = Background->getSize();
+    Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
+    float scaleX2 = (float)windowSizeLevel1.x / BackgroundSize.x;
+    float scaleY2 = (float)windowSizeLevel1.y / BackgroundSize.y;
+    BackgroundSprite = make_unique<sf::Sprite>();
+    BackgroundSprite->setTexture(*Background);
+    BackgroundSprite->setPosition(0, 0);
+    BackgroundSprite->setScale(scaleX2, scaleY2);
+    BackgroundSprite->setOrigin(0, 0);
+    
 }
 
 void MenuScene::Load()
@@ -174,14 +172,14 @@ void MenuScene::Render()
     {
         titleSprite.setColor(Color(255, 255, 255, fadeCounter));
         fadeCounter++;
-        Renderer::queue(&backgroundSprite);
+        Renderer::queue(BackgroundSprite.get());
         Renderer::queue(&titleSprite);
     }
     else 
     {
-        backgroundSprite.setColor(Color(255, 255, 255, 255));
+        BackgroundSprite->setColor(Color(255, 255, 255, 255));
         titleSprite.setColor(Color(255, 255, 255, 255));
-        Renderer::queue(&backgroundSprite);
+        Renderer::queue(BackgroundSprite.get());
         Renderer::queue(&titleSprite);
 
         for (int i = 0; i < MAX_MENU_ITEMS; i++)
@@ -197,6 +195,8 @@ void MenuScene::UnLoad()
     float x2 = Engine::GetWindow().getSize().x;
     float y2 = Engine::GetWindow().getSize().y;
     Engine::GetWindow().setView(View(FloatRect(0, 0, x2, y2)));
+   // BackgroundSprite.reset();
+    //Background.reset();
     Scene::UnLoad();
 }
 

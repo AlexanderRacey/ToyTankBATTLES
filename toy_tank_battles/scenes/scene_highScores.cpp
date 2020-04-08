@@ -5,6 +5,7 @@
 #include "engine.h"
 #include "scene_highScores.h"
 #include "../game.h"
+#include <system_resources.h>
 
 using namespace std;
 using namespace sf;
@@ -13,13 +14,30 @@ using namespace sf;
 
 void HighScoresScene::Load()
 {
+	SetBackground();
+}
 
+void HighScoresScene::SetBackground() {
+	Background = Resources::load<Texture>("background.png");
+	float x2 = Engine::GetWindow().getSize().x;
+	float y2 = Engine::GetWindow().getSize().x;
+	Vector2u BackgroundSize = Background->getSize();
+	Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
+	float scaleX2 = (float)windowSizeLevel1.x / BackgroundSize.x;
+	float scaleY2 = (float)windowSizeLevel1.y / BackgroundSize.y;
+	BackgroundSprite = make_unique<sf::Sprite>();
+	BackgroundSprite->setTexture(*Background);
+	BackgroundSprite->setPosition(0, 0);
+	BackgroundSprite->setScale(scaleX2, scaleY2);
+	BackgroundSprite->setOrigin(0, 0);
 }
 
 void HighScoresScene::UnLoad()
 {
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().y;
+	BackgroundSprite.reset();
+	Background.reset();
 	Engine::GetWindow().setView(View(FloatRect(0, 0, x2, y2)));
 	Scene::UnLoad();
 }

@@ -18,32 +18,27 @@
 using namespace std;
 using namespace sf;
 
-Texture blueTank1;
-Sprite playerTank1;
-
-Sprite backgroundSprite3;
-Texture backgroundTexture3;
-Vector2u backgroundSize3;
-
-
 
 // Display background
 void Level1Scene::SetBackground()
 {
-	backgroundTexture3 = *Resources::load<Texture>("background.png");
+
+	Background = Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().x;
-	backgroundSize3 = backgroundTexture3.getSize();
+	Vector2u BackgroundSize = Background->getSize();
 	Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
-	float scaleX2 = (float)windowSizeLevel1.x / backgroundSize3.x;
-	float scaleY2 = (float)windowSizeLevel1.y / backgroundSize3.y;
-	backgroundSprite3.setTexture(backgroundTexture3);
-	backgroundSprite3.setPosition(0, 0);
-	backgroundSprite3.setScale(scaleX2, scaleY2);
-	backgroundSprite3.setOrigin(0, 0);
+	float scaleX2 = (float)windowSizeLevel1.x / BackgroundSize.x;
+	float scaleY2 = (float)windowSizeLevel1.y / BackgroundSize.y;
+	BackgroundSprite = make_unique<sf::Sprite>();
+	BackgroundSprite->setTexture(*Background);
+	BackgroundSprite->setPosition(0, 0);
+	BackgroundSprite->setScale(scaleX2, scaleY2);
+	BackgroundSprite->setOrigin(0, 0);
 }
 
-/*void Level1Scene::SetPickups() 
+
+void Level1Scene::SetPickups() 
 {
 	//make array of Pickup components based on number represented on map
 	vector<shared_ptr<Texture>> picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("giraffe.png"),
@@ -53,13 +48,17 @@ void Level1Scene::SetBackground()
 	auto pickups = ls::findTiles(ls::PICKUP);
 	for (auto p : pickups) {
 		int type = rand() % 5;
-		auto pos = ls::getTilePosition(p);
+		Vector2f pos = ls::getTilePosition(p);
 		auto e = makeEntity();
 		e->setPosition(pos);
 		
 		e->addComponent<SpriteComponent>();
 		e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(picks[type]);
-		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
+		//e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
+		Vector2u TextureSize = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getTexture()->getSize();
+		float scaleX = (ls::getTileSize() / TextureSize.x) / 2;
+		float scaleY = (ls::getTileSize()/ TextureSize.y) /2 ;
+		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(scaleX, scaleY);
 		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getGlobalBounds();
 		// not centered... not sure how to fix that
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize());
@@ -127,16 +126,11 @@ void Level1Scene::Load()
 	// Create player object
 	player = AddEntity::makePlayer(this, Vector2f(x2 / 2, y2 / 2));
 
-	AddEntity::makeWalls(this);
-
-	// Create pickups
-	auto healthPickups = ls::findTiles(ls::)
-
+	SetPickups();
+	SetBreakables();
 	//Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
 	cout << " Scene 1 Load Done" << endl;
-	//SetPickups();
-	//SetBreakables();
 	setLoaded(true);
 }
 
@@ -149,6 +143,8 @@ void Level1Scene::UnLoad()
 	// Reset player and remove pickups
 	player.reset();
 	//picks.clear();
+	Background.reset();
+	BackgroundSprite.reset();
 
 	// Finish Unload
 	ls::unload();
@@ -180,6 +176,7 @@ void Level1Scene::Update(const double& dt)
 	{
 		Engine::ChangeScene(&menu);
 	}
+
 	cout << "Scene 1 Unload" << endl;
     //picks.clear();
 	ls::unload();
@@ -191,13 +188,11 @@ void Level1Scene::Update(const double& dt)
 
 void Level1Scene::Render()
 {
-	ls::render(Engine::GetWindow());
-	Scene::Render();
-
-	// Render game items
-	Renderer::queue(&backgroundSprite3);
+	Renderer::queue(BackgroundSprite.get());
 	for (auto& s : ls::_sprites)
 	{
 		Renderer::queue(s.get());
 	}
+	Scene::Render();
+
 }

@@ -19,7 +19,7 @@ using namespace sf;
 /*Texture* house;
 Sprite houseSprite;*/
 
-
+/*
 Texture blueTank2;
 Sprite playerTank2;
 
@@ -29,25 +29,26 @@ Vector2u backgroundSize4;
 Vector2u windowSizeLevel1;
 
 vector<shared_ptr<Texture>> picks;
-
+*/
 //shared_ptr<Entity> player;
 
 
-/* Display background
+//Display background
 void Level2Scene::SetBackground()
 {
-	backgroundTexture4 = *Resources::load<Texture>("background.png");
+	Background = Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().x;
-	backgroundSize4 = backgroundTexture4.getSize();
-	windowSizeLevel1 = Engine::GetWindow().getSize();
-	float scaleX2 = (float)windowSizeLevel1.x / backgroundSize4.x;
-	float scaleY2 = (float)windowSizeLevel1.y / backgroundSize4.y;
-	backgroundSprite4.setTexture(backgroundTexture4);
-	backgroundSprite4.setPosition(0, 0);
-	backgroundSprite4.setScale(scaleX2, scaleY2);
-	backgroundSprite4.setOrigin(0, 0);
-}*/
+	Vector2u BackgroundSize = Background->getSize();
+	Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
+	float scaleX2 = (float)windowSizeLevel1.x / BackgroundSize.x;
+	float scaleY2 = (float)windowSizeLevel1.y / BackgroundSize.y;
+	BackgroundSprite = make_unique<sf::Sprite>();
+	BackgroundSprite->setTexture(*Background);
+	BackgroundSprite->setPosition(0, 0);
+	BackgroundSprite->setScale(scaleX2, scaleY2);
+	BackgroundSprite->setOrigin(0, 0);
+}
 
 void Level2Scene::Load()
 {
@@ -85,7 +86,8 @@ void Level2Scene::UnLoad()
 	{
 		Engine::ChangeScene((Scene*)&menu);
 	}
-
+	BackgroundSprite.reset();
+	Background.reset();
 	cout << "Scene 2 Unload" << endl;
 	ls::unload();
 	Scene::UnLoad();
@@ -98,15 +100,11 @@ void Level2Scene::Update(const double& dt)
 
 void Level2Scene::Render()
 {
-	//auto & sprit = ls::_sprites.at(0);
-	Scene::Render();
-	//Engine::GetWindow().draw(*sprit);
-	//auto _sprites = ls::getSprites();
-	Renderer::queue(&backgroundSprite4);
+	
+	Renderer::queue(BackgroundSprite.get());
 	for (auto& s : ls::_sprites)
 	{
 		Renderer::queue(s.get());
 	}
-	//ls::render(Engine::GetWindow());
-
+	Scene::Render();
 }
