@@ -94,9 +94,7 @@ void Level1Scene::SetBreakables() {
 		if (ls::getTile(b) == ls::BROKEN_R) {
 			e->setRotation(90.f);
 		}
-
 	}
-	
 }
 
 void Level1Scene::Load()
@@ -182,5 +180,4 @@ void Level1Scene::Render()
 		Renderer::queue(s.get());
 	}
 	Scene::Render();
-
 }

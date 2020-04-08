@@ -1,6 +1,7 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <levelsystem.h>
 #include "add_entity.h"
+#include "animation.h"
 #include "system_resources.h"
 #include "components/cmp_sprite.h"
 
@@ -13,9 +14,12 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	auto player = scene->makeEntity();
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	player->addTag("player");
-	//Texture s = *Resources::load<Texture>("playerTank.png");
-	player->addComponent<SpriteComponent>();
-	player->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("playerTank.png"));
+
+	auto animation = player->addComponent<AnimationComponent>(Vector2f(83.0f, 78.0f));
+	Texture s = *Resources::load<Texture>("playerSpritesheet.png");
+	animation->setSpritesheet(s);
+	animation->setFrameCount(8);
+	animation->setFrameTime(0.06);
 
 	return player;
 }
