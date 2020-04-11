@@ -55,12 +55,12 @@ void Level1Scene::SetPickups()
 		e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(picks[type]);
 		//e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
 		Vector2u TextureSize = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getTexture()->getSize();
-		float scaleX = (ls::getTileSize() / TextureSize.x) / 2;
-		float scaleY = (ls::getTileSize()/ TextureSize.y) /2 ;
+		float scaleX = (ls::getTileSize() / TextureSize.x) / 2.5;
+		float scaleY = (ls::getTileSize()/ TextureSize.y) /2.5 ;
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(scaleX, scaleY);
-		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getGlobalBounds();
+		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getLocalBounds();
 		// not centered... not sure how to fix that
-		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize());
+		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize().x /2, bounds.getSize().y /2 );
 		// Add pickup component
 		e->addComponent<PickupComponent>(type);
 	}
@@ -117,6 +117,14 @@ void Level1Scene::Load()
 
 	// Create player object
 	player = AddEntity::makePlayer(this, Vector2f(x2 / 2, y2 / 2));
+
+	
+	auto enp = ls::findTiles(ls::ENEMY);
+	for (auto e : enp) {
+		auto pos = ls::getTilePosition(e);
+		auto enemy = AddEntity::makeEnemy(this, pos);
+	}
+	
 
 	SetPickups();
 	SetBreakables();
