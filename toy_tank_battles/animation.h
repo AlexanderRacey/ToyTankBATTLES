@@ -34,5 +34,6 @@ class AnimationComponent : public Component
 		void setFrameCount(int count);
 		void setSize(const Vector2f& size);
 		void setScale(const Vector2f& size);
+		void setRotation(float rot);
 		AnimationComponent() = delete;
 };

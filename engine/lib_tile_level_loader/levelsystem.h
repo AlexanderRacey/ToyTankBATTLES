@@ -49,7 +49,7 @@ class LevelSystem
         static const Vector2f& getOffset();
         static float getTileSize();
         static vector<unique_ptr<sf::Sprite>> _sprites;
-      // static vector<unique_ptr<sf::Sprite>> getSprites();
+        static bool isWall(Tile t);
     protected:
         static unique_ptr<Tile[]> _tiles;
         static size_t _width;
