@@ -3,6 +3,7 @@
 #include "add_entity.h"
 #include "animation.h"
 #include "system_resources.h"
+#include "components/cmp_actor_movevent.h"
 #include "components/cmp_sprite.h"
 
 using namespace sf;
@@ -15,11 +16,13 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	player->addTag("player");
 
-	auto animation = player->addComponent<AnimationComponent>(Vector2f(83.0f, 78.0f));
-	Texture s = *Resources::load<Texture>("playerSpritesheet.png");
-	animation->setSpritesheet(s);
-	animation->setFrameCount(8);
-	animation->setFrameTime(0.06);
+	auto tankAnimation = player->addComponent<AnimationComponent>(Vector2f(58.5f, 55.0f));
+	Texture playerTexture = *Resources::load<Texture>("playerSpritesheet.png");
+	tankAnimation->setSpritesheet(playerTexture);
+	tankAnimation->setFrameCount(8);
+	tankAnimation->setFrameTime(0.06f);
+
+	player->addComponent<PlayerMovementComponent>();
 
 	return player;
 }

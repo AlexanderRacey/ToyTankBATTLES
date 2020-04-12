@@ -59,7 +59,6 @@ void MenuScene::SetBackground()
     BackgroundSprite->setPosition(0, 0);
     BackgroundSprite->setScale(scaleX2, scaleY2);
     BackgroundSprite->setOrigin(0, 0);
-    
 }
 
 void MenuScene::Load()

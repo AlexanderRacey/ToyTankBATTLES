@@ -67,13 +67,15 @@ void Level1Scene::SetPickups()
 }
 
 //ADDs breakable houses to tiles
-void Level1Scene::SetBreakables() {
+void Level1Scene::SetBreakables() 
+{
 
 	auto brokenHouses = ls::findTiles(ls::BROKEN);
 	auto brokenHouses2 = ls::findTiles(ls::BROKEN_R);
 	brokenHouses.insert(end(brokenHouses), begin(brokenHouses2), end(brokenHouses2));
 	int type;
-	for (auto b : brokenHouses) {
+	for (auto b : brokenHouses) 
+	{
 		type = rand() % 3;
 		auto pos = ls::getTilePosition(b);
 		auto e = makeEntity();
@@ -117,9 +119,10 @@ void Level1Scene::Load()
 
 	// Create player object
 	player = AddEntity::makePlayer(this, Vector2f(x2 / 2, y2 / 2));
-
+	
 	SetPickups();
 	SetBreakables();
+
 	//Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
 	cout << " Scene 1 Load Done" << endl;
@@ -134,9 +137,11 @@ void Level1Scene::UnLoad()
 
 	// Reset player and remove pickups
 	player.reset();
+	playerTurret.reset();
 	//picks.clear();
 	Background.reset();
 	BackgroundSprite.reset();
+
 	// Finish Unload
 	ls::unload();
 	cout << "Scene 1 Unload" << endl;

@@ -14,3 +14,4 @@ extern HighScoresScene highscores;
 static shared_ptr<Texture> Background;
 static unique_ptr<Sprite> BackgroundSprite;
 static shared_ptr<Entity> player;
+static shared_ptr<Entity> playerTurret;
