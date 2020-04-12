@@ -249,3 +249,6 @@ const Vector2f& LevelSystem::getOffset() { return _offset; }
 
 float LevelSystem::getTileSize() { return _tileSize; }
 
+bool ls::isWall(Tile t) {
+    return (t == HOUSE || t == HOUSE_R || t == WALL || t == BROKEN || t == BROKEN_R);
+}

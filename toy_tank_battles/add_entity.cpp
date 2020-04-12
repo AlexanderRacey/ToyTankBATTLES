@@ -5,6 +5,7 @@
 #include "system_resources.h"
 #include "components/cmp_actor_movevent.h"
 #include "components/cmp_sprite.h"
+#include "components/ActorMovementComponent.h"
 
 using namespace sf;
 using namespace std;
@@ -25,6 +26,22 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	player->addComponent<PlayerMovementComponent>();
 
 	return player;
+}
+
+shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
+{
+	auto enemy = scene->makeEntity();
+	enemy->setPosition(pos);
+	enemy->addTag("enemy");
+	auto animation = enemy->addComponent<AnimationComponent>(Vector2f(83.0f, 80.0f));
+	shared_ptr<Texture> s = Resources::load<Texture>("enemySpritesheet.png");
+	animation->setSpritesheet(*s);
+	animation->setScale(Vector2f(0.6, 0.6));
+	animation->setFrameCount(8);
+	animation->setFrameTime(0.10);
+	enemy->addComponent<EnemyAiComponent>();
+
+	return enemy;
 }
 
 // Add fake player1 to simulate movement for animations

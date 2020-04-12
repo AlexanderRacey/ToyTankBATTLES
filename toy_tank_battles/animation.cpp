@@ -75,6 +75,16 @@ void AnimationComponent::setSize(const Vector2f& size)
 	sprite.setOrigin(origin);
 }
 
+void AnimationComponent::setScale(const Vector2f& scale)
+{
+	//set_size = size;
+	sprite.setScale(scale);
+}
+
+void AnimationComponent::setRotation(float rot) {
+	sprite.setRotation(rot);
+}
+
 const Vector2f& AnimationComponent::getSize() const 
 {
 	return set_size;
