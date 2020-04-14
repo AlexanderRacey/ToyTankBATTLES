@@ -18,6 +18,7 @@ class ActorMovementComponent : public Component
         float getSpeed() const;
         void setSpeed(float speed);
 
+
         void move(const Vector2f& pos);
         void move(float x, float y);
         void increaseSpeed(float sp);
@@ -30,8 +31,9 @@ class ActorMovementComponent : public Component
 class PlayerMovementComponent : public ActorMovementComponent
 {
     public:
-        PlayerMovementComponent() = delete;
-        explicit PlayerMovementComponent(Entity* p);
+    PlayerMovementComponent() = delete;
+    explicit PlayerMovementComponent(Entity* p);
+	void setRotation(float rot);
 
 	void move(const sf::Vector2f& pos);
 	void update(double dt) override;
