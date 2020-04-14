@@ -209,9 +209,12 @@ LevelSystem::Tile LevelSystem::getTileAt(Vector2f v)
     auto a = v - _offset;
     if (a.x < 0 || a.y < 0) 
     {
-        throw string("Tile out of range ");
+        //throw string("Tile out of range ");
+        return NOTVALID;
     }
+    else {
     return getTile(Vector2ul((v - _offset) / (_tileSize)));
+    }
 }
 
 bool LevelSystem::isOnGrid(sf::Vector2f v) 
@@ -250,5 +253,5 @@ const Vector2f& LevelSystem::getOffset() { return _offset; }
 float LevelSystem::getTileSize() { return _tileSize; }
 
 bool ls::isWall(Tile t) {
-    return (t == HOUSE || t == HOUSE_R || t == WALL || t == BROKEN || t == BROKEN_R);
+    return (t == HOUSE || t == HOUSE_R || t == WALL || t == BROKEN || t == BROKEN_R || t == NOTVALID);
 }

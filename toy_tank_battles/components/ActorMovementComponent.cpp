@@ -1,3 +1,4 @@
+/*
 #include "ActorMovementComponent.h"
 #include "levelsystem.h"
 #include "cmp_sprite.h"
@@ -139,3 +140,4 @@ FloatRect EnemyAiComponent::getBounds() {
         return FloatRect(0, 0, 0, 0);
     }
 }
+*/

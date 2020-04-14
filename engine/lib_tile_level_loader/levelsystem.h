@@ -32,7 +32,8 @@ class LevelSystem
             PICKUP = 'p',
             BROKEN = 'b',
             BROKEN_R = 'q',
-            WALL = 'l'
+            WALL = 'l',
+            NOTVALID = '!'
         };
 
         static Tile getTile(Vector2ul);

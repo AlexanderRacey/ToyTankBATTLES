@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include "ecm.h"
 #include "engine.h"
@@ -28,8 +29,7 @@ private:
 	enum state {MOVING, SHOTING, ROTATING, ROTATED};
 	state _state;
 	float gap;
-	//bool validMove(const sf::Vector2f&);
-	//int ChangeDirection();
+
 public:
 	explicit EnemyAiComponent(Entity* p);
 	EnemyAiComponent() = delete;
@@ -37,6 +37,6 @@ public:
 	void resetState();
 	void setRotation(float rot);
 	void move(const sf::Vector2f& pos);
-	void update(double dt) override;
+	void update(double dt);
 	sf::FloatRect getBounds();
-};
+};*/

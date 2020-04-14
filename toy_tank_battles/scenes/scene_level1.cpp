@@ -119,19 +119,12 @@ void Level1Scene::Load()
 
 	// Create player object
 	player = AddEntity::makePlayer(this, Vector2f(x2 / 2, y2 / 2));
-<<<<<<< HEAD
-	
-=======
 
-	
 	auto enp = ls::findTiles(ls::ENEMY);
 	for (auto e : enp) {
 		auto pos = ls::getTilePosition(e);
 		auto enemy = AddEntity::makeEnemy(this, pos);
 	}
-	
-
->>>>>>> 8f62bcac48eec53d0c3ab7ce475b6f5d6fb1b9f6
 	SetPickups();
 	SetBreakables();
 
