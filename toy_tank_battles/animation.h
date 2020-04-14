@@ -35,5 +35,7 @@ class AnimationComponent : public Component
 		void setSize(const Vector2f& size);
 		void setScale(const Vector2f& size);
 		void setRotation(float rot);
+		void rotate(float rot);
+		float getRotation();
 		AnimationComponent() = delete;
 };

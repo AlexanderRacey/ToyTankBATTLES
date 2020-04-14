@@ -68,7 +68,7 @@ size_t LevelSystem::_width;
 size_t LevelSystem::_height;
 
 float LevelSystem::_tileSize(100.f);
-Vector2f LevelSystem::_offset(0.0f, 30.0f);
+Vector2f LevelSystem::_offset(0.0f, 0.0f);
 // Vector2f LevelSystem::_offset(0,0);
 
 void LevelSystem::loadLevelFile(const string& path, float tileSize)
@@ -78,6 +78,7 @@ void LevelSystem::loadLevelFile(const string& path, float tileSize)
     string buffer;
     ls::loadTextures();
     //sand = Resources::load<Texture>("sand.png");
+    _offset = _offset + Vector2f(_tileSize / 2, _tileSize / 2);
 
     // Load in file to buffer
     ifstream f(path);

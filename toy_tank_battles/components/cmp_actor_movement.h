@@ -27,10 +27,6 @@ public:
 	PlayerMovementComponent() = delete;
 	explicit PlayerMovementComponent(Entity* p);
 
-<<<<<<< HEAD:toy_tank_battles/components/cmp_actor_movement.h
-        void update(double dt) override;
-        void render() override;
-=======
 	void move(const sf::Vector2f& pos);
 	void update(double dt) override;
 	void render() override;
@@ -43,6 +39,7 @@ private:
 	enum state { MOVING, SHOTING, ROTATING, ROTATED };
 	state _state;
 	float gap;
+	bool turnRight = false;
 
 public:
 	explicit EnemyAiComponent(Entity* p);
@@ -50,8 +47,9 @@ public:
 	void ChangeDirection();
 	void resetState();
 	void setRotation(float rot);
+	void rotate(float rot);
+	float getRotation();
 	void move(const sf::Vector2f& pos);
 	void update(double dt);
 	sf::FloatRect getBounds();
->>>>>>> b1f592b4136500439b2fe9cd677b92143cfe80a0:toy_tank_battles/components/cmp_actor_movevent.h
 };

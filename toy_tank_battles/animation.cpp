@@ -85,6 +85,14 @@ void AnimationComponent::setRotation(float rot) {
 	sprite.setRotation(rot);
 }
 
+void AnimationComponent::rotate(float rot) {
+	sprite.rotate(rot);
+}
+
+float AnimationComponent::getRotation() {
+	return sprite.getRotation();
+}
+
 const Vector2f& AnimationComponent::getSize() const 
 {
 	return set_size;

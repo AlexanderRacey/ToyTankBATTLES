@@ -102,7 +102,7 @@ void Level1Scene::SetBreakables()
 void Level1Scene::Load()
 {
 	cout << " Scene 1 Load" << endl;
-	ls::loadLevelFile("res/Level1test.txt", 90.0f);
+	ls::loadLevelFile("res/level1test.txt", 90.0f);
 	SetBackground();
 
 	// Get window size

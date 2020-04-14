@@ -1,13 +1,7 @@
-<<<<<<< HEAD
+
 #include <system_resources.h>
 #include <levelsystem.h>
 #include "cmp_actor_movement.h"
-=======
-
-#include "cmp_actor_movevent.h"
-#include "levelsystem.h"
-#include "cmp_sprite.h"
->>>>>>> b1f592b4136500439b2fe9cd677b92143cfe80a0
 #include "../animation.h"
 
 using namespace sf;
@@ -85,10 +79,7 @@ static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
 EnemyAiComponent::EnemyAiComponent(Entity* p)
     : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(20.f) {
     ChangeDirection();
-<<<<<<< HEAD
-    setSpeed(10.f);
-=======
->>>>>>> b1f592b4136500439b2fe9cd677b92143cfe80a0
+    setSpeed(50.f);
 };
 
 void EnemyAiComponent::move(const sf::Vector2f& pos) {
@@ -114,15 +105,45 @@ void EnemyAiComponent::update(double dt) {
             move(newpos);
         }
         else {
-
+            ChangeDirection();
+      //      setSpeed(150);
             _state = ROTATING;
         }
         break;
     case EnemyAiComponent::SHOTING:
         break;
     case EnemyAiComponent::ROTATING:
-        ChangeDirection();
-        _state = MOVING;
+        //left
+        if (_direction == Vector2f(-1, 0) && getRotation() == 270.f) {
+            setSpeed(50);
+            _state = MOVING;
+        }
+        //rigth
+        else if (_direction == Vector2f(1, 0) && getRotation() == 90.f) {
+            setSpeed(50);
+            _state = MOVING;
+        }
+        //up
+        else if (_direction == Vector2f(0, -1) && (getRotation() == 360.f || getRotation() == 0.f)) {
+            setRotation(0.f);
+            setSpeed(50);
+            _state = MOVING;
+        }
+        //down
+        else if (_direction == Vector2f(0, 1) && getRotation() == 180.f) {
+            setSpeed(50);
+            _state = MOVING;
+        }
+        else {
+                
+                if (turnRight) {
+                    rotate(0.5f);
+                }
+                else {
+                    rotate(-0.5f);
+                }
+              
+        }
         break;
     case EnemyAiComponent::ROTATED:
         break;
@@ -147,22 +168,46 @@ void EnemyAiComponent::ChangeDirection() {
     {
     case 0:
         //move right
-        setRotation(90.f);
+       // setRotation(90.f);
+        if (_direction == Vector2f(0, 1)) {
+            turnRight = false;
+        }
+        else {
+            turnRight = true;
+        }
         _offset = Vector2f(getBounds().getSize().x + gap, 0);
         break;
     case 1:
         //Move down
-        setRotation(0.f);
+       // setRotation(0.f);
+        if (_direction == Vector2f(-1, 0)) {
+            turnRight = false;
+        }
+        else {
+            turnRight = true;
+        }
         _offset = Vector2f(0, getBounds().getSize().y + gap);
         break;
     case 2:
         //Move Up
-        setRotation(0.f);
+        //setRotation(0.f);
+        if (_direction == Vector2f(1, 0)) {
+            turnRight = false;
+        }
+        else {
+            turnRight = true;
+        }
         _offset = Vector2f(0, 0);
         break;
     case 3:
         //Move left
-        setRotation(90.f);
+        //setRotation(90.f);
+        if (_direction == Vector2f(0, -1)) {
+            turnRight = false;
+        }
+        else {
+            turnRight = true;
+        }
         _offset = Vector2f(0, 0);
         break;
     }
@@ -179,6 +224,25 @@ void EnemyAiComponent::setRotation(float rot) {
 
     if (!animation.empty()) {
         animation[0]->setRotation(rot);
+    }
+}
+
+void EnemyAiComponent::rotate(float rot) {
+    auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
+
+    if (!animation.empty()) {
+        animation[0]->rotate(rot);
+    }
+}
+
+float EnemyAiComponent::getRotation() {
+    auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
+
+    if (!animation.empty()) {
+       return animation[0]->getRotation();
+    }
+    else {
+        return 0.f;
     }
 }
 
