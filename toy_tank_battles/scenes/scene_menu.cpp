@@ -23,7 +23,6 @@ Vector2f targetCoords;
 Vector2u titleTextureSize;
 Vector2u windowSizeMenu;
 
-
 Clock clock1;
 
 int fadeCounter = 0;
@@ -82,18 +81,23 @@ void MenuScene::Load()
 
         menu[1].setFont(font);
         menu[1].setFillColor(Color(255, 127, 39, 255));
-        menu[1].setString("High Scores");
+        menu[1].setString("How To Play");
         menu[1].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 80));
 
         menu[2].setFont(font);
         menu[2].setFillColor(Color(255, 127, 39, 255));
-        menu[2].setString("Settings");
+        menu[2].setString("High Scores");
         menu[2].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 120));
 
         menu[3].setFont(font);
         menu[3].setFillColor(Color(255, 127, 39, 255));
-        menu[3].setString("Quit");
+        menu[3].setString("Settings");
         menu[3].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 160));
+
+        menu[4].setFont(font);
+        menu[4].setFillColor(Color(255, 127, 39, 255));
+        menu[4].setString("Quit");
+        menu[4].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 200));
 
         // Refers to currently selected menu item
         selectedItemIndex = 0;
@@ -149,13 +153,17 @@ void MenuScene::Update(const double& dt)
                 Engine::ChangeScene(&level1);
                 break;
             case 1:
-                Engine::ChangeScene(&highscores);
+                Engine::ChangeScene(&howtoplay);
+                this_thread::sleep_for(chrono::milliseconds(170));
                 break;
             case 2:
+                Engine::ChangeScene(&highscores);
+                break;
+            case 3:
                 Engine::ChangeScene(&settings);
                 this_thread::sleep_for(chrono::milliseconds(170));
                 break;
-            case 3:
+            case 4:
                 Engine::GetWindow().close();
                 break;
         }

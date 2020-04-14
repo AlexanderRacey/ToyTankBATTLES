@@ -1,4 +1,5 @@
 #include "scenes/scene_highScores.h"
+#include "scenes/scene_howToPlay.h"
 #include "scenes/scene_level1.h"
 #include "scenes/scene_level2.h"
 #include "scenes/scene_menu.h"
@@ -10,6 +11,7 @@ extern Level1Scene level1;
 extern Level2Scene level2;
 extern SettingsScene settings;
 extern HighScoresScene highscores;
+extern HowToPlayScene howtoplay;
 
 static shared_ptr<Texture> Background;
 static unique_ptr<Sprite> BackgroundSprite;

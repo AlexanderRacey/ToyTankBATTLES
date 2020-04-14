@@ -16,7 +16,7 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	player->addTag("player");
 
-	auto tankAnimation = player->addComponent<AnimationComponent>(Vector2f(58.5f, 55.0f));
+	auto tankAnimation = player->addComponent<AnimationComponent>(Vector2f(57.5f, 54.0f));
 	Texture playerTexture = *Resources::load<Texture>("playerSpritesheet.png");
 	tankAnimation->setSpritesheet(playerTexture);
 	tankAnimation->setFrameCount(8);
@@ -27,6 +27,7 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	return player;
 }
 
+// Create enemies
 shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
 {
 	auto enemy = scene->makeEntity();
@@ -41,24 +42,4 @@ shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
 	enemy->addComponent<EnemyAiComponent>();
 
 	return enemy;
-}
-
-// Add fake player1 to simulate movement for animations
-shared_ptr<Entity> AddEntity::makeFakePlayer1(Scene* scene, const Vector2f& pos, const Vector2f& distance, float time)
-{
-	auto fakePlayer1 = scene->makeEntity();
-	fakePlayer1->setPosition(pos);
-	fakePlayer1->addTag("fakePlayer1");
-
-	return fakePlayer1;
-}
-
-// Add fake player2 to simulate movement for animations
-shared_ptr<Entity> AddEntity::makeFakePlayer2(Scene* scene, const Vector2f& pos, const Vector2f& distance, float time)
-{
-	auto fakePlayer2 = scene->makeEntity();
-	fakePlayer2->setPosition(pos);
-	fakePlayer2->addTag("fakePlayer2");
-
-	return fakePlayer2;
 }

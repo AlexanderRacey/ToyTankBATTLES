@@ -27,38 +27,41 @@ class ActorMovementComponent : public Component
         void update(double dt) override;
 };
 
-// Create player movement from class ActoMovementComponent
+// Create player movement from class ActorMovementComponent
 class PlayerMovementComponent : public ActorMovementComponent
 {
     public:
-    PlayerMovementComponent() = delete;
-    explicit PlayerMovementComponent(Entity* p);
-	void setRotation(float rot);
+		PlayerMovementComponent() = delete;
+		explicit PlayerMovementComponent(Entity* p);
+		void setRotation(float rot);
 
-	void move(const sf::Vector2f& pos);
-	void update(double dt) override;
-	void render() override;
+		void fire(float rotation);
+		void move(const Vector2f& pos);
+		void update(double dt) override;
+		void render() override;
 };
 
-//enemy Ai movement
-class EnemyAiComponent : public ActorMovementComponent {
-private:
-	Vector2f _direction;
-	Vector2f _offset;
-	enum state { MOVING, SHOTING, ROTATING, ROTATED };
-	state _state;
-	float gap;
-	bool turnRight = false;
 
-public:
-	explicit EnemyAiComponent(Entity* p);
-	EnemyAiComponent() = delete;
-	void ChangeDirection();
-	void resetState();
-	void setRotation(float rot);
-	void rotate(float rot);
-	float getRotation();
-	void move(const sf::Vector2f& pos);
-	void update(double dt);
-	sf::FloatRect getBounds();
+// Create enemy ai component from class ActorMovementComponent
+class EnemyAiComponent : public ActorMovementComponent 
+{
+	private:
+		Vector2f _direction;
+		Vector2f _offset;
+		enum state { MOVING, SHOTING, ROTATING, ROTATED };
+		state _state;
+		float gap;
+		bool turnRight = false;
+
+	public:
+		explicit EnemyAiComponent(Entity* p);
+		EnemyAiComponent() = delete;
+		void ChangeDirection();
+		void resetState();
+		void setRotation(float rot);
+		void rotate(float rot);
+		float getRotation();
+		void move(const Vector2f& pos);
+		void update(double dt);
+		FloatRect getBounds();
 };

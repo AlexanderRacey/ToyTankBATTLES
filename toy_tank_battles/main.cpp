@@ -10,6 +10,7 @@ int gameWidth = 1280;
 int gameHeight = 720;
 
 MenuScene menu;
+HowToPlayScene howtoplay;
 SettingsScene settings;
 Level1Scene level1;
 Level2Scene level2;

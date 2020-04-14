@@ -3,7 +3,7 @@
 #include "SFML/Graphics.hpp"
 
 // Variable for items on menu
-#define MAX_MENU_ITEMS 4
+#define MAX_MENU_ITEMS 5
 
 // Create menu scene from class Scene
 class MenuScene : public Scene 

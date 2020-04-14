@@ -1,8 +1,10 @@
-
 #include <system_resources.h>
 #include <levelsystem.h>
 #include "cmp_actor_movement.h"
+#include "cmp_bullet.h"
+#include "cmp_physics.h"
 #include "../animation.h"
+#include "../add_entity.h"
 
 using namespace sf;
 
@@ -46,6 +48,27 @@ void PlayerMovementComponent::setRotation(float rot)
     }
 }
 
+void PlayerMovementComponent::fire(float rotation) 
+{
+    auto bullet = _parent->scene->makeEntity();
+    bullet->setPosition(_parent->getPosition());
+    bullet->addComponent<BulletComponent>();
+
+    auto animation = bullet->addComponent<AnimationComponent>(Vector2f(10.f, 17.f));
+    Texture bulletTexture = *Resources::load<Texture>("playerBullet.png");
+    animation->setSpritesheet(bulletTexture);
+    animation->setFrameCount(1);
+    animation->setFrameTime(0.06f);
+
+    float inverse = fmod((rotation + 180.f), 360);  //Sets rotation of bullet to be inverse of ship rotation, using fancy maths.
+    bullet->setRotation(inverse);
+
+    /*auto p = bullet->addComponent<PhysicsComponent>(true, Vector2f(8.f, 8.f));
+    p->setRestitution(.4f);
+    p->setFriction(.005f);
+    p->impulse(rotate(Vector2f(0, 15.f), -_parent->getRotation()));*/
+}
+
 void PlayerMovementComponent::update(double dt)
 {
     int xdir = 0, ydir = 0;
@@ -70,6 +93,11 @@ void PlayerMovementComponent::update(double dt)
         setRotation(90.0f);
         move(Vector2f(_speed * dt, 0));
     }
+    if (Keyboard::isKeyPressed(Keyboard::Space))
+    {
+        float rotation = _parent->getRotation();
+        fire(rotation);
+    }
 
     ActorMovementComponent::update(dt);
 }
@@ -92,19 +120,19 @@ void PlayerMovementComponent::move(const Vector2f& p)
 // -- Enemy Component --
 static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
 
-EnemyAiComponent::EnemyAiComponent(Entity* p)
-    : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(20.f) {
+EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(20.f) 
+{
     ChangeDirection();
     setSpeed(50.f);
 };
 
-void EnemyAiComponent::move(const sf::Vector2f& pos) {
-
+void EnemyAiComponent::move(const sf::Vector2f& pos) 
+{
     _parent->setPosition(pos);
-
 }
 
-void EnemyAiComponent::update(double dt) {
+void EnemyAiComponent::update(double dt) 
+{
     //amount to move
     const auto mva = (float)(dt * _speed);
     //Current position
@@ -115,55 +143,62 @@ void EnemyAiComponent::update(double dt) {
 
     switch (_state)
     {
-    case EnemyAiComponent::MOVING:
-        if (validMove(testPos)) {
-            move(newpos);
-        }
-        else {
-            ChangeDirection();
-      //      setSpeed(150);
-            _state = ROTATING;
-        }
-        break;
-    case EnemyAiComponent::SHOTING:
-        break;
-    case EnemyAiComponent::ROTATING:
-        //left
-        if (_direction == Vector2f(-1, 0) && getRotation() == 270.f) {
-            setSpeed(50);
-            _state = MOVING;
-        }
-        //rigth
-        else if (_direction == Vector2f(1, 0) && getRotation() == 90.f) {
-            setSpeed(50);
-            _state = MOVING;
-        }
-        //up
-        else if (_direction == Vector2f(0, -1) && (getRotation() == 360.f || getRotation() == 0.f)) {
-            setRotation(0.f);
-            setSpeed(50);
-            _state = MOVING;
-        }
-        //down
-        else if (_direction == Vector2f(0, 1) && getRotation() == 180.f) {
-            setSpeed(50);
-            _state = MOVING;
-        }
-        else {
-
-                if (turnRight) {
+        case EnemyAiComponent::MOVING:
+            if (validMove(testPos)) 
+            {
+                move(newpos);
+            }
+            else
+            {
+                ChangeDirection();
+                //setSpeed(150);
+                _state = ROTATING;
+            }
+            break;
+        case EnemyAiComponent::SHOTING:
+            break;
+        case EnemyAiComponent::ROTATING:
+            //left
+            if (_direction == Vector2f(-1, 0) && getRotation() == 270.f)
+            {
+                setSpeed(50);
+                _state = MOVING;
+            }
+            //rigth
+            else if (_direction == Vector2f(1, 0) && getRotation() == 90.f)
+            {
+                setSpeed(50);
+                _state = MOVING;
+            }
+            //up
+            else if (_direction == Vector2f(0, -1) && (getRotation() == 360.f || getRotation() == 0.f)) 
+            {
+                setRotation(0.f);
+                setSpeed(50);
+                _state = MOVING;
+            }
+            //down
+            else if (_direction == Vector2f(0, 1) && getRotation() == 180.f) 
+            {
+                setSpeed(50);
+                _state = MOVING;
+            }
+            else 
+            {
+                if (turnRight) 
+                {
                     rotate(0.5f);
                 }
-                else {
+                else 
+                {
                     rotate(-0.5f);
                 }
-
-        }
-        break;
-    case EnemyAiComponent::ROTATED:
-        break;
-    default:
-        break;
+            }
+            break;
+        case EnemyAiComponent::ROTATED:
+            break;
+        default:
+            break;
     }
     // move(newpos);
 }
@@ -181,50 +216,58 @@ void EnemyAiComponent::ChangeDirection()
 
     switch (loc)
     {
-    case 0:
-        //move right
-       // setRotation(90.f);
-        if (_direction == Vector2f(0, 1)) {
-            turnRight = false;
-        }
-        else {
-            turnRight = true;
-        }
-        _offset = Vector2f(getBounds().getSize().x + gap, 0);
-        break;
-    case 1:
-        //Move down
-       // setRotation(0.f);
-        if (_direction == Vector2f(-1, 0)) {
-            turnRight = false;
-        }
-        else {
-            turnRight = true;
-        }
-        _offset = Vector2f(0, getBounds().getSize().y + gap);
-        break;
-    case 2:
-        //Move Up
-        //setRotation(0.f);
-        if (_direction == Vector2f(1, 0)) {
-            turnRight = false;
-        }
-        else {
-            turnRight = true;
-        }
-        _offset = Vector2f(0, 0);
-        break;
-    case 3:
-        //Move left
-        //setRotation(90.f);
-        if (_direction == Vector2f(0, -1)) {
-            turnRight = false;
-        }
-        else {
-            turnRight = true;
-        }
-        _offset = Vector2f(0, 0);
-        break;
+        case 0:
+            //move right
+            //setRotation(90.f);
+            if (_direction == Vector2f(0, 1)) 
+            {
+                turnRight = false;
+            }
+            else 
+            {
+                turnRight = true;
+            }
+            _offset = Vector2f(getBounds().getSize().x + gap, 0);
+            break;
+        case 1:
+            //Move down
+            //setRotation(0.f);
+            if (_direction == Vector2f(-1, 0)) 
+            {
+                turnRight = false;
+            }
+            else
+            {
+                turnRight = true;
+            }
+            _offset = Vector2f(0, getBounds().getSize().y + gap);
+            break;
+        case 2:
+            //Move Up
+            //setRotation(0.f);
+            if (_direction == Vector2f(1, 0))
+            {
+                turnRight = false;
+            }
+            else 
+            {
+                turnRight = true;
+            }
+            _offset = Vector2f(0, 0);
+            break;
+        case 3:
+            //Move left
+            //setRotation(90.f);
+            if (_direction == Vector2f(0, -1)) 
+            {
+                turnRight = false;
+            }
+            else 
+            {
+                turnRight = true;
+            }
+            _offset = Vector2f(0, 0);
+            break;
     }
 
     _direction = newDir;
@@ -245,15 +288,18 @@ void EnemyAiComponent::setRotation(float rot)
     }
 }
 
-void EnemyAiComponent::rotate(float rot) {
+void EnemyAiComponent::rotate(float rot)
+{
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
-    if (!animation.empty()) {
+    if (!animation.empty()) 
+    {
         animation[0]->rotate(rot);
     }
 }
 
-float EnemyAiComponent::getRotation() {
+float EnemyAiComponent::getRotation() 
+{
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
     if (!animation.empty()) {
@@ -264,8 +310,8 @@ float EnemyAiComponent::getRotation() {
     }
 }
 
-FloatRect EnemyAiComponent::getBounds() {
-
+FloatRect EnemyAiComponent::getBounds() 
+{
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
     if (!animation.empty())
