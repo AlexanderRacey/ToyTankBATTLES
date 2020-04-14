@@ -1,13 +1,6 @@
-<<<<<<< HEAD
 #include <system_resources.h>
 #include <levelsystem.h>
 #include "cmp_actor_movement.h"
-=======
-
-#include "cmp_actor_movevent.h"
-#include "levelsystem.h"
-#include "cmp_sprite.h"
->>>>>>> b1f592b4136500439b2fe9cd677b92143cfe80a0
 #include "../animation.h"
 
 using namespace sf;
@@ -36,9 +29,9 @@ void ActorMovementComponent::move(float x, float y) {
 float ActorMovementComponent::getSpeed() const { return _speed; }
 void ActorMovementComponent::setSpeed(float speed) { _speed = speed; }
 
+
 PlayerMovementComponent::PlayerMovementComponent(Entity* p) : ActorMovementComponent(p) {
     setSpeed(100.f);
-
 }
 
 // Player movement
@@ -85,10 +78,7 @@ static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
 EnemyAiComponent::EnemyAiComponent(Entity* p)
     : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(20.f) {
     ChangeDirection();
-<<<<<<< HEAD
     setSpeed(10.f);
-=======
->>>>>>> b1f592b4136500439b2fe9cd677b92143cfe80a0
 };
 
 void EnemyAiComponent::move(const sf::Vector2f& pos) {
