@@ -30,9 +30,9 @@ void ActorMovementComponent::move(float x, float y) {
 float ActorMovementComponent::getSpeed() const { return _speed; }
 void ActorMovementComponent::setSpeed(float speed) { _speed = speed; }
 
+
 PlayerMovementComponent::PlayerMovementComponent(Entity* p) : ActorMovementComponent(p) {
     setSpeed(100.f);
-
 }
 
 // Player movement
@@ -135,14 +135,14 @@ void EnemyAiComponent::update(double dt) {
             _state = MOVING;
         }
         else {
-                
+
                 if (turnRight) {
                     rotate(0.5f);
                 }
                 else {
                     rotate(-0.5f);
                 }
-              
+
         }
         break;
     case EnemyAiComponent::ROTATED:
