@@ -1,91 +1,84 @@
-#include <system_resources.h>
-#include <levelsystem.h>
+
 #include "cmp_actor_movevent.h"
+#include "levelsystem.h"
+#include "cmp_sprite.h"
 #include "../animation.h"
 
 using namespace sf;
-using namespace std;
 
-void ActorMovementComponent::render() {}
+void ActorMovementComponent::update(double dt) {};
 
-void ActorMovementComponent::update(double dt) {}
-
-ActorMovementComponent::ActorMovementComponent(Entity* p) : _speed(100.0f), Component(p) {}
-
-bool ActorMovementComponent::validMove(const Vector2f& pos)
+bool ActorMovementComponent::validMove(const sf::Vector2f& pos)
 {
-    return (ls::isWall(LevelSystem::getTileAt(pos)));
+    return (!ls::isWall(ls::getTileAt(pos)));
+};
+
+ActorMovementComponent::ActorMovementComponent(Entity* p)
+    : _speed(50.0f), Component(p) {};
+
+
+void ActorMovementComponent::move(const sf::Vector2f& pos) {
+    if (validMove(pos)) {
+        _parent->setPosition(pos);
+    }
+};
+
+void ActorMovementComponent::move(float x, float y) {
+    move(Vector2f(x, y));
 }
 
-void ActorMovementComponent::move(const Vector2f& p)
-{
-	auto pp = _parent->getPosition() + p;
-	if (validMove(pp))
-	{
-		_parent->setPosition(pp);
-	}
-}
+float ActorMovementComponent::getSpeed() const { return _speed; }
+void ActorMovementComponent::setSpeed(float speed) { _speed = speed; }
 
-void ActorMovementComponent::move(float x, float y)
-{
-	move(Vector2f(x, y));
-}
+PlayerMovementComponent::PlayerMovementComponent(Entity* p) : ActorMovementComponent(p) {
+    setSpeed(100.f);
 
-float ActorMovementComponent::getSpeed() const
-{
-	return _speed;
 }
-
-void ActorMovementComponent::setSpeed(float speed)
-{
-	_speed = speed;
-}
-
-void ActorMovementComponent::increaseSpeed(float speed)
-{
-	_speed += speed;
-}
-
-PlayerMovementComponent::PlayerMovementComponent(Entity* p) : ActorMovementComponent(p) {}
 
 // Player movement
 void PlayerMovementComponent::update(double dt)
 {
-	int xdir = 0, ydir = 0;
+    int xdir = 0, ydir = 0;
 
-	if (Keyboard::isKeyPressed(Keyboard::W))
-	{
-		move(Vector2f(0, -_speed * dt));
-	}
-	if (Keyboard::isKeyPressed(Keyboard::S))
-	{
-		move(Vector2f(0, _speed * dt));
-	}
-	if (Keyboard::isKeyPressed(Keyboard::A))
-	{
-		move(Vector2f(-_speed * dt, 0));
-	}
-	if (Keyboard::isKeyPressed(Keyboard::D))
-	{
-		move(Vector2f(_speed * dt, 0));
-	}
+    if (Keyboard::isKeyPressed(Keyboard::W))
+    {
+        move(Vector2f(0, -_speed * dt));
+    }
+    if (Keyboard::isKeyPressed(Keyboard::S))
+    {
+        move(Vector2f(0, _speed * dt));
+    }
+    if (Keyboard::isKeyPressed(Keyboard::A))
+    {
+        move(Vector2f(-_speed * dt, 0));
+    }
+    if (Keyboard::isKeyPressed(Keyboard::D))
+    {
+        move(Vector2f(_speed * dt, 0));
+    }
 
-	ActorMovementComponent::update(dt);
+    ActorMovementComponent::update(dt);
 }
 
 void PlayerMovementComponent::render()
 {
-	ActorMovementComponent::render();
+    ActorMovementComponent::render();
 }
 
+void PlayerMovementComponent::move(const Vector2f& p)
+{
+    auto pp = _parent->getPosition() + p;
+    if (validMove(pp))
+    {
+        _parent->setPosition(pp);
+    }
+}
 
-static const Vector2i directions[] = { {1,0}, {0,1} , {0, -1}, {-1, 0} };
-
+static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
 
 EnemyAiComponent::EnemyAiComponent(Entity* p)
     : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(20.f) {
     ChangeDirection();
-    setSpeed(50.f);
 };
 
 void EnemyAiComponent::move(const sf::Vector2f& pos) {
@@ -97,7 +90,7 @@ void EnemyAiComponent::move(const sf::Vector2f& pos) {
 
 void EnemyAiComponent::update(double dt) {
     //amount to move
-    const auto mva =  (float) (_speed * 0.004);
+    const auto mva = (float)(dt * _speed);
     //Current position
     const Vector2f pos = _parent->getPosition();
     //Next position
@@ -145,12 +138,12 @@ void EnemyAiComponent::ChangeDirection() {
     case 0:
         //move right
         setRotation(90.f);
-        _offset = Vector2f(0, 0);
+        _offset = Vector2f(getBounds().getSize().x + gap, 0);
         break;
     case 1:
         //Move down
         setRotation(0.f);
-        _offset = Vector2f(0, getBounds().getSize().y);
+        _offset = Vector2f(0, getBounds().getSize().y + gap);
         break;
     case 2:
         //Move Up
@@ -160,7 +153,7 @@ void EnemyAiComponent::ChangeDirection() {
     case 3:
         //Move left
         setRotation(90.f);
-        _offset = Vector2f(-getBounds().getSize().x - gap, 0);
+        _offset = Vector2f(0, 0);
         break;
     }
 
