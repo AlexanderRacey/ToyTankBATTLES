@@ -31,29 +31,43 @@ float ActorMovementComponent::getSpeed() const { return _speed; }
 void ActorMovementComponent::setSpeed(float speed) { _speed = speed; }
 
 
+// -- Player movement
 PlayerMovementComponent::PlayerMovementComponent(Entity* p) : ActorMovementComponent(p) {
     setSpeed(100.f);
 }
 
-// Player movement
+void PlayerMovementComponent::setRotation(float rot)
+{
+    auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
+
+    if (!animation.empty())
+    {
+        animation[0]->setRotation(rot);
+    }
+}
+
 void PlayerMovementComponent::update(double dt)
 {
     int xdir = 0, ydir = 0;
 
     if (Keyboard::isKeyPressed(Keyboard::W))
     {
+        setRotation(0.0f);
         move(Vector2f(0, -_speed * dt));
     }
     if (Keyboard::isKeyPressed(Keyboard::S))
     {
+        setRotation(180.0f);
         move(Vector2f(0, _speed * dt));
     }
     if (Keyboard::isKeyPressed(Keyboard::A))
     {
+        setRotation(270.0f);
         move(Vector2f(-_speed * dt, 0));
     }
     if (Keyboard::isKeyPressed(Keyboard::D))
     {
+        setRotation(90.0f);
         move(Vector2f(_speed * dt, 0));
     }
 
@@ -74,6 +88,8 @@ void PlayerMovementComponent::move(const Vector2f& p)
     }
 }
 
+
+// -- Enemy Component --
 static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
 
 EnemyAiComponent::EnemyAiComponent(Entity* p)
@@ -87,7 +103,6 @@ void EnemyAiComponent::move(const sf::Vector2f& pos) {
     _parent->setPosition(pos);
 
 }
-
 
 void EnemyAiComponent::update(double dt) {
     //amount to move
@@ -150,16 +165,16 @@ void EnemyAiComponent::update(double dt) {
     default:
         break;
     }
-
     // move(newpos);
-
 }
 
-void EnemyAiComponent::ChangeDirection() {
+void EnemyAiComponent::ChangeDirection()
+{
     Vector2f newDir;
     Vector2f newPos;
     int loc = 0;
-    do {
+    do
+    {
         loc = rand() % 4;
         newDir = Vector2f(directions[loc]);
     } while (newDir == _direction);
@@ -215,14 +230,17 @@ void EnemyAiComponent::ChangeDirection() {
     _direction = newDir;
 }
 
-void EnemyAiComponent::resetState() {
+void EnemyAiComponent::resetState()
+{
     _state = MOVING;
 }
 
-void EnemyAiComponent::setRotation(float rot) {
+void EnemyAiComponent::setRotation(float rot)
+{
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
-    if (!animation.empty()) {
+    if (!animation.empty())
+    {
         animation[0]->setRotation(rot);
     }
 }
@@ -250,10 +268,12 @@ FloatRect EnemyAiComponent::getBounds() {
 
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
-    if (!animation.empty()) {
+    if (!animation.empty())
+    {
         return animation[0]->getSprite().getGlobalBounds();
     }
-    else {
+    else
+    {
         return FloatRect(0, 0, 0, 0);
     }
 }
