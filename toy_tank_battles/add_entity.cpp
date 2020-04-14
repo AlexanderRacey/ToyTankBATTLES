@@ -3,9 +3,8 @@
 #include "add_entity.h"
 #include "animation.h"
 #include "system_resources.h"
-#include "components/cmp_actor_movevent.h"
+#include "components/cmp_actor_movement.h"
 #include "components/cmp_sprite.h"
-#include "components/ActorMovementComponent.h"
 
 using namespace sf;
 using namespace std;

@@ -1,6 +1,6 @@
 #include <system_resources.h>
 #include <levelsystem.h>
-#include "cmp_actor_movevent.h"
+#include "cmp_actor_movement.h"
 #include "../animation.h"
 
 using namespace sf;
@@ -85,7 +85,7 @@ static const Vector2i directions[] = { {1,0}, {0,1} , {0, -1}, {-1, 0} };
 EnemyAiComponent::EnemyAiComponent(Entity* p)
     : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(20.f) {
     ChangeDirection();
-    setSpeed(50.f);
+    setSpeed(10.f);
 };
 
 void EnemyAiComponent::move(const sf::Vector2f& pos) {

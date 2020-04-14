@@ -36,23 +36,3 @@ class PlayerMovementComponent : public ActorMovementComponent
         void update(double dt) override;
         void render() override;
 };
-
-//enemy Ai movement
-class EnemyAiComponent : public ActorMovementComponent {
-private:
-    Vector2f _direction;
-    Vector2f _offset;
-    enum state { MOVING, SHOTING, ROTATING, ROTATED };
-    state _state;
-    float gap;
-
-public:
-    explicit EnemyAiComponent(Entity* p);
-    EnemyAiComponent() = delete;
-    void ChangeDirection();
-    void resetState();
-    void setRotation(float rot);
-    void move(const sf::Vector2f& pos);
-    void update(double dt) override;
-    sf::FloatRect getBounds();
-};
