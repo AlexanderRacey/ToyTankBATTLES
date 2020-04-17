@@ -10,6 +10,7 @@ void SpriteComponent::setTexture(shared_ptr<Texture> tex)
 {
     _texture = tex;
     _sprite->setTexture(*_texture);
+    _sprite->setTextureRect(IntRect(0, 0, _texture->getSize().x, _texture->getSize().y));
 }
 
 SpriteComponent::SpriteComponent(Entity* p) : Component(p), _sprite(make_shared<sf::Sprite>()) 

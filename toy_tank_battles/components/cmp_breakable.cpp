@@ -26,7 +26,7 @@ void BreakableComponent::update(double dt) {
 //Set exploded when bullet destroys house
 void BreakableComponent::setExploded() {
 	_exploded = true;
-	_timer = 10.f;
+	_timer = 1.f;
 	//set sprite to explotion sprite
 	_parent->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("smokeGrey4.png"));
 	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.70f, .70f);
