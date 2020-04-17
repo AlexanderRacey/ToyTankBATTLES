@@ -39,3 +39,20 @@ class AnimationComponent : public Component
 		float getRotation();
 		AnimationComponent() = delete;
 };
+
+class EnemyAnimationComp : public AnimationComponent {
+	protected:
+		Sprite turretSprite;
+		Texture turretImage;
+	public:
+		explicit EnemyAnimationComp(Entity* p, Vector2f size);
+		void setTurretRotation(float rot);
+		void rotateTurret(float rot);
+		void setRotation(float rot);
+		void rotate(float rot);
+		void update(double dt) override;
+		void render() override;
+		void setScale(const Vector2f& scale);
+		Sprite& getTurretSprite();
+
+};

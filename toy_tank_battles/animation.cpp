@@ -1,6 +1,7 @@
 #include "animation.h"
 #include "system_renderer.h"
 #include <cmath>
+#include <system_resources.h>
 
 using namespace sf;
 using namespace std;
@@ -116,4 +117,62 @@ bool AnimationComponent::finished() const
 const Sprite& AnimationComponent::getSprite() const 
 {
 	return sprite;
+}
+
+//enemy animation components
+
+
+EnemyAnimationComp::EnemyAnimationComp(Entity* p, Vector2f size) : AnimationComponent(p, size)
+{
+	turretImage = *Resources::load<Texture>("enemyTurret.png");
+	turretSprite.setTexture(turretImage);
+	auto bounds = turretSprite.getGlobalBounds();
+	turretSprite.setOrigin(bounds.getSize().x / 2, bounds.getSize().y - 5.f);
+}
+
+void EnemyAnimationComp::setTurretRotation(float rot)
+{
+	turretSprite.setRotation(rot);
+}
+
+void EnemyAnimationComp::rotateTurret(float rot)
+{
+	turretSprite.rotate(rot);
+}
+
+void EnemyAnimationComp::setRotation(float rot)
+{
+	AnimationComponent::setRotation(rot);
+	setTurretRotation(rot);
+}
+
+void EnemyAnimationComp::rotate(float rot)
+{
+	AnimationComponent::rotate(rot);
+	rotateTurret(rot);
+}
+
+void EnemyAnimationComp::setScale(const Vector2f& scale)
+{
+	AnimationComponent::setScale(scale);
+	turretSprite.setScale(scale);
+}
+
+void EnemyAnimationComp::update(double dt)
+{
+	AnimationComponent::update(dt);
+	turretSprite.setPosition(_parent->getPosition());
+}
+
+void EnemyAnimationComp::render()
+{
+	AnimationComponent::render();
+	Renderer::queueAnimation(turretSprite);
+	//Renderer::queue(&sprite);
+	//Renderer::queue(&turretSprite);
+}
+
+
+Sprite & EnemyAnimationComp::getTurretSprite() {
+	return turretSprite;
 }

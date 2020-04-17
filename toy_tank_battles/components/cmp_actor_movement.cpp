@@ -280,7 +280,7 @@ void EnemyAiComponent::resetState()
 
 void EnemyAiComponent::setRotation(float rot)
 {
-    auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
+    auto animation = _parent->GetCompatibleComponent<EnemyAnimationComp>();
 
     if (!animation.empty())
     {
@@ -290,7 +290,7 @@ void EnemyAiComponent::setRotation(float rot)
 
 void EnemyAiComponent::rotate(float rot)
 {
-    auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
+    auto animation = _parent->GetCompatibleComponent<EnemyAnimationComp>();
 
     if (!animation.empty()) 
     {

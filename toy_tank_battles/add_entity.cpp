@@ -33,12 +33,20 @@ shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
 	auto enemy = scene->makeEntity();
 	enemy->setPosition(pos);
 	enemy->addTag("enemy");
-	auto animation = enemy->addComponent<AnimationComponent>(Vector2f(83.0f, 80.0f));
+	//Add Turret 
+	/*
+	auto turret = enemy->addComponent<SpriteComponent>();
+	turret->setTexture(Resources::load<Texture>("enemyTurret.png"));
+	auto bounds = turret->getSprite().getGlobalBounds();
+	turret->getSprite().setOrigin(bounds.getSize().x / 2, bounds.getSize().y);
+	*/
+	auto animation = enemy->addComponent<EnemyAnimationComp>(Vector2f(83.0f, 80.0f));
 	shared_ptr<Texture> s = Resources::load<Texture>("enemySpritesheet.png");
 	animation->setSpritesheet(*s);
 	animation->setScale(Vector2f(0.6, 0.6));
 	animation->setFrameCount(8);
 	animation->setFrameTime(0.10);
+
 	enemy->addComponent<EnemyAiComponent>();
 
 	return enemy;
