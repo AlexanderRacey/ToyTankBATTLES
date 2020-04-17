@@ -218,6 +218,19 @@ LevelSystem::Tile LevelSystem::getTileAt(Vector2f v)
     }
 }
 
+Vector2f LevelSystem::getTilePosAt(Vector2f v)
+{
+    auto a = v - _offset;
+    if (a.x < 0 || a.y < 0)
+    {
+        throw string("Tile out of range ");
+    }
+    else {
+        return getTilePosition(Vector2ul((v - _offset) / (_tileSize)));
+        //return getTile(Vector2ul((v - _offset) / (_tileSize)));
+    }
+}
+
 bool LevelSystem::isOnGrid(sf::Vector2f v) 
 {
     auto a = v - _offset;

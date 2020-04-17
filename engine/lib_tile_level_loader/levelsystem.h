@@ -42,6 +42,7 @@ class LevelSystem
         static size_t getWidth();
         static size_t getHeight();
         static Vector2f getTilePosition(Vector2ul);
+        static sf::Vector2f getTilePosAt(sf::Vector2f v);
         static vector<Vector2ul> findTiles(Tile);
         static shared_ptr<sf::Texture> getTexture(LevelSystem::Tile t);
         static void loadTextures();

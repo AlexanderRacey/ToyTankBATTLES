@@ -118,12 +118,16 @@ void PlayerMovementComponent::move(const Vector2f& p)
 
 
 // -- Enemy Component --
+//direction order : right, down, up, left
 static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
+const float rotations[] = { 90.f, 180.f, 0.f, 270.f};
+
 
 EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(20.f) 
 {
     ChangeDirection();
     setSpeed(50.f);
+    setRotation(rotations[index]);
 };
 
 void EnemyAiComponent::move(const sf::Vector2f& pos) 
@@ -147,6 +151,10 @@ void EnemyAiComponent::update(double dt)
             if (validMove(testPos)) 
             {
                 move(newpos);
+            }
+            else if (ls::BROKEN == ls::getTileAt(testPos) ||
+                ls::BROKEN_R == ls::getTileAt(testPos)) {
+                _state = AIMING;
             }
             else
             {
@@ -195,7 +203,9 @@ void EnemyAiComponent::update(double dt)
                 }
             }
             break;
-        case EnemyAiComponent::ROTATED:
+        case EnemyAiComponent::AIMING:
+            aimTurrent(testPos);
+            _state = SHOTING;
             break;
         default:
             break;
@@ -207,14 +217,14 @@ void EnemyAiComponent::ChangeDirection()
 {
     Vector2f newDir;
     Vector2f newPos;
-    int loc = 0;
+    index = 0;
     do
     {
-        loc = rand() % 4;
-        newDir = Vector2f(directions[loc]);
+        index = rand() % 4;
+        newDir = Vector2f(directions[index]);
     } while (newDir == _direction);
 
-    switch (loc)
+    switch (index)
     {
         case 0:
             //move right
@@ -321,5 +331,60 @@ FloatRect EnemyAiComponent::getBounds()
     else
     {
         return FloatRect(0, 0, 0, 0);
+    }
+}
+
+void EnemyAiComponent::aimTurrent(Vector2f Pos) {
+    //Aim turrent depending on tank direction it is facing
+    //direction order : right, down, up, left
+    float m1 = 0.f;
+    float m2 = 0.f;
+    float form = 0.f;
+    float rot = 0.f;
+    Vector2f tilePos = ls::getTilePosAt(Pos);
+    switch (index) {
+    case 0:
+        //facing right
+        m1 = _parent->getPosition().x;
+        m2 = tilePos.x;
+        form = (m2 - m1) / (1 + m2 * m1);
+        rot = atan(form) * 10000;
+        setTurrentRotation(-rot);
+        break;
+    case 1:
+        //facing downwards
+        m1 = _parent->getPosition().y;
+        m2 = tilePos.y;
+        form = (m2 - m1) / (1 + m2 * m1);
+        rot = atan(form) * 10000;
+        setTurrentRotation(rot);
+     
+        break;
+    case 2:
+        //facing upwards
+        m1 = _parent->getPosition().y;
+        m2 = tilePos.y;
+        form = (m2 - m1) / (1 + m2 * m1);
+        rot = atan(form) * 10000;
+        setTurrentRotation(-rot);
+        break;
+    case 3:
+        //facing left
+        m1 = _parent->getPosition().x;
+        m2 = tilePos.x;
+        form = (m2 - m1) / (1 + m2 * m1);
+        rot = atan(form) * 10000;
+        setTurrentRotation(-rot);
+        break;
+    }
+
+}
+
+void EnemyAiComponent::setTurrentRotation(float rot) {
+    auto animation = _parent->GetCompatibleComponent<EnemyAnimationComp>();
+
+    if (!animation.empty())
+    {
+        animation[0]->rotateTurret(rot);
     }
 }

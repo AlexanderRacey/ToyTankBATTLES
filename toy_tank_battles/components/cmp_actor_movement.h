@@ -48,7 +48,8 @@ class EnemyAiComponent : public ActorMovementComponent
 	private:
 		Vector2f _direction;
 		Vector2f _offset;
-		enum state { MOVING, SHOTING, ROTATING, ROTATED };
+		int index;
+		enum state { MOVING, SHOTING, ROTATING, AIMING };
 		state _state;
 		float gap;
 		bool turnRight = false;
@@ -64,4 +65,6 @@ class EnemyAiComponent : public ActorMovementComponent
 		void move(const Vector2f& pos);
 		void update(double dt);
 		FloatRect getBounds();
+		void aimTurrent(Vector2f pos);
+		void setTurrentRotation(float rot);
 };
