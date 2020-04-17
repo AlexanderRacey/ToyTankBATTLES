@@ -18,7 +18,7 @@ class SpriteComponent : public Component
         explicit SpriteComponent(Entity* p);
         void update(double dt) override;
         void render() override;
-
+        FloatRect getBounds();
 
         Sprite& getSprite() const;
 

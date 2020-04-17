@@ -80,6 +80,7 @@ void Level1Scene::SetBreakables()
 		auto pos = ls::getTilePosition(b);
 		auto e = makeEntity();
 		e->setPosition(pos);
+		e->addTag("brokenHouse");
 		//ADD Breakable Component
 		e->addComponent<BreakableComponent>();
 		//ADD house sprite

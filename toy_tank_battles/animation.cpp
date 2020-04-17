@@ -176,3 +176,7 @@ void EnemyAnimationComp::render()
 Sprite & EnemyAnimationComp::getTurretSprite() {
 	return turretSprite;
 }
+
+float EnemyAnimationComp::getTurretRotation() {
+	return turretSprite.getRotation();
+}

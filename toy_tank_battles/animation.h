@@ -48,6 +48,7 @@ class EnemyAnimationComp : public AnimationComponent {
 		explicit EnemyAnimationComp(Entity* p, Vector2f size);
 		void setTurretRotation(float rot);
 		void rotateTurret(float rot);
+		float getTurretRotation();
 		void setRotation(float rot);
 		void rotate(float rot);
 		void update(double dt) override;

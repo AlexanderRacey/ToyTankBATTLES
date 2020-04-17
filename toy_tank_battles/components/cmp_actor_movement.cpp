@@ -123,7 +123,7 @@ static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
 const float rotations[] = { 90.f, 180.f, 0.f, 270.f};
 
 
-EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(20.f) 
+EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(30.f) 
 {
     ChangeDirection();
     setSpeed(50.f);
@@ -154,16 +154,33 @@ void EnemyAiComponent::update(double dt)
             }
             else if (ls::BROKEN == ls::getTileAt(testPos) ||
                 ls::BROKEN_R == ls::getTileAt(testPos)) {
-                _state = AIMING;
+                vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
+                for (auto t : potTargets) {
+                    auto sp = t->GetCompatibleComponent<SpriteComponent>();
+                    auto bounds = sp[0]->getSprite().getGlobalBounds();
+                    bounds = FloatRect(bounds.left - 80.f, bounds.top -80.f, bounds.width + 80.f, bounds.height + 80.f);
+                    
+                    if (bounds.contains(testPos)) {
+                        if (t->isAlive()) {
+                            target = t;
+                            _state = AIMING;
+                            break;
+                        }
+                    }
+                }
+       
             }
             else
             {
                 ChangeDirection();
-                //setSpeed(150);
                 _state = ROTATING;
             }
             break;
         case EnemyAiComponent::SHOTING:
+            fire();
+            _state = WAIT;
+            break;
+        case EnemyAiComponent::WAIT:
             break;
         case EnemyAiComponent::ROTATING:
             //left
@@ -210,7 +227,6 @@ void EnemyAiComponent::update(double dt)
         default:
             break;
     }
-    // move(newpos);
 }
 
 void EnemyAiComponent::ChangeDirection()
@@ -340,7 +356,7 @@ void EnemyAiComponent::aimTurrent(Vector2f Pos) {
     float m1 = 0.f;
     float m2 = 0.f;
     float form = 0.f;
-    float rot = 0.f;
+    tAngle = 0.f;
     Vector2f tilePos = ls::getTilePosAt(Pos);
     switch (index) {
     case 0:
@@ -348,16 +364,16 @@ void EnemyAiComponent::aimTurrent(Vector2f Pos) {
         m1 = _parent->getPosition().x;
         m2 = tilePos.x;
         form = (m2 - m1) / (1 + m2 * m1);
-        rot = atan(form) * 10000;
-        setTurrentRotation(-rot);
+        tAngle = -(atan(form) * 10000);
+        setTurrentRotation(tAngle);
         break;
     case 1:
         //facing downwards
         m1 = _parent->getPosition().y;
         m2 = tilePos.y;
         form = (m2 - m1) / (1 + m2 * m1);
-        rot = atan(form) * 10000;
-        setTurrentRotation(rot);
+        tAngle = atan(form) * 10000;
+        setTurrentRotation(tAngle);
      
         break;
     case 2:
@@ -365,16 +381,16 @@ void EnemyAiComponent::aimTurrent(Vector2f Pos) {
         m1 = _parent->getPosition().y;
         m2 = tilePos.y;
         form = (m2 - m1) / (1 + m2 * m1);
-        rot = atan(form) * 10000;
-        setTurrentRotation(-rot);
+        tAngle = -(atan(form) * 10000);
+        setTurrentRotation(tAngle);
         break;
     case 3:
         //facing left
         m1 = _parent->getPosition().x;
         m2 = tilePos.x;
         form = (m2 - m1) / (1 + m2 * m1);
-        rot = atan(form) * 10000;
-        setTurrentRotation(-rot);
+        tAngle = -(atan(form) * 10000);
+        setTurrentRotation(tAngle);
         break;
     }
 
@@ -387,4 +403,50 @@ void EnemyAiComponent::setTurrentRotation(float rot) {
     {
         animation[0]->rotateTurret(rot);
     }
+}
+
+float EnemyAiComponent::getTurrentRotation() {
+    auto animation = _parent->GetCompatibleComponent<EnemyAnimationComp>();
+
+    if (!animation.empty())
+    {
+        return animation[0]->getTurretRotation();
+    }
+}
+
+void EnemyAiComponent::fire() {
+
+    auto bullet = _parent->scene->makeEntity();
+    bullet->setPosition(_parent->getPosition());
+    auto bulletcomp = bullet->addComponent<BulletComponent>();
+    bulletcomp->setTarget(target);
+    switch (index)
+    {
+    case 0:
+        //facing right
+        bulletcomp->setDirection(_direction);
+        break;
+    case 1:
+        //facing downwards
+        bulletcomp->setDirection(_direction);
+        break;
+    case 2:
+        //facing upwards
+        bulletcomp->setDirection(_direction);
+        break;
+    case 3:
+        //facing left
+        bulletcomp->setDirection(_direction);
+        break;
+    }
+   
+
+    auto spriteB = bullet->addComponent<SpriteComponent>();
+   // Texture bulletTexture = Resources::load<Texture>("enemyBullet.png");
+    spriteB->setTexture(Resources::load<Texture>("enemyBullet.png"));
+    spriteB->getSprite().setScale(Vector2f(0.6, 0.6));
+    auto bounds = spriteB->getSprite().getGlobalBounds();
+    spriteB->getSprite().setOrigin(Vector2f(bounds.getSize().x / 2, bounds.getSize().y));
+    // float inverse = fmod((getTurrentRotation() + 180.f), 360);  //Sets rotation of bullet to be inverse of ship rotation, using fancy maths.
+    bullet->setRotation(getTurrentRotation());
 }

@@ -29,5 +29,7 @@ void BreakableComponent::setExploded() {
 	_timer = 10.f;
 	//set sprite to explotion sprite
 	_parent->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("smokeGrey4.png"));
-	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
+	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.70f, .70f);
+	auto bounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getLocalBounds();
+	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize().x/2, bounds.getSize().x/2);
 }

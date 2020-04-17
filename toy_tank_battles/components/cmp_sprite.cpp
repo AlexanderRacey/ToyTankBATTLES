@@ -32,6 +32,10 @@ Sprite& SpriteComponent::getSprite() const
     return *_sprite; 
 }
 
+FloatRect SpriteComponent::getBounds() {
+    return _sprite->getGlobalBounds();
+}
+
 
 // -- Shape --
 void ShapeComponent::update(double dt)
