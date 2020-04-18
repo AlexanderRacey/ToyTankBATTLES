@@ -33,3 +33,7 @@ void BreakableComponent::setExploded() {
 	auto bounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getLocalBounds();
 	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize().x/2, bounds.getSize().x/2);
 }
+
+bool BreakableComponent::isExploded() {
+	return _exploded;
+}

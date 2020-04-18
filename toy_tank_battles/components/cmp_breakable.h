@@ -16,4 +16,5 @@ public:
     void update(double dt) override;
     void render() override {};
     void setExploded();
+    bool isExploded();
 };

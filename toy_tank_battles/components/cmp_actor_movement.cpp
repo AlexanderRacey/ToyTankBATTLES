@@ -5,6 +5,7 @@
 #include "cmp_physics.h"
 #include "../animation.h"
 #include "../add_entity.h"
+#include "cmp_breakable.h"
 
 using namespace sf;
 
@@ -144,6 +145,7 @@ void EnemyAiComponent::update(double dt)
     //Next position
     Vector2f newpos = pos + _direction * mva;
     Vector2f testPos = newpos + _offset;
+   // auto breakable;
 
     switch (_state)
     {
@@ -158,15 +160,21 @@ void EnemyAiComponent::update(double dt)
                 for (auto t : potTargets) {
                     auto sp = t->GetCompatibleComponent<SpriteComponent>();
                     auto bounds = sp[0]->getSprite().getGlobalBounds();
-                    bounds = FloatRect(bounds.left - 80.f, bounds.top -80.f, bounds.width + 80.f, bounds.height + 80.f);
+                    //cheating the left detection by making width much wider for now
+                    bounds = FloatRect(bounds.left - 50.f, bounds.top -50.f, bounds.width + 120.f, bounds.height + 50.f);
                     
                     if (bounds.contains(testPos)) {
                         if (t->isAlive()) {
                             target = t;
+                            fireTimer = 0.5f;
                             _state = AIMING;
+                            blocked = true;
                             break;
                         }
                     }
+                    if (!blocked) {
+                        move(newpos);
+                  }
                 }
        
             }
@@ -177,8 +185,25 @@ void EnemyAiComponent::update(double dt)
             }
             break;
         case EnemyAiComponent::SHOTING:
-            fire();
-            _state = WAIT;
+            if (target->isAlive()) {
+             auto breakable = target->GetCompatibleComponent<BreakableComponent>();
+                if (!breakable.empty()) {
+                    if (!breakable[0]->isExploded()) {
+                        fireTimer -= dt;
+                        if (fireTimer <= 0) {
+                            fire();
+                            fireTimer = 3.f;
+                            }
+                    }
+                  //  else {
+                   //     blocked
+                   // }
+                    }
+            }else{
+     //       fire();
+            _state = MOVING;
+            blocked = false;
+            }
             break;
         case EnemyAiComponent::WAIT:
             break;
