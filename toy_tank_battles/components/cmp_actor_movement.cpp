@@ -445,23 +445,24 @@ void EnemyAiComponent::fire() {
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
     bulletcomp->setTarget(target);
+    tAngle = tAngle / 10;
     switch (index)
     {
     case 0:
         //facing right
-        bulletcomp->setDirection(_direction);
+        bulletcomp->setDirection(_direction + Vector2f(-tAngle, 0));
         break;
     case 1:
         //facing downwards
-        bulletcomp->setDirection(_direction);
+        bulletcomp->setDirection(_direction + Vector2f(0, tAngle));
         break;
     case 2:
         //facing upwards
-        bulletcomp->setDirection(_direction);
+        bulletcomp->setDirection(_direction + Vector2f(tAngle, 0));;
         break;
     case 3:
         //facing left
-        bulletcomp->setDirection(_direction);
+        bulletcomp->setDirection(_direction + Vector2f(0, -tAngle));
         break;
     }
    
