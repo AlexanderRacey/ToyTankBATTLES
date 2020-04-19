@@ -9,6 +9,8 @@
 #include "../components/cmp_pickup.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
+#include "../components/cmp_actor_movement.h"
+#include "../components/cmp_physics.h"
 //#include "maths.h"
 #include "scene_level1.h"
 #include "system_renderer.h"
@@ -88,13 +90,15 @@ void Level1Scene::SetBreakables()
 		if (type == 0) {
 			e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("BrokenH.png"));
 		}
-		else {
+		else 
+		{
 			e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("BrokenH1.png"));
 		}
 		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getGlobalBounds();
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize().x/2, bounds.getSize().y / 2);
 		//Rotate Broken houses on tile Broken_R
-		if (ls::getTile(b) == ls::BROKEN_R) {
+		if (ls::getTile(b) == ls::BROKEN_R) 
+		{
 			e->setRotation(90.f);
 		}
 	}
@@ -121,8 +125,10 @@ void Level1Scene::Load()
 	// Create player object
 	player = AddEntity::makePlayer(this, Vector2f(x2 / 2, y2 / 2));
 
+	// Create enemies
 	auto enp = ls::findTiles(ls::ENEMY);
-	for (auto e : enp) {
+	for (auto e : enp)
+	{
 		auto pos = ls::getTilePosition(e);
 		auto enemy = AddEntity::makeEnemy(this, pos);
 	}
@@ -174,7 +180,8 @@ void Level1Scene::Update(const double& dt)
 		UnLoad();
 		Load();
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
+
+	if (Keyboard::isKeyPressed(Keyboard::Escape)) 
 	{
 		Engine::ChangeScene(&menu);
 	}

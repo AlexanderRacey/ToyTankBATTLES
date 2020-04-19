@@ -159,3 +159,7 @@ void PhysicsComponent::setGravityScale(int32 gs)
 {
     _body->SetGravityScale(gs);
 }
+
+void PhysicsComponent::setTimer() {
+    _timer = 0.5;
+}

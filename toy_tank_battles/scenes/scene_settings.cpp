@@ -21,10 +21,7 @@ Sprite titleSprite1;
 Texture titleTexture1;
 Vector2f targetCoords1;
 Vector2u titleTextureSize1;
-/*
-Sprite backgroundSprite2;
-Texture backgroundTexture2;
-Vector2u backgroundSize2;*/
+
 Vector2u windowSizeSettings;
 
 // Display settings title
@@ -65,13 +62,6 @@ void SettingsScene::Load()
 {
 	// Display settings 
 	cout << "Settings Load \n";
-	/*{
-		auto txtSettings = makeEntity();
-		auto t = txtSettings->addComponent<TextComponent>("Settings");
-		t->getText().setCharacterSize(54);
-		t->getText().setOrigin(t->getText().getGlobalBounds().width / 2, t->getText().getGlobalBounds().height / 2);
-		txtSettings->setPosition(Vector2f(Engine::GetWindow().getSize().x / 2, 100.0f));
-	}*/
 
 	float x2 = Engine::getWindowSize().x;
 	float y2 = Engine::getWindowSize().y;
@@ -83,7 +73,7 @@ void SettingsScene::Load()
 	// Create settings menu
 	settingsMenu[0].setFont(font);
 	settingsMenu[0].setFillColor(Color(0, 168, 243, 255));
-	settingsMenu[0].setString("1280 x 720");
+	settingsMenu[0].setString("1440 x 900");
 	settingsMenu[0].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 40));
 
 	settingsMenu[1].setFont(font);
@@ -103,7 +93,7 @@ void SettingsScene::Load()
 
 	settingsMenu[4].setFont(font);
 	settingsMenu[4].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[4].setString("Back to Title");
+	settingsMenu[4].setString("Return to Menu");
 	settingsMenu[4].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 200));
 
 	selectedItemIndex2 = 0;
@@ -161,7 +151,7 @@ void SettingsScene::Update(const double& dt)
 		switch (GetPressedItem())
 		{
 			case 0:
-				Engine::setNewWindowSize(Vector2u(1280, 720), 2);
+				Engine::setNewWindowSize(Vector2u(1440, 900), 2);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 1:

@@ -28,7 +28,7 @@ Vector2u windowSizeHowToPlay;
 // Display settings title
 void HowToPlayScene::SetTitle()
 {
-	titleTexture2 = *Resources::load<Texture>("titleSettings.png");
+	titleTexture2 = *Resources::load<Texture>("titleHTP.png");
 	float x = Engine::GetWindow().getSize().x;
 	float y = Engine::GetWindow().getSize().y;
 	titleTextureSize2 = titleTexture2.getSize();
@@ -72,30 +72,40 @@ void HowToPlayScene::Load()
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
 	// Create settings menu
-	settingsMenu[0].setFont(font);
-	settingsMenu[0].setFillColor(Color(0, 168, 243, 255));
-	settingsMenu[0].setString("These need to be replaced with instructions");
-	settingsMenu[0].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 40));
+	instructionMenu[0].setFont(font);
+	instructionMenu[0].setFillColor(Color(255, 127, 39, 255));
+	instructionMenu[0].setString("You are the Blue Tank");
+	instructionMenu[0].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 40));
 
-	settingsMenu[1].setFont(font);
-	settingsMenu[1].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[1].setString("1504 x 846");
-	settingsMenu[1].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 80));
+	instructionMenu[1].setFont(font);
+	instructionMenu[1].setFillColor(Color(255, 127, 39, 255));
+	instructionMenu[1].setString("Eliminate all Orange Tanks!");
+	instructionMenu[1].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 80));
 
-	settingsMenu[2].setFont(font);
-	settingsMenu[2].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[2].setString("1920 x 1080");
-	settingsMenu[2].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 120));
+	instructionMenu[2].setFont(font);
+	instructionMenu[2].setFillColor(Color(255, 127, 39, 255));
+	instructionMenu[2].setString(" ");
+	instructionMenu[2].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 120));
 
-	settingsMenu[3].setFont(font);
-	settingsMenu[3].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[3].setString("Fullscreen");
-	settingsMenu[3].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 160));
+	instructionMenu[3].setFont(font);
+	instructionMenu[3].setFillColor(Color(255, 127, 39, 255));
+	instructionMenu[3].setString(" - Use the WASD keys to move your tank");
+	instructionMenu[3].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 160));
 
-	settingsMenu[4].setFont(font);
-	settingsMenu[4].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[4].setString("Back to Title");
-	settingsMenu[4].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 200));
+	instructionMenu[4].setFont(font);
+	instructionMenu[4].setFillColor(Color(255, 127, 39, 255));
+	instructionMenu[4].setString(" - Use the SPACE bar to fire your weapon");
+	instructionMenu[4].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 200));
+
+	instructionMenu[5].setFont(font);
+	instructionMenu[5].setFillColor(Color(255, 127, 39, 255));
+	instructionMenu[5].setString(" ");
+	instructionMenu[5].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 240));
+
+	instructionMenu[6].setFont(font);
+	instructionMenu[6].setFillColor(Color(0, 168, 243, 255));
+	instructionMenu[6].setString("Press ENTER to Return to Menu");
+	instructionMenu[6].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 280));
 
 	selectedItemIndex2 = 0;
 	setLoaded(true);
@@ -137,41 +147,10 @@ void HowToPlayScene::Update(const double& dt)
 	}
 
 	// Select options from menu
-	if (Keyboard::isKeyPressed(Keyboard::Up))
-	{
-		MoveUp();
-		this_thread::sleep_for(chrono::milliseconds(170));
-	}
-	else if (Keyboard::isKeyPressed(Keyboard::Down)) 
-	{
-		MoveDown();
-		this_thread::sleep_for(chrono::milliseconds(170));
-	}
 	else if (Keyboard::isKeyPressed(Keyboard::Enter)) 
 	{
-		switch (GetPressedItem())
-		{
-			case 0:
-				Engine::setNewWindowSize(Vector2u(1280, 720), 2);
-				this_thread::sleep_for(chrono::milliseconds(170));
-				break;
-			case 1:
-				Engine::setNewWindowSize(Vector2u(1504, 864), 2);
-				this_thread::sleep_for(chrono::milliseconds(170));
-				break;
-			case 2:
-				Engine::setNewWindowSize(Vector2u(1920, 1080), 2);
-				this_thread::sleep_for(chrono::milliseconds(170));
-				break;
-			case 3:
-				Engine::setNewWindowSize(Vector2u(1920, 1080), 1);
-				this_thread::sleep_for(chrono::milliseconds(170));
-				break;
-			case 4:
-				Engine::ChangeScene(&menu);
-				this_thread::sleep_for(chrono::milliseconds(170));
-				break;
-		}
+		Engine::ChangeScene(&menu);
+		this_thread::sleep_for(chrono::milliseconds(170));
 	}
 }
 
@@ -183,9 +162,9 @@ void HowToPlayScene::Render()
 	Renderer::queue(&titleSprite2);
 
 	// Display settings menu
-	for (int j = 0; j < MAX_NUMBER_OF_SETTINGS; j++)
+	for (int j = 0; j < MAX_NUMBER_OF_INSTRUCTIONS; j++)
 	{
-		Renderer::queue(&settingsMenu[j]);
+		Renderer::queue(&instructionMenu[j]);
 	}
 }
 
@@ -193,18 +172,18 @@ void HowToPlayScene::MoveUp()
 {
 	if (selectedItemIndex2 - 1 >= 0)
 	{
-		settingsMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
+		instructionMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex2--;
-		settingsMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));
+		instructionMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));
 	}
 }
 
 void HowToPlayScene::MoveDown()
 {
-	if (selectedItemIndex2 + 1 < MAX_NUMBER_OF_SETTINGS)
+	if (selectedItemIndex2 + 1 < MAX_NUMBER_OF_INSTRUCTIONS)
 	{
-		settingsMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
+		instructionMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex2++;
-		settingsMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));
+		instructionMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));
 	}
 }

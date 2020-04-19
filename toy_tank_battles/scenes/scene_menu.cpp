@@ -202,7 +202,7 @@ void MenuScene::UnLoad()
     float x2 = Engine::GetWindow().getSize().x;
     float y2 = Engine::GetWindow().getSize().y;
     Engine::GetWindow().setView(View(FloatRect(0, 0, x2, y2)));
-   // BackgroundSprite.reset();
+    //BackgroundSprite.reset();
     //Background.reset();
     Scene::UnLoad();
 }
