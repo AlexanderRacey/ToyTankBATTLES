@@ -3,6 +3,7 @@
 #include <engine.h>
 #include "../animation.h"
 #include "cmp_health.h"
+#include <levelsystem.h>
 
 using namespace std;
 using namespace sf;
@@ -45,8 +46,8 @@ void BulletComponent::update(double dt)
     }
 }
 
-BulletComponent::BulletComponent(Entity* p, float lifetime, float size, float impulse, float speed, float damage)
-    : Component(p), _lifetime(lifetime), _size(size), _impulse(impulse), _speed(speed), _damage(damage) {}
+BulletComponent::BulletComponent(Entity* p, float lifetime, float speed, float damage)
+    : Component(p), _lifetime(lifetime),  _speed(speed), _damage(damage) {}
 
 void BulletComponent::setTarget(shared_ptr<Entity> tar)
 {
@@ -90,6 +91,87 @@ bool BulletComponent::checkCollision() {
     }
     else
     {
+        return false;
+    }
+}
+
+PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage) : BulletComponent(p, lifetime, speed, damage)
+{
+}
+
+void BulletComponent::setDamage(float dam) {
+    _damage = dam;
+}
+
+void PlayerBullet::update(double dt)
+{
+    _lifetime -= dt;
+    if (_lifetime <= 0.f)
+    {
+        _parent->setForDelete();
+    }
+    else if (checkCollision()) {
+        _parent->setForDelete();
+    }
+    else {
+        move(dt);
+    }
+  
+}
+
+
+
+bool PlayerBullet::checkCollision()
+{
+    Vector2f pos = _parent->getPosition();
+
+    if (ls::getTileAt(pos) == ls::BROKEN || ls::getTileAt(pos) == ls::BROKEN_R) {
+
+        vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
+        for (auto t : potTargets)
+        {
+            auto sp = t->GetCompatibleComponent<SpriteComponent>();
+            auto bounds = sp[0]->getSprite().getGlobalBounds();
+
+            FloatRect bBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
+            if (bounds.intersects(bBounds))
+            {
+                if (t->isAlive())
+                {
+                    t->GetCompatibleComponent<BreakableComponent>()[0]->setExploded();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    else {
+        vector<shared_ptr<Entity>> potTargets = Engine::findEntity("enemy");
+        for (auto t : potTargets)
+        {
+            auto sp = t->GetCompatibleComponent<AnimationComponent>();
+            if (!sp.empty()) {
+                auto bounds = sp[0]->getSprite().getGlobalBounds();
+
+                FloatRect bBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
+                if (bounds.intersects(bBounds))
+                {
+                    if (t->isAlive())
+                    {
+                        auto healtcomp = t->GetCompatibleComponent<HealthComponent>();
+                        if(!healtcomp.empty()){
+                            if (healtcomp[0]->getHealth() > 0) {
+                                healtcomp[0]->deductHealth(_damage);
+                            }
+                            else {
+                                t->GetCompatibleComponent<BreakableComponent>()[0]->setExploded();
+                            }
+                        return true;
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 }

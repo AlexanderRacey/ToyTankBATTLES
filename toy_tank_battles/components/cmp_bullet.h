@@ -10,8 +10,6 @@ class BulletComponent : public Component
 {
     protected:
         float _lifetime;
-        float _size;
-        float _impulse;
         float _speed;
         float _damage;
         Vector2f direction;
@@ -21,13 +19,27 @@ class BulletComponent : public Component
     public:
         void update(double dt) override;
         void render() override {};
-        explicit BulletComponent(Entity* p, float lifetime = 3.f, float size = 1.f, float impulse = 1.f, float speed = 1.f, float damage = 1.f);
+        explicit BulletComponent(Entity* p, float lifetime = 3.f, float speed = 1.f, float damage = 1.f);
         BulletComponent() = delete;
 
         void setDirection(Vector2f dir);
         void move(double dt);
         void setTarget(shared_ptr<Entity> tar);
         bool checkCollision();
+        void setDamage(float dam);
+};
+
+
+class PlayerBullet : public BulletComponent
+{
+
+public:
+    void update(double dt) override;
+    explicit PlayerBullet(Entity* p, float lifetime = 3.f, float speed = 1.f, float damage = 1.f);
+    PlayerBullet() = delete;
+
+ 
+    bool checkCollision();
 };
 
 // Create base bullet component from class Component

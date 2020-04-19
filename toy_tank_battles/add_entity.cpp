@@ -7,6 +7,7 @@
 #include "components/cmp_sprite.h"
 #include "components/cmp_health.h"
 #include "components/cmp_breakable.h"
+#include "components/cmp_timed_component.h"
 
 using namespace sf;
 using namespace std;
@@ -52,6 +53,7 @@ shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
 	animation->setFrameTime(0.06f);
 
 	enemy->addComponent<EnemyAiComponent>();
+	enemy->addComponent<BreakableComponent>();
 
 	return enemy;
 }
@@ -61,13 +63,14 @@ shared_ptr<Entity> AddEntity::makeSmoke(Scene* scene, const Vector2f& pos)
 {
 	auto smoke = scene->makeEntity();
 	smoke->setPosition(pos);
-	smoke->addTag("enemy");
+	smoke->addTag("smoke");
 
 	auto smokeAnimation = smoke->addComponent<AnimationComponent>(Vector2f(87.0f, 87.0f));
 	Texture smokeTexture = *Resources::load<Texture>("smokeSpritesheet.png");
 	smokeAnimation->setSpritesheet(smokeTexture);
 	smokeAnimation->setFrameCount(30);
 	smokeAnimation->setFrameTime(0.06f);
+	smoke->addComponent<TimedComponent>();
 
 	return smoke;
 }

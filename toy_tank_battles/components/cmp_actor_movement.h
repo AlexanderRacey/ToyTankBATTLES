@@ -19,7 +19,6 @@ class ActorMovementComponent : public Component
         float getSpeed() const;
         void setSpeed(float speed);
 
-
         void move(const Vector2f& pos);
         void move(float x, float y);
         void increaseSpeed(float sp);
@@ -32,14 +31,23 @@ class ActorMovementComponent : public Component
 // Create player movement from class ActorMovementComponent
 class PlayerMovementComponent : public ActorMovementComponent
 {
+	protected:
+	//	bool validMove(const Vector2f&);
+	private:
+		Vector2f direction = { 0,-1 };
+		float firetimer = 0;
+		bool isBlocked(Vector2f pos);
     public:
 		PlayerMovementComponent() = delete;
 		explicit PlayerMovementComponent(Entity* p);
 		void setRotation(float rot);
+		float getRotation();
 
 		void move(const Vector2f& pos);
 		void update(double dt) override;
 		void render() override;
+
+		void fire();
 };
 
 

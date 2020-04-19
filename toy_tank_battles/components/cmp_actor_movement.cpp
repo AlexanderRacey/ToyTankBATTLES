@@ -58,21 +58,35 @@ void PlayerMovementComponent::update(double dt)
     {
         setRotation(0.0f);
         move(Vector2f(0, -_speed * dt));
+        direction = {0,-1};
     }
     if (Keyboard::isKeyPressed(Keyboard::S))
     {
         setRotation(180.0f);
         move(Vector2f(0, _speed * dt));
+        direction = { 0, 1 };
     }
     if (Keyboard::isKeyPressed(Keyboard::A))
     {
         setRotation(270.0f);
         move(Vector2f(-_speed * dt, 0));
+        direction = { -1, 0 };
     }
     if (Keyboard::isKeyPressed(Keyboard::D))
     {
         setRotation(90.0f);
         move(Vector2f(_speed * dt, 0));
+        direction = { 1, 0 };
+    }
+
+    if (Keyboard::isKeyPressed(Keyboard::Space))
+    {
+        if (firetimer > 0) {
+            firetimer -= dt;
+        }
+        else {
+            fire();
+        }      
     }
 
     ActorMovementComponent::update(dt);
@@ -86,12 +100,73 @@ void PlayerMovementComponent::render()
 void PlayerMovementComponent::move(const Vector2f& p)
 {
     auto pp = _parent->getPosition() + p;
-    if (validMove(pp))
+    if (!isBlocked(pp))
     {
         _parent->setPosition(pp);
     }
 }
 
+void PlayerMovementComponent::fire() {
+
+    auto bullet = _parent->scene->makeEntity();
+    bullet->setPosition(_parent->getPosition());
+    auto bulletcomp = bullet->addComponent<PlayerBullet>();
+    bulletcomp->setDamage(50.f);
+    bulletcomp->setDirection(direction);
+
+    auto spriteB = bullet->addComponent<SpriteComponent>();
+
+    spriteB->setTexture(Resources::load<Texture>("playerBullet.png"));
+
+    bullet->setRotation(getRotation());
+    firetimer = 0.7f;
+
+}
+
+float PlayerMovementComponent::getRotation()
+{
+    auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
+
+    if (!animation.empty()) {
+        return animation[0]->getRotation();
+    }
+    else {
+        return 0.f;
+    }
+}
+
+
+bool PlayerMovementComponent::isBlocked(Vector2f pos) {
+    if (ls::isWall(ls::getTileAt(pos))) {
+
+        if(ls::getTileAt(pos) == ls::BROKEN || ls::getTileAt(pos) == ls::BROKEN_R){
+
+        vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
+            for (auto t : potTargets)
+            {
+                auto sp = t->GetCompatibleComponent<SpriteComponent>();
+                    auto bounds = sp[0]->getSprite().getGlobalBounds();
+                    //cheating the left detection by making width much wider for now
+                    bounds = FloatRect(bounds.left - 50.f, bounds.top - 50.f, bounds.width + 120.f, bounds.height + 50.f);
+
+                    if (bounds.contains(pos))
+                    {
+                        if (t->isAlive())
+                        {
+                            return true;
+                        }
+                    }
+            }
+        return false;
+        }
+        else {
+            return true;
+        }
+    }
+    else {
+        return false;
+    }
+}
 
 
 // -- Enemy Component --
@@ -200,9 +275,6 @@ void EnemyAiComponent::update(double dt)
         case EnemyAiComponent::SHOTING:
         //    if (target->isAlive() && target->getTags().find("brokenHouse") != target->getTags().end()) {
         //maybe other entities like, player and enemy should have breakable comp as well
-            if (target == Engine::findEntity("player")[0]) {
-                cout << "player target";
-            }
             if (target->isAlive()) {
              auto breakable = target->GetCompatibleComponent<BreakableComponent>();
                 if (!breakable.empty()) {
@@ -397,9 +469,6 @@ void EnemyAiComponent::aimTurrent(Vector2f Pos)
 {
     //Aim turrent depending on tank direction it is facing
     //direction order : right, down, up, left
-    if (target == Engine::findEntity("player")[0]) {
-        cout << "player target";
-    }
     float m1 = 0.f;
     float m2 = 0.f;
     float form = 0.f;
@@ -466,9 +535,6 @@ float EnemyAiComponent::getTurrentRotation()
 
 void EnemyAiComponent::fire() {
 
-    if (target == Engine::findEntity("player")[0]) {
-        cout << "player target";
-    }
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
