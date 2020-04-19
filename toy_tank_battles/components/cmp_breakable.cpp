@@ -40,8 +40,9 @@ void BreakableComponent::setExploded()
 	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.70f, .70f);
 	auto bounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getLocalBounds();
 	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize().x/2, bounds.getSize().x/2);
-	
-	//smoke = AddEntity::makeSmoke(_parent->scene, _parent->getPosition());
-	//auto smoke = _parent->scene->makeEntity();
-	//smoke->setPosition(_parent->getPosition());
+}
+
+bool BreakableComponent::isExploded() 
+{
+	return _exploded;
 }

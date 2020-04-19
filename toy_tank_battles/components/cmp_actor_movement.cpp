@@ -5,6 +5,7 @@
 #include "cmp_physics.h"
 #include "../animation.h"
 #include "../add_entity.h"
+#include "cmp_breakable.h"
 
 using namespace sf;
 using namespace std;
@@ -120,6 +121,7 @@ void EnemyAiComponent::update(double dt)
     //Next position
     Vector2f newpos = pos + _direction * mva;
     Vector2f testPos = newpos + _offset;
+   // auto breakable;
 
     switch (_state)
     {
@@ -136,17 +138,23 @@ void EnemyAiComponent::update(double dt)
                 {
                     auto sp = t->GetCompatibleComponent<SpriteComponent>();
                     auto bounds = sp[0]->getSprite().getGlobalBounds();
-                    bounds = FloatRect(bounds.left - 80.f, bounds.top -80.f, bounds.width + 80.f, bounds.height + 80.f);
+                    //cheating the left detection by making width much wider for now
+                    bounds = FloatRect(bounds.left - 50.f, bounds.top -50.f, bounds.width + 120.f, bounds.height + 50.f);
                     
                     if (bounds.contains(testPos)) 
                     {
                         if (t->isAlive())
                         {
                             target = t;
+                            fireTimer = 0.5f;
                             _state = AIMING;
+                            blocked = true;
                             break;
                         }
                     }
+                    if (!blocked) {
+                        move(newpos);
+                  }
                 }
        
             }
@@ -157,8 +165,25 @@ void EnemyAiComponent::update(double dt)
             }
             break;
         case EnemyAiComponent::SHOTING:
-            fire();
-            _state = WAIT;
+            if (target->isAlive()) {
+             auto breakable = target->GetCompatibleComponent<BreakableComponent>();
+                if (!breakable.empty()) {
+                    if (!breakable[0]->isExploded()) {
+                        fireTimer -= dt;
+                        if (fireTimer <= 0) {
+                            fire();
+                            fireTimer = 3.f;
+                            }
+                    }
+                  //  else {
+                   //     blocked
+                   // }
+                    }
+            }else{
+     //       fire();
+            _state = MOVING;
+            blocked = false;
+            }
             break;
         case EnemyAiComponent::WAIT:
             break;
@@ -403,23 +428,24 @@ void EnemyAiComponent::fire()
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
     bulletcomp->setTarget(target);
+    tAngle = tAngle / 10;
     switch (index)
     {
         case 0:
             //facing right
-            bulletcomp->setDirection(_direction);
+            bulletcomp->setDirection(_direction + Vector2f(-tAngle, 0));
             break;
         case 1:
             //facing downwards
-            bulletcomp->setDirection(_direction);
+            bulletcomp->setDirection(_direction + Vector2f(0, tAngle));
             break;
         case 2:
             //facing upwards
-            bulletcomp->setDirection(_direction);
+            bulletcomp->setDirection(_direction + Vector2f(tAngle, 0));;
             break;
         case 3:
             //facing left
-            bulletcomp->setDirection(_direction);
+            bulletcomp->setDirection(_direction + Vector2f(0, -tAngle));
             break;
     }
 

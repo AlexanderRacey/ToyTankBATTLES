@@ -17,6 +17,7 @@ void BulletComponent::update(double dt)
                 auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
                 if (!breakable.empty()) {
                     breakable[0]->setExploded();
+                    _parent->setForDelete();
                 }
             }
         }

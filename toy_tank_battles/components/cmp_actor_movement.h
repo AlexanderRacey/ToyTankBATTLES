@@ -54,8 +54,10 @@ class EnemyAiComponent : public ActorMovementComponent
 		state _state;
 		float gap;
 		bool turnRight = false;
+		bool blocked = false;
 		shared_ptr<Entity> target;
 		float tAngle;
+		float fireTimer = 0.f;
 
 	public:
 		explicit EnemyAiComponent(Entity* p);
