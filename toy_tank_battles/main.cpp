@@ -6,8 +6,8 @@
 using namespace sf;
 using namespace std;
 
-int gameWidth = 1280;
-int gameHeight = 720;
+int gameWidth = 1440;
+int gameHeight = 900;
 
 MenuScene menu;
 HowToPlayScene howtoplay;

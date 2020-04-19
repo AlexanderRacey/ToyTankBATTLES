@@ -8,7 +8,10 @@
 #include "cmp_breakable.h"
 
 using namespace sf;
+using namespace std;
 
+
+// -- Actor movement --
 void ActorMovementComponent::update(double dt) {};
 
 bool ActorMovementComponent::validMove(const sf::Vector2f& pos)
@@ -16,26 +19,24 @@ bool ActorMovementComponent::validMove(const sf::Vector2f& pos)
     return (!ls::isWall(ls::getTileAt(pos)));
 };
 
-ActorMovementComponent::ActorMovementComponent(Entity* p)
-    : _speed(50.0f), Component(p) {};
+ActorMovementComponent::ActorMovementComponent(Entity* p) : _speed(50.0f), Component(p) {};
 
-
-void ActorMovementComponent::move(const sf::Vector2f& pos) {
+void ActorMovementComponent::move(const sf::Vector2f& pos)
+{
     if (validMove(pos)) {
         _parent->setPosition(pos);
     }
 };
 
-void ActorMovementComponent::move(float x, float y) {
-    move(Vector2f(x, y));
-}
-
+void ActorMovementComponent::move(float x, float y) { move(Vector2f(x, y)); }
 float ActorMovementComponent::getSpeed() const { return _speed; }
 void ActorMovementComponent::setSpeed(float speed) { _speed = speed; }
 
 
-// -- Player movement
-PlayerMovementComponent::PlayerMovementComponent(Entity* p) : ActorMovementComponent(p) {
+
+// -- Player movement --
+PlayerMovementComponent::PlayerMovementComponent(Entity* p) : ActorMovementComponent(p)
+{
     setSpeed(100.f);
 }
 
@@ -47,27 +48,6 @@ void PlayerMovementComponent::setRotation(float rot)
     {
         animation[0]->setRotation(rot);
     }
-}
-
-void PlayerMovementComponent::fire(float rotation) 
-{
-    auto bullet = _parent->scene->makeEntity();
-    bullet->setPosition(_parent->getPosition());
-    bullet->addComponent<BulletComponent>();
-
-    auto animation = bullet->addComponent<AnimationComponent>(Vector2f(10.f, 17.f));
-    Texture bulletTexture = *Resources::load<Texture>("playerBullet.png");
-    animation->setSpritesheet(bulletTexture);
-    animation->setFrameCount(1);
-    animation->setFrameTime(0.06f);
-
-    float inverse = fmod((rotation + 180.f), 360);  //Sets rotation of bullet to be inverse of ship rotation, using fancy maths.
-    bullet->setRotation(inverse);
-
-    /*auto p = bullet->addComponent<PhysicsComponent>(true, Vector2f(8.f, 8.f));
-    p->setRestitution(.4f);
-    p->setFriction(.005f);
-    p->impulse(rotate(Vector2f(0, 15.f), -_parent->getRotation()));*/
 }
 
 void PlayerMovementComponent::update(double dt)
@@ -94,11 +74,6 @@ void PlayerMovementComponent::update(double dt)
         setRotation(90.0f);
         move(Vector2f(_speed * dt, 0));
     }
-    if (Keyboard::isKeyPressed(Keyboard::Space))
-    {
-        float rotation = _parent->getRotation();
-        fire(rotation);
-    }
 
     ActorMovementComponent::update(dt);
 }
@@ -118,25 +93,26 @@ void PlayerMovementComponent::move(const Vector2f& p)
 }
 
 
+
 // -- Enemy Component --
 //direction order : right, down, up, left
 static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
 const float rotations[] = { 90.f, 180.f, 0.f, 270.f};
 
 
-EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(30.f) 
+EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(30.f)
 {
     ChangeDirection();
     setSpeed(50.f);
     setRotation(rotations[index]);
 };
 
-void EnemyAiComponent::move(const sf::Vector2f& pos) 
+void EnemyAiComponent::move(const sf::Vector2f& pos)
 {
     _parent->setPosition(pos);
 }
 
-void EnemyAiComponent::update(double dt) 
+void EnemyAiComponent::update(double dt)
 {
     //amount to move
     const auto mva = (float)(dt * _speed);
@@ -150,7 +126,7 @@ void EnemyAiComponent::update(double dt)
     switch (_state)
     {
         case EnemyAiComponent::MOVING:
-           if (validMove(testPos)) 
+           if (validMove(testPos))
             {
             shared_ptr<Entity> player = Engine::findEntity("player")[0];
             FloatRect pBounds = player->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
@@ -174,7 +150,7 @@ void EnemyAiComponent::update(double dt)
                 eBounds = FloatRect(eBounds.left - 100.f, eBounds.top -50.f, eBounds.width, eBounds.height + 50.f);
                 break;
             }
-           
+
                 if (eBounds.intersects(pBounds)) {
                         target = player;
                         fireTimer = 0.5f;
@@ -185,20 +161,23 @@ void EnemyAiComponent::update(double dt)
                 else {
                     move(newpos);
                 }
-                
+
             }
             else if (ls::BROKEN == ls::getTileAt(testPos) ||
                  ls::BROKEN_R == ls::getTileAt(testPos)) {
 
                 vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
-                for (auto t : potTargets) {
+                for (auto t : potTargets)
+                {
                     auto sp = t->GetCompatibleComponent<SpriteComponent>();
                     auto bounds = sp[0]->getSprite().getGlobalBounds();
                     //cheating the left detection by making width much wider for now
                     bounds = FloatRect(bounds.left - 50.f, bounds.top -50.f, bounds.width + 120.f, bounds.height + 50.f);
-                    
-                    if (bounds.contains(testPos)) {
-                        if (t->isAlive()) {
+
+                    if (bounds.contains(testPos))
+                    {
+                        if (t->isAlive())
+                        {
                             target = t;
                             fireTimer = 0.5f;
                             _state = AIMING;
@@ -210,7 +189,7 @@ void EnemyAiComponent::update(double dt)
                         move(newpos);
                   }
                 }
-       
+
             }
             else
             {
@@ -260,25 +239,25 @@ void EnemyAiComponent::update(double dt)
                 _state = MOVING;
             }
             //up
-            else if (_direction == Vector2f(0, -1) && (getRotation() == 360.f || getRotation() == 0.f)) 
+            else if (_direction == Vector2f(0, -1) && (getRotation() == 360.f || getRotation() == 0.f))
             {
                 setRotation(0.f);
                 setSpeed(50);
                 _state = MOVING;
             }
             //down
-            else if (_direction == Vector2f(0, 1) && getRotation() == 180.f) 
+            else if (_direction == Vector2f(0, 1) && getRotation() == 180.f)
             {
                 setSpeed(50);
                 _state = MOVING;
             }
-            else 
+            else
             {
-                if (turnRight) 
+                if (turnRight)
                 {
                     rotate(0.5f);
                 }
-                else 
+                else
                 {
                     rotate(-0.5f);
                 }
@@ -309,11 +288,11 @@ void EnemyAiComponent::ChangeDirection()
         case 0:
             //move right
             //setRotation(90.f);
-            if (_direction == Vector2f(0, 1)) 
+            if (_direction == Vector2f(0, 1))
             {
                 turnRight = false;
             }
-            else 
+            else
             {
                 turnRight = true;
             }
@@ -322,7 +301,7 @@ void EnemyAiComponent::ChangeDirection()
         case 1:
             //Move down
             //setRotation(0.f);
-            if (_direction == Vector2f(-1, 0)) 
+            if (_direction == Vector2f(-1, 0))
             {
                 turnRight = false;
             }
@@ -339,7 +318,7 @@ void EnemyAiComponent::ChangeDirection()
             {
                 turnRight = false;
             }
-            else 
+            else
             {
                 turnRight = true;
             }
@@ -348,11 +327,11 @@ void EnemyAiComponent::ChangeDirection()
         case 3:
             //Move left
             //setRotation(90.f);
-            if (_direction == Vector2f(0, -1)) 
+            if (_direction == Vector2f(0, -1))
             {
                 turnRight = false;
             }
-            else 
+            else
             {
                 turnRight = true;
             }
@@ -382,13 +361,13 @@ void EnemyAiComponent::rotate(float rot)
 {
     auto animation = _parent->GetCompatibleComponent<EnemyAnimationComp>();
 
-    if (!animation.empty()) 
+    if (!animation.empty())
     {
         animation[0]->rotate(rot);
     }
 }
 
-float EnemyAiComponent::getRotation() 
+float EnemyAiComponent::getRotation()
 {
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
@@ -400,7 +379,7 @@ float EnemyAiComponent::getRotation()
     }
 }
 
-FloatRect EnemyAiComponent::getBounds() 
+FloatRect EnemyAiComponent::getBounds()
 {
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
@@ -414,7 +393,8 @@ FloatRect EnemyAiComponent::getBounds()
     }
 }
 
-void EnemyAiComponent::aimTurrent(Vector2f Pos) {
+void EnemyAiComponent::aimTurrent(Vector2f Pos)
+{
     //Aim turrent depending on tank direction it is facing
     //direction order : right, down, up, left
     if (target == Engine::findEntity("player")[0]) {
@@ -442,7 +422,7 @@ void EnemyAiComponent::aimTurrent(Vector2f Pos) {
         form = (m2 - m1) / (1 + m2 * m1);
         tAngle = atan(form) * 10000;
         setTurrentRotation(tAngle);
-     
+
         break;
     case 2:
         //facing upwards
@@ -464,7 +444,8 @@ void EnemyAiComponent::aimTurrent(Vector2f Pos) {
 
 }
 
-void EnemyAiComponent::setTurrentRotation(float rot) {
+void EnemyAiComponent::setTurrentRotation(float rot)
+{
     auto animation = _parent->GetCompatibleComponent<EnemyAnimationComp>();
 
     if (!animation.empty())
@@ -473,7 +454,8 @@ void EnemyAiComponent::setTurrentRotation(float rot) {
     }
 }
 
-float EnemyAiComponent::getTurrentRotation() {
+float EnemyAiComponent::getTurrentRotation()
+{
     auto animation = _parent->GetCompatibleComponent<EnemyAnimationComp>();
 
     if (!animation.empty())
@@ -512,10 +494,9 @@ void EnemyAiComponent::fire() {
         bulletcomp->setDirection(_direction + Vector2f(0, -angle));
         break;
     }
-   
 
     auto spriteB = bullet->addComponent<SpriteComponent>();
-   // Texture bulletTexture = Resources::load<Texture>("enemyBullet.png");
+    // Texture bulletTexture = Resources::load<Texture>("enemyBullet.png");
     spriteB->setTexture(Resources::load<Texture>("enemyBullet.png"));
     spriteB->getSprite().setScale(Vector2f(0.6, 0.6));
     auto bounds = spriteB->getSprite().getGlobalBounds();

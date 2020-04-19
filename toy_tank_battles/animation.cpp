@@ -7,7 +7,7 @@ using namespace sf;
 using namespace std;
 
 // Create animation component
-AnimationComponent::AnimationComponent(Entity* p, Vector2f size) : Component(p), set_size(size) 
+AnimationComponent::AnimationComponent(Entity* p, Vector2f size) : Component(p), set_size(size)
 {
 	animationTimer = 0.0f;
 	currentFrame.width = set_size.x;
@@ -82,11 +82,13 @@ void AnimationComponent::setScale(const Vector2f& scale)
 	sprite.setScale(scale);
 }
 
-void AnimationComponent::setRotation(float rot) {
+void AnimationComponent::setRotation(float rot)
+{
 	sprite.setRotation(rot);
 }
 
-void AnimationComponent::rotate(float rot) {
+void AnimationComponent::rotate(float rot) 
+{
 	sprite.rotate(rot);
 }
 /*
@@ -95,7 +97,8 @@ void AnimationComponent::setOrigin(float rot) {
 }
 */
 
-float AnimationComponent::getRotation() {
+float AnimationComponent::getRotation() 
+{
 	return sprite.getRotation();
 }
 
@@ -124,9 +127,9 @@ const Sprite& AnimationComponent::getSprite() const
 	return sprite;
 }
 
-//enemy animation components
 
 
+// -- Enemy animation components
 EnemyAnimationComp::EnemyAnimationComp(Entity* p, Vector2f size) : AnimationComponent(p, size)
 {
 	turretImage = *Resources::load<Texture>("enemyTurret.png");

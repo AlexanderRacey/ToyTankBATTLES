@@ -40,10 +40,12 @@ class AnimationComponent : public Component
 		AnimationComponent() = delete;
 };
 
-class EnemyAnimationComp : public AnimationComponent {
+class EnemyAnimationComp : public AnimationComponent
+{
 	protected:
 		Sprite turretSprite;
 		Texture turretImage;
+
 	public:
 		explicit EnemyAnimationComp(Entity* p, Vector2f size);
 		void setTurretRotation(float rot);

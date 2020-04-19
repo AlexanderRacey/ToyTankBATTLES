@@ -1,5 +1,8 @@
 #include "cmp_breakable.h"
+#include "../animation.h"
+#include "../add_entity.h"
 #include "cmp_sprite.h"
+#include "../game.h"
 #include <system_resources.h>
 #include "../animation.h"
 
@@ -8,16 +11,19 @@ using namespace std;
 
 BreakableComponent::BreakableComponent(Entity* p) : Component(p), _exploded(false), _timer(0) {};
 
-void BreakableComponent::update(double dt) {
-	//if timer was set by explosion subtract from timer
-	if (_timer > 0) {
+void BreakableComponent::update(double dt)
+{
+	// If timer was set by explosion subtract from timer
+	if (_timer > 0)
+	{
 		_timer -= dt;
 	}
 
-	if (_exploded) {
-
-		//if timer run out clear sprite delete
-		if (_timer <= 0) {
+	if (_exploded)
+	{
+		// If timer run out clear sprite delete
+		if (_timer <= 0)
+		{
 			_parent->setForDelete();
 		}
 	}
@@ -25,7 +31,8 @@ void BreakableComponent::update(double dt) {
 }
 
 //Set exploded when bullet destroys house
-void BreakableComponent::setExploded() {
+void BreakableComponent::setExploded()
+{
 	_exploded = true;
 	_timer = 1.f;
 	//set sprite to explotion sprite
@@ -46,6 +53,7 @@ void BreakableComponent::setExploded() {
 	}
 }
 
-bool BreakableComponent::isExploded() {
+bool BreakableComponent::isExploded()
+{
 	return _exploded;
 }

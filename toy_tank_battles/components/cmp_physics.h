@@ -13,6 +13,7 @@ class PhysicsComponent : public Component
         b2Body* _body;
         const bool _dynamic;
         b2Fixture* _fixture;
+        float _timer = 0;
 
     public:
         PhysicsComponent(Entity* p, bool dyn, const Vector2f& size);
@@ -32,5 +33,6 @@ class PhysicsComponent : public Component
         void setVelocity(const Vector2f& v);
         void teleport(const Vector2f& v);
         void setGravityScale(int32 gs);
+        void setTimer();
         ~PhysicsComponent() override;
 };

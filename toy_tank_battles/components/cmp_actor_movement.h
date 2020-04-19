@@ -1,5 +1,6 @@
 #pragma once
 #include <ecm.h>
+#include "cmp_sprite.h"
 
 using namespace sf;
 using namespace std;
@@ -27,6 +28,7 @@ class ActorMovementComponent : public Component
         void update(double dt) override;
 };
 
+
 // Create player movement from class ActorMovementComponent
 class PlayerMovementComponent : public ActorMovementComponent
 {
@@ -35,7 +37,6 @@ class PlayerMovementComponent : public ActorMovementComponent
 		explicit PlayerMovementComponent(Entity* p);
 		void setRotation(float rot);
 
-		void fire(float rotation);
 		void move(const Vector2f& pos);
 		void update(double dt) override;
 		void render() override;
