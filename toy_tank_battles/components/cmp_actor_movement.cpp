@@ -150,12 +150,46 @@ void EnemyAiComponent::update(double dt)
     switch (_state)
     {
         case EnemyAiComponent::MOVING:
-            if (validMove(testPos)) 
+           if (validMove(testPos)) 
             {
-                move(newpos);
+            shared_ptr<Entity> player = Engine::findEntity("player")[0];
+            FloatRect pBounds = player->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
+            FloatRect eBounds = _parent->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
+            switch (index)
+            {
+            case 0:
+                //move right
+                eBounds = FloatRect(eBounds.left, eBounds.top - 50.f, eBounds.width + 100.f, eBounds.height + 50.f);
+                break;
+            case 1:
+                //Move down
+                eBounds = FloatRect(eBounds.left - 50.f, eBounds.top, eBounds.width + 50.f, eBounds.height + 100.f);
+                break;
+            case 2:
+                //Move Up
+                eBounds = FloatRect(eBounds.left - 50.f, eBounds.top - 100.f, eBounds.width + 50.f, eBounds.height);
+                break;
+            case 3:
+                //Move left
+                eBounds = FloatRect(eBounds.left - 100.f, eBounds.top -50.f, eBounds.width, eBounds.height + 50.f);
+                break;
+            }
+           
+                if (eBounds.intersects(pBounds)) {
+                        target = player;
+                        fireTimer = 0.5f;
+                        _state = AIMING;
+                        break;
+
+                }
+                else {
+                    move(newpos);
+                }
+                
             }
             else if (ls::BROKEN == ls::getTileAt(testPos) ||
-                ls::BROKEN_R == ls::getTileAt(testPos)) {
+                 ls::BROKEN_R == ls::getTileAt(testPos)) {
+
                 vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
                 for (auto t : potTargets) {
                     auto sp = t->GetCompatibleComponent<SpriteComponent>();
@@ -185,6 +219,11 @@ void EnemyAiComponent::update(double dt)
             }
             break;
         case EnemyAiComponent::SHOTING:
+        //    if (target->isAlive() && target->getTags().find("brokenHouse") != target->getTags().end()) {
+        //maybe other entities like, player and enemy should have breakable comp as well
+            if (target == Engine::findEntity("player")[0]) {
+                cout << "player target";
+            }
             if (target->isAlive()) {
              auto breakable = target->GetCompatibleComponent<BreakableComponent>();
                 if (!breakable.empty()) {
@@ -378,11 +417,15 @@ FloatRect EnemyAiComponent::getBounds()
 void EnemyAiComponent::aimTurrent(Vector2f Pos) {
     //Aim turrent depending on tank direction it is facing
     //direction order : right, down, up, left
+    if (target == Engine::findEntity("player")[0]) {
+        cout << "player target";
+    }
     float m1 = 0.f;
     float m2 = 0.f;
     float form = 0.f;
     tAngle = 0.f;
-    Vector2f tilePos = ls::getTilePosAt(Pos);
+   // Vector2f tilePos = ls::getTilePosAt(Pos);
+    Vector2f tilePos = target->getPosition();
     switch (index) {
     case 0:
         //facing right
@@ -441,28 +484,32 @@ float EnemyAiComponent::getTurrentRotation() {
 
 void EnemyAiComponent::fire() {
 
+    if (target == Engine::findEntity("player")[0]) {
+        cout << "player target";
+    }
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
     bulletcomp->setTarget(target);
-    tAngle = tAngle / 10;
+    float angle = tAngle / 100;
     switch (index)
     {
     case 0:
         //facing right
-        bulletcomp->setDirection(_direction + Vector2f(-tAngle, 0));
+        bulletcomp->setDirection(_direction + Vector2f(-angle, 0));
         break;
     case 1:
         //facing downwards
-        bulletcomp->setDirection(_direction + Vector2f(0, tAngle));
+       // bulletcomp->setDirection(_direction + Vector2f(0, angle));
+        bulletcomp->setDirection(_direction);
         break;
     case 2:
         //facing upwards
-        bulletcomp->setDirection(_direction + Vector2f(tAngle, 0));;
+        bulletcomp->setDirection(_direction + Vector2f(angle, 0));;
         break;
     case 3:
         //facing left
-        bulletcomp->setDirection(_direction + Vector2f(0, -tAngle));
+        bulletcomp->setDirection(_direction + Vector2f(0, -angle));
         break;
     }
    

@@ -5,6 +5,8 @@
 #include "system_resources.h"
 #include "components/cmp_actor_movement.h"
 #include "components/cmp_sprite.h"
+#include "components/cmp_health.h"
+#include "components/cmp_breakable.h"
 
 using namespace sf;
 using namespace std;
@@ -23,6 +25,8 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	tankAnimation->setFrameTime(0.06f);
 
 	player->addComponent<PlayerMovementComponent>();
+	player->addComponent<HealthComponent>();
+	player->addComponent<BreakableComponent>();
 
 	return player;
 }
@@ -33,6 +37,7 @@ shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
 	auto enemy = scene->makeEntity();
 	enemy->setPosition(pos);
 	enemy->addTag("enemy");
+	enemy->addComponent<HealthComponent>();
 	//Add Turret 
 	/*
 	auto turret = enemy->addComponent<SpriteComponent>();

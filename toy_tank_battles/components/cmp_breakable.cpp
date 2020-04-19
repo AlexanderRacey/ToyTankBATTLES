@@ -1,6 +1,7 @@
 #include "cmp_breakable.h"
 #include "cmp_sprite.h"
 #include <system_resources.h>
+#include "../animation.h"
 
 using namespace sf;
 using namespace std;
@@ -28,10 +29,21 @@ void BreakableComponent::setExploded() {
 	_exploded = true;
 	_timer = 1.f;
 	//set sprite to explotion sprite
-	_parent->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(Resources::load<Texture>("smokeGrey4.png"));
-	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.70f, .70f);
-	auto bounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getLocalBounds();
-	_parent->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize().x/2, bounds.getSize().x/2);
+	auto spComp = _parent->GetCompatibleComponent<SpriteComponent>();
+	if (!spComp.empty()){
+		spComp[0]->setTexture(Resources::load<Texture>("smokeGrey4.png"));
+		spComp[0]->getSprite().setScale(.70f, .70f);
+	auto bounds = spComp[0]->getSprite().getLocalBounds();
+	spComp[0]->getSprite().setOrigin(bounds.getSize().x/2, bounds.getSize().x/2);
+	}
+	else {
+		auto anim = _parent->GetCompatibleComponent<AnimationComponent>();
+		anim[0]->setSpritesheet(*Resources::load<Texture>("smokeGrey4.png"));
+		anim[0]->setFrameCount(1);
+		anim[0]->setScale(Vector2f(0.7, 0.7));
+		auto bounds = anim[0]->getSprite().getLocalBounds();
+		anim[0]->setSize(bounds.getSize());
+	}
 }
 
 bool BreakableComponent::isExploded() {

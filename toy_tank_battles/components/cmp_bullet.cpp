@@ -1,5 +1,8 @@
 #include "cmp_bullet.h"
 #include "cmp_breakable.h"
+#include <engine.h>
+#include "../animation.h"
+#include "cmp_health.h"
 
 using namespace std;
 using namespace sf;
@@ -13,11 +16,28 @@ void BulletComponent::update(double dt)
     }
     else{
         if (targetset) {
+
             if (checkCollision()) {
+                if (_target == Engine::findEntity("player")[0]) {
+                    auto health = _target->GetCompatibleComponent<HealthComponent>();
+
+                  if (health[0]->getHealth() < 0) {
+                        auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
+                        if (!breakable.empty()) {
+                            breakable[0]->setExploded();
+                            _parent->setForDelete();
+                        }
+                    }
+                    else {
+                        health[0]->deductHealth(_damage);
+                        _parent->setForDelete();
+                    }
+                }else{
                 auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
                 if (!breakable.empty()) {
                     breakable[0]->setExploded();
                     _parent->setForDelete();
+                }
                 }
             }
         }
@@ -46,9 +66,16 @@ void BulletComponent::move(double dt) {
 
 bool BulletComponent::checkCollision() {
     if (_target->isAlive()) {
-        auto bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
+        FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
         //would not work for animation,need to implement new check. 
-        auto targetBounds = _target->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
+        FloatRect targetBounds;
+        if (_target == Engine::findEntity("player")[0]){
+            targetBounds = _target->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
+        }
+        else {
+            targetBounds = _target->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
+        }
+      
 
         if (bulletBounds.intersects(targetBounds)) {
             return true;

@@ -89,6 +89,11 @@ void AnimationComponent::setRotation(float rot) {
 void AnimationComponent::rotate(float rot) {
 	sprite.rotate(rot);
 }
+/*
+void AnimationComponent::setOrigin(float rot) {
+	sprite.rotate(rot);
+}
+*/
 
 float AnimationComponent::getRotation() {
 	return sprite.getRotation();
