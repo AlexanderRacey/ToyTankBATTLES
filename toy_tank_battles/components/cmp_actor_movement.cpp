@@ -14,16 +14,18 @@ using namespace std;
 // -- Actor movement --
 void ActorMovementComponent::update(double dt) {};
 
-bool ActorMovementComponent::validMove(const sf::Vector2f& pos)
+bool ActorMovementComponent::validMove(const Vector2f& pos)
 {
+    //return (LevelSystem::getTileAt(pos) != LevelSystem::WALL);
     return (!ls::isWall(ls::getTileAt(pos)));
 };
 
 ActorMovementComponent::ActorMovementComponent(Entity* p) : _speed(50.0f), Component(p) {};
 
-void ActorMovementComponent::move(const sf::Vector2f& pos)
+void ActorMovementComponent::move(const Vector2f& pos)
 {
-    if (validMove(pos)) {
+    if (validMove(pos)) 
+    {
         _parent->setPosition(pos);
     }
 };
@@ -108,8 +110,8 @@ void PlayerMovementComponent::move(const Vector2f& p)
     }
 }
 
-void PlayerMovementComponent::fire() {
-
+void PlayerMovementComponent::fire() 
+{
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<PlayerBullet>();
@@ -122,17 +124,18 @@ void PlayerMovementComponent::fire() {
 
     bullet->setRotation(getRotation());
     firetimer = 0.7f;
-
 }
 
 float PlayerMovementComponent::getRotation()
 {
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
-    if (!animation.empty()) {
+    if (!animation.empty())
+    {
         return animation[0]->getRotation();
     }
-    else {
+    else 
+    {
         return 0.f;
     }
 }
@@ -142,7 +145,6 @@ bool PlayerMovementComponent::isBlocked(Vector2f pos)
 {
     if (ls::isWall(ls::getTileAt(pos)))
     {
-
         if(ls::getTileAt(pos) == ls::BROKEN || ls::getTileAt(pos) == ls::BROKEN_R)
         {
             vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
@@ -454,10 +456,12 @@ float EnemyAiComponent::getRotation()
 {
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
-    if (!animation.empty()) {
+    if (!animation.empty()) 
+    {
        return animation[0]->getRotation();
     }
-    else {
+    else 
+    {
         return 0.f;
     }
 }
@@ -484,7 +488,7 @@ void EnemyAiComponent::aimTurrent(Vector2f Pos)
     float m2 = 0.f;
     float form = 0.f;
     tAngle = 0.f;
-   // Vector2f tilePos = ls::getTilePosAt(Pos);
+    //Vector2f tilePos = ls::getTilePosAt(Pos);
     Vector2f tilePos = target->getPosition();
     switch (index) {
     case 0:

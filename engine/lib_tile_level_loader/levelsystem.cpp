@@ -238,7 +238,7 @@ Vector2f LevelSystem::getTilePosAt(Vector2f v)
     }
 }
 
-bool LevelSystem::isOnGrid(sf::Vector2f v) 
+bool LevelSystem::isOnGrid(Vector2f v) 
 {
     auto a = v - _offset;
     if (a.x < 0 || a.y < 0)
