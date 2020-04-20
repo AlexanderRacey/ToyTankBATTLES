@@ -14,8 +14,6 @@ shared_ptr<Texture> house2;
 shared_ptr<Texture> house3;
 shared_ptr<Texture> house4;
 shared_ptr<Texture> house5;
-//shared_ptr<Texture> broken;
-//shared_ptr<Texture> broken2;
 shared_ptr<Texture> wall;
 
 vector<shared_ptr<Texture>> houses;
@@ -215,13 +213,22 @@ LevelSystem::Tile LevelSystem::getTileAt(Vector2f v)
     auto a = v - _offset;
     if (a.x < 0 || a.y < 0) 
     {
-        throw string("Tile out of range ");
+       // throw string("Tile out of range ");
         return NOTVALID;
     }
     else 
     {
         return getTile(Vector2ul((v - _offset) / (_tileSize)));
     }
+}
+
+LevelSystem::Tile LevelSystem::getTileAt(Vector2f v,  Vector2f offset)
+{
+    auto a = v - offset;
+    if (a.x < 0 || a.y < 0) {
+        throw string("Tile out of range ");
+    }
+    return getTile(Vector2ul((v - offset) / (_tileSize)));
 }
 
 Vector2f LevelSystem::getTilePosAt(Vector2f v)
@@ -255,7 +262,7 @@ bool LevelSystem::isOnGrid(sf::Vector2f v)
 
 void LevelSystem::setOffset(const Vector2f& _offset) 
 {
-    LevelSystem::_offset = _offset + Vector2f(_tileSize/2, _tileSize/2);
+   // LevelSystem::_offset = _offset + Vector2f(_tileSize/2, _tileSize/2);
     buildSprites();
 }
 
@@ -274,7 +281,7 @@ const Vector2f& LevelSystem::getOffset() { return _offset; }
 
 float LevelSystem::getTileSize() { return _tileSize; }
 
-bool ls::isWall(Tile t) 
+bool LevelSystem::isWall(Tile t)
 {
     return (t == HOUSE || t == HOUSE_R || t == WALL || t == BROKEN || t == BROKEN_R || t == NOTVALID);
 }

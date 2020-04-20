@@ -39,13 +39,6 @@ shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
 	enemy->setPosition(pos);
 	enemy->addTag("enemy");
 	enemy->addComponent<HealthComponent>();
-	//Add Turret 
-	/*
-	auto turret = enemy->addComponent<SpriteComponent>();
-	turret->setTexture(Resources::load<Texture>("enemyTurret.png"));
-	auto bounds = turret->getSprite().getGlobalBounds();
-	turret->getSprite().setOrigin(bounds.getSize().x / 2, bounds.getSize().y);
-	*/
 	auto animation = enemy->addComponent<EnemyAnimationComp>(Vector2f(57.5f, 55.0f));
 	shared_ptr<Texture> s = Resources::load<Texture>("enemySpritesheet.png");
 	animation->setSpritesheet(*s);
