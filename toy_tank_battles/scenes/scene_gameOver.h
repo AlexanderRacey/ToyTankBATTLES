@@ -1,28 +1,29 @@
 #pragma once
 #include "engine.h"
 #include "SFML/Graphics.hpp"
+#include <SFML/Audio/Music.hpp>
+#include "../components/cmp_music.h"
 
-#define MAX_NUMBER_OF_INSTRUCTIONS 7
+#define MAX_NUMBER_OF_GOMSGS 1
 
-// Create how to play scene from class Scene
-class HowToPlayScene : public Scene 
+// Create level1 scene from class Scene
+class GameOverScene : public Scene 
 {
     public:
       void Load() override;
       void UnLoad() override;
       void Update(const double& dt) override;
       void Render() override;
-
       void SetTitle();
       void SetBackground();
       void MoveUp();
       void MoveDown();
-      int GetPressedItem() { return selectedItemIndex3; }
+      int GetPressedItem() { return selectedItemIndex4; }
 
       IntRect uvRect;
 
     private:
-        int selectedItemIndex3;
+        int selectedItemIndex4;
         Font font;
-        Text instructionMenu[MAX_NUMBER_OF_INSTRUCTIONS];
+        Text gameOverMenu[MAX_NUMBER_OF_GOMSGS];
 };

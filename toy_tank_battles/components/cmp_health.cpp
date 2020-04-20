@@ -16,5 +16,3 @@ float HealthComponent::getHealth()
 {
     return _health;
 }
-
-

@@ -9,12 +9,12 @@
 #include <LevelSystem.h>
 #include <iostream>
 #include <thread>
+#include "../components/cmp_music.h"
 #include "../components/cmp_text.h"
 
 using namespace std;
 using namespace sf;
 
-//static shared_ptr<Entity> player;
 
 // Resources
 Sprite titleSprite1;

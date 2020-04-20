@@ -9,10 +9,9 @@ class PickupComponent : public Component
 {
     protected:
         int type;
+
     public:
-
         PickupComponent() = delete;
-
         explicit PickupComponent(Entity* p, int t);
         void update(double dt) override;
         void render() override;

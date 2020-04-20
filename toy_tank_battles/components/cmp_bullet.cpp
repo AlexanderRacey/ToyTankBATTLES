@@ -15,30 +15,39 @@ void BulletComponent::update(double dt)
     {
         _parent->setForDelete();
     }
-    else{
-        if (targetset) {
+    else
+    {
+        if (targetset) 
+        {
+            if (checkCollision()) 
+            {
+                if (_target == Engine::findEntity("player")[0]) 
+                {
+                    _target->setAlive(false);
+                    /*auto health = _target->GetCompatibleComponent<HealthComponent>();
 
-            if (checkCollision()) {
-                if (_target == Engine::findEntity("player")[0]) {
-                    auto health = _target->GetCompatibleComponent<HealthComponent>();
-
-                  if (health[0]->getHealth() < 0) {
+                    if (health[0]->getHealth() < 0) 
+                    {
                         auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
                         if (!breakable.empty()) {
                             breakable[0]->setExploded();
                             _parent->setForDelete();
                         }
                     }
-                    else {
+                    else
+                    {
                         health[0]->deductHealth(_damage);
                         _parent->setForDelete();
-                    }
-                }else{
-                auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
-                if (!breakable.empty()) {
-                    breakable[0]->setExploded();
-                    _parent->setForDelete();
+                    }*/
                 }
+                else
+                {
+                    auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
+                    if (!breakable.empty()) 
+                    {
+                        breakable[0]->setExploded();
+                        _parent->setForDelete();
+                    }
                 }
             }
         }
@@ -67,15 +76,19 @@ void BulletComponent::move(double dt)
     _parent->setPosition(newPos);
 }
 
-bool BulletComponent::checkCollision() {
-    if (_target->isAlive()) {
+bool BulletComponent::checkCollision() 
+{
+    if (_target->isAlive()) 
+    {
         FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
         //would not work for animation,need to implement new check.
         FloatRect targetBounds;
-        if (_target == Engine::findEntity("player")[0]){
+        if (_target == Engine::findEntity("player")[0])
+        {
             targetBounds = _target->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
         }
-        else {
+        else 
+        {
             targetBounds = _target->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
         }
 
@@ -99,7 +112,8 @@ PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage)
 {
 }
 
-void BulletComponent::setDamage(float dam) {
+void BulletComponent::setDamage(float dam)
+{
     _damage = dam;
 }
 
@@ -110,13 +124,14 @@ void PlayerBullet::update(double dt)
     {
         _parent->setForDelete();
     }
-    else if (checkCollision()) {
+    else if (checkCollision()) 
+    {
         _parent->setForDelete();
     }
-    else {
+    else
+    {
         move(dt);
     }
-  
 }
 
 
@@ -125,8 +140,8 @@ bool PlayerBullet::checkCollision()
 {
     Vector2f pos = _parent->getPosition();
 
-    if (ls::getTileAt(pos) == ls::BROKEN || ls::getTileAt(pos) == ls::BROKEN_R) {
-
+    if (ls::getTileAt(pos) == ls::BROKEN || ls::getTileAt(pos) == ls::BROKEN_R) 
+    {
         vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
         for (auto t : potTargets)
         {
@@ -145,12 +160,14 @@ bool PlayerBullet::checkCollision()
         }
         return false;
     }
-    else {
+    else
+    {
         vector<shared_ptr<Entity>> potTargets = Engine::findEntity("enemy");
         for (auto t : potTargets)
         {
             auto sp = t->GetCompatibleComponent<AnimationComponent>();
-            if (!sp.empty()) {
+            if (!sp.empty())
+            {
                 auto bounds = sp[0]->getSprite().getGlobalBounds();
 
                 FloatRect bBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
@@ -159,14 +176,17 @@ bool PlayerBullet::checkCollision()
                     if (t->isAlive())
                     {
                         auto healtcomp = t->GetCompatibleComponent<HealthComponent>();
-                        if(!healtcomp.empty()){
-                            if (healtcomp[0]->getHealth() > 0) {
+                        if(!healtcomp.empty())
+                        {
+                            if (healtcomp[0]->getHealth() > 0)
+                            {
                                 healtcomp[0]->deductHealth(_damage);
                             }
-                            else {
+                            else 
+                            {
                                 t->GetCompatibleComponent<BreakableComponent>()[0]->setExploded();
                             }
-                        return true;
+                            return true;
                         }
                     }
                 }

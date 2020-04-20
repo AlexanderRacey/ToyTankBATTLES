@@ -14,6 +14,9 @@ using namespace sf;
 
 void HighScoresScene::Load()
 {
+	s2.stop();
+	s3.stop();
+	s1.playing();
 	SetBackground();
 }
 

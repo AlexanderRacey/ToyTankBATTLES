@@ -42,10 +42,10 @@ void MusicPlayer::play2(const int title, bool loop)
 	}
 }
 
-/*void MusicPlayer::play3(const int title, bool loop)
+void MusicPlayer::play3(const int title, bool loop)
 {
 	if (title == 2) {
-		if (m_music.openFromFile("res/sound/BossTheme.ogg"))
+		if (m_music.openFromFile("res/sound/gameOver.ogg"))
 		{
 			m_music.setVolume(m_volume);
 			m_music.setLoop(loop);
@@ -57,7 +57,7 @@ void MusicPlayer::play2(const int title, bool loop)
 			std::cout << "ERROR with music file." << std::endl;
 		}
 	}
-}*/
+}
 
 void MusicPlayer::stop()
 {

@@ -61,6 +61,10 @@ void HowToPlayScene::SetBackground()
 // Load function
 void HowToPlayScene::Load()
 {
+	s2.stop();
+	s3.stop();
+	s1.playing();
+
 	// Display settings 
 	cout << "How To Play Load \n";
 
@@ -107,7 +111,7 @@ void HowToPlayScene::Load()
 	instructionMenu[6].setString("Press ENTER to Return to Menu");
 	instructionMenu[6].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 280));
 
-	selectedItemIndex2 = 0;
+	selectedItemIndex3 = 0;
 	setLoaded(true);
 }
 
@@ -131,7 +135,8 @@ void HowToPlayScene::Update(const double& dt)
 	while (Engine::GetWindow().pollEvent(event))
 	
 	{
-		if (event.type == Event::Resized) {
+		if (event.type == Event::Resized) 
+		{
 			UnLoad();
 			Engine::GetWindow().setSize(Vector2u(event.size.width, event.size.height));
 			Engine::GetWindow().display();
@@ -170,20 +175,20 @@ void HowToPlayScene::Render()
 
 void HowToPlayScene::MoveUp()
 {
-	if (selectedItemIndex2 - 1 >= 0)
+	if (selectedItemIndex3 - 1 >= 0)
 	{
-		instructionMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
-		selectedItemIndex2--;
-		instructionMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));
+		instructionMenu[selectedItemIndex3].setFillColor(Color(255, 127, 39, 255));
+		selectedItemIndex3--;
+		instructionMenu[selectedItemIndex3].setFillColor(Color(0, 168, 243, 255));
 	}
 }
 
 void HowToPlayScene::MoveDown()
 {
-	if (selectedItemIndex2 + 1 < MAX_NUMBER_OF_INSTRUCTIONS)
+	if (selectedItemIndex3 + 1 < MAX_NUMBER_OF_INSTRUCTIONS)
 	{
-		instructionMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
-		selectedItemIndex2++;
-		instructionMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));
+		instructionMenu[selectedItemIndex3].setFillColor(Color(255, 127, 39, 255));
+		selectedItemIndex3++;
+		instructionMenu[selectedItemIndex3].setFillColor(Color(0, 168, 243, 255));
 	}
 }

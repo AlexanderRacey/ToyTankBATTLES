@@ -15,6 +15,7 @@ SettingsScene settings;
 Level1Scene level1;
 Level2Scene level2;
 HighScoresScene highscores;
+GameOverScene gameover;
 
 // Start game
 int main()

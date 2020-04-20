@@ -13,7 +13,6 @@
 #include "../components/cmp_actor_movement.h"
 #include "../components/cmp_physics.h"
 #include "../components/cmp_music.h"
-//#include "maths.h"
 #include "scene_level1.h"
 #include "system_renderer.h"
 #include "../add_entity.h"
@@ -108,6 +107,7 @@ void Level1Scene::Load()
 {
 	// Play music 
 	s1.stop();
+	s3.stop();
 	s2.play2(1, true);
 
 	// Load level
@@ -123,7 +123,7 @@ void Level1Scene::Load()
 
 	//Set level to appear at middle of window
 	//this is not the middle anymore will need to figure somethings out
-	auto ho = (Engine::getWindowSize().y/2) - ((ls::getHeight() * ls::getTileSize()) /2);
+	auto ho = (Engine::getWindowSize().y / 2) - ((ls::getHeight() * ls::getTileSize()) / 2);
 	auto wid = (Engine::getWindowSize().x / 2) - ((ls::getWidth() * ls::getTileSize()) / 2);
 	ls::setOffset(Vector2f(wid, ho));
 
@@ -175,8 +175,9 @@ void Level1Scene::Update(const double& dt)
 	}
 	else if (!player->isAlive())
 	{
+		// Plays gameOver scene if player is dead
 		this_thread::sleep_for(chrono::milliseconds(200));
-		Engine::ChangeScene((Scene*)&level1);
+		Engine::ChangeScene((Scene*)&gameover);
 	}
 
 	// Reset scene

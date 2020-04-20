@@ -16,7 +16,7 @@ class MusicPlayer final : private NonCopyable
 
 		void play1(const int file, bool loop = false);
 		void play2(const int file, bool loop = false);
-		//void play3(const int file, bool loop = false);
+		void play3(const int file, bool loop = false);
 		void stop();
 		void setPaused(bool paused);
 		bool playing() const;
