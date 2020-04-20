@@ -1,6 +1,9 @@
 #pragma once
 #include "engine.h"
 #include "SFML/Graphics.hpp"
+#include <SFML/Audio/Music.hpp>
+#include "SFML/Graphics.hpp"
+#include "../components/cmp_music.h"
 
 // Variable for items on menu
 #define MAX_MENU_ITEMS 5

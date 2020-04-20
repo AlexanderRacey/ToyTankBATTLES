@@ -18,3 +18,7 @@ static unique_ptr<Sprite> BackgroundSprite;
 static shared_ptr<Entity> player;
 static shared_ptr<Entity> playerTurret;
 static shared_ptr<Entity> smoke;
+
+extern MusicPlayer s1;
+extern MusicPlayer s2;
+//extern MusicPlayer s3;

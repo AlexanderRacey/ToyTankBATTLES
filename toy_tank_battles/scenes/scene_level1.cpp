@@ -2,6 +2,7 @@
 #include "../game.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
 #include <system_resources.h>
 #include <levelsystem.h>
 #include <iostream>
@@ -11,6 +12,7 @@
 #include "../components/cmp_text.h"
 #include "../components/cmp_actor_movement.h"
 #include "../components/cmp_physics.h"
+#include "../components/cmp_music.h"
 //#include "maths.h"
 #include "scene_level1.h"
 #include "system_renderer.h"
@@ -24,7 +26,6 @@ using namespace sf;
 // Display background
 void Level1Scene::SetBackground()
 {
-
 	Background = Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().x;
@@ -71,7 +72,6 @@ void Level1Scene::SetPickups()
 //ADDs breakable houses to tiles
 void Level1Scene::SetBreakables() 
 {
-
 	auto brokenHouses = ls::findTiles(ls::BROKEN);
 	auto brokenHouses2 = ls::findTiles(ls::BROKEN_R);
 	brokenHouses.insert(end(brokenHouses), begin(brokenHouses2), end(brokenHouses2));
@@ -106,6 +106,11 @@ void Level1Scene::SetBreakables()
 
 void Level1Scene::Load()
 {
+	// Play music 
+	s1.stop();
+	s2.play2(1, true);
+
+	// Load level
 	cout << " Scene 1 Load" << endl;
 	ls::loadLevelFile("res/level1test.txt", 90.0f);
 	SetBackground();

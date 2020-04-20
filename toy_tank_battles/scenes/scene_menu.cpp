@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "engine.h"
 #include "levelsystem.h"
@@ -10,6 +11,7 @@
 #include "scene_settings.h"
 #include "../add_entity.h"
 #include "../game.h"
+#include "../components/cmp_music.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
 
@@ -22,6 +24,14 @@ Texture titleTexture;
 Vector2f targetCoords;
 Vector2u titleTextureSize;
 Vector2u windowSizeMenu;
+
+MusicPlayer s1;
+MusicPlayer s2;
+
+SoundBuffer effect1;
+Sound sound1;
+SoundBuffer effect2;
+Sound sound2;
 
 Clock clock1;
 
@@ -65,6 +75,16 @@ void MenuScene::Load()
     // Display menu loading to console
     cout << "Menu Load \n";
     {
+        // Play menu music 
+        s1.play1(0, true);
+        s1.playing();
+
+        // Load sound effects
+        effect1.loadFromFile("res/sound/playerFire.ogg");
+        sound1.setBuffer(effect1);
+        effect2.loadFromFile("res/sound/enemyFire.ogg");
+        sound2.setBuffer(effect2);
+
         // Get size of window
         float x3 = Engine::getWindowSize().x;
         float y3 = Engine::getWindowSize().y;
@@ -150,20 +170,25 @@ void MenuScene::Update(const double& dt)
         switch (GetPressedItem())
         {
             case 0:
+                sound2.play();
                 Engine::ChangeScene(&level1);
                 break;
             case 1:
+                sound2.play();
                 Engine::ChangeScene(&howtoplay);
                 this_thread::sleep_for(chrono::milliseconds(170));
                 break;
             case 2:
+                sound2.play();
                 Engine::ChangeScene(&highscores);
                 break;
             case 3:
+                sound2.play();
                 Engine::ChangeScene(&settings);
                 this_thread::sleep_for(chrono::milliseconds(170));
                 break;
             case 4:
+                sound2.play();
                 Engine::GetWindow().close();
                 break;
         }
@@ -211,6 +236,7 @@ void MenuScene::MoveUp()
 {
     if (selectedItemIndex - 1 >= 0)
     {
+        sound1.play();
         menu[selectedItemIndex].setFillColor(Color(255, 127, 39, 255));
         selectedItemIndex--;
         menu[selectedItemIndex].setFillColor(Color(0, 168, 243, 255));
@@ -221,6 +247,7 @@ void MenuScene::MoveDown()
 {
     if (selectedItemIndex + 1 < MAX_MENU_ITEMS)
     {
+        sound1.play();
         menu[selectedItemIndex].setFillColor(Color(255, 127, 39, 255));
         selectedItemIndex++;
         menu[selectedItemIndex].setFillColor(Color(0, 168, 243, 255));
