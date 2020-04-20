@@ -1,3 +1,4 @@
+#include <SFML/Audio.hpp>
 #include <system_resources.h>
 #include <levelsystem.h>
 #include "cmp_actor_movement.h"
@@ -6,10 +7,13 @@
 #include "../animation.h"
 #include "../add_entity.h"
 #include "cmp_breakable.h"
+#include "cmp_sound.h"
 
 using namespace sf;
 using namespace std;
 
+SoundPlayer playerFireSound;
+SoundPlayer enemyFireSound;
 
 // -- Actor movement --
 void ActorMovementComponent::update(double dt) {};
@@ -102,6 +106,7 @@ void PlayerMovementComponent::update(double dt)
         }
         else
         {
+            playerFireSound.playerFire(0, false);
             fire();
         }
     }
@@ -309,6 +314,7 @@ void EnemyAiComponent::update(double dt)
                         fireTimer -= dt;
                         if (fireTimer <= 0)
                         {
+                            enemyFireSound.enemyFire(1, false);
                             fire();
                             fireTimer = 3.f;
                         }

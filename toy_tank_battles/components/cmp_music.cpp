@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-MusicPlayer::MusicPlayer() : m_volume(10.0f) {}
+MusicPlayer::MusicPlayer() : m_volume(6.0f) {}
 
 void MusicPlayer::play1(const int title, bool loop)
 {
@@ -20,14 +20,14 @@ void MusicPlayer::play1(const int title, bool loop)
 		}
 		else
 		{
-			//TODO this probably warns anyway
-			std::cout << "ERROR with music file." << std::endl;
+			cout << "ERROR with music file." << endl;
 		}
 	}
 }
 void MusicPlayer::play2(const int title, bool loop)
 {
-	if (title == 1) {
+	if (title == 1) 
+	{
 		if (m_music.openFromFile("res/sound/mainMusic.ogg"))
 		{
 			m_music.setVolume(m_volume);
@@ -36,8 +36,7 @@ void MusicPlayer::play2(const int title, bool loop)
 		}
 		else
 		{
-			//TODO this probably warns anyway
-			std::cout << "ERROR with music file." << std::endl;
+			cout << "ERROR with music file." << endl;
 		}
 	}
 }
@@ -53,7 +52,6 @@ void MusicPlayer::play3(const int title, bool loop)
 		}
 		else
 		{
-			//TODO this probably warns anyway
 			std::cout << "ERROR with music file." << std::endl;
 		}
 	}

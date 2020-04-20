@@ -6,6 +6,7 @@
 using namespace sf;
 using namespace std;
 
+// Create MusicPlayer class from NonCopyable
 class MusicPlayer final : private NonCopyable
 {
 	public:

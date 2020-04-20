@@ -85,8 +85,10 @@ void MenuScene::Load()
         // Load sound effects
         effect1.loadFromFile("res/sound/playerFire.ogg");
         sound1.setBuffer(effect1);
+        sound1.setVolume(15.0f);
         effect2.loadFromFile("res/sound/enemyFire.ogg");
         sound2.setBuffer(effect2);
+        sound2.setVolume(15.0f);
 
         // Get size of window
         float x3 = Engine::getWindowSize().x;
