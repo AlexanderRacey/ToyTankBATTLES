@@ -20,18 +20,18 @@ shared_ptr<Texture> wall;
 
 vector<shared_ptr<Texture>> houses;
 
-map<LevelSystem::Tile, shared_ptr<Texture>> LevelSystem::_textures
-{
-};
+map<LevelSystem::Tile, shared_ptr<Texture>> LevelSystem::_textures {};
 
 vector<unique_ptr<Sprite>> LevelSystem::_sprites;
 
 shared_ptr<Texture> LevelSystem::getTexture(LevelSystem::Tile t)
 {
-    if (t == HOUSE || t == HOUSE_R) {
+    if (t == HOUSE || t == HOUSE_R)
+    {
         return houses[rand() % 5];
     }
-    else {
+    else 
+    {
         auto it = _textures.find(t);
         if (it == _textures.end())
         {
@@ -54,10 +54,9 @@ void LevelSystem::loadTextures()
     wall = Resources::load<Texture>("GreyWall.png");
     houses = { house1, house2, house3, house4, house5 };
     _textures = { {EMPTY, sand }, {HOUSE, house1}, {WALL, wall} };
-
 }
 
-void LevelSystem::setTexture(LevelSystem::Tile t, shared_ptr<sf::Texture> tex)
+void LevelSystem::setTexture(LevelSystem::Tile t, shared_ptr<Texture> tex)
 {
     _textures[t] = tex;
 }
@@ -67,7 +66,7 @@ unique_ptr<LevelSystem::Tile[]> LevelSystem::_tiles;
 size_t LevelSystem::_width;
 size_t LevelSystem::_height;
 
-float LevelSystem::_tileSize(100.f);
+float LevelSystem::_tileSize(90.f);
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 // Vector2f LevelSystem::_offset(0,0);
 
@@ -139,23 +138,30 @@ void LevelSystem::loadLevelFile(const string& path, float tileSize)
 void LevelSystem::buildSprites()
 {
     _sprites.clear();
+
     for (size_t y = 0; y < LevelSystem::getHeight(); ++y) 
     {
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
         {
-            auto s = make_unique<sf::Sprite>();
+            auto s = make_unique<Sprite>();
             s->setTexture(*ls::getTexture(getTile({ x, y })));
-            if (getTile({ x, y }) == HOUSE_R) {
-                if (x == 0) {
+            if (getTile({ x, y }) == HOUSE_R) 
+            {
+                if (x == 0) 
+                {
                     s->setRotation(270.f);
                 }
-                else {
+                else 
+                {
                     s->setRotation(90.f);
                 }  
             }
             if (getTile({ x, y }) == HOUSE)
-                if (y == ls::getHeight() - 1) {
+            {
+                if (y == ls::getHeight() - 1)
+                {
                     s->setRotation(180.f);
+                }
             }
             s->setPosition(getTilePosition({ x,y }));
             s->setTextureRect(IntRect(0, 0, _tileSize, _tileSize));
@@ -186,14 +192,14 @@ size_t LevelSystem::getWidth() { return _width; }
 
 size_t LevelSystem::getHeight() { return _height; }
 
-sf::Vector2f LevelSystem::getTilePosition(Vector2ul p)
+Vector2f LevelSystem::getTilePosition(Vector2ul p)
 {
     return (Vector2f(p.x, p.y) * _tileSize) + _offset;
 }
 
 vector<Vector2ul> LevelSystem::findTiles(LevelSystem::Tile type) 
 {
-    auto v = vector<sf::Vector2ul>();
+    auto v = vector<Vector2ul>();
     for (size_t i = 0; i < _width * _height; ++i) 
     {
         if (_tiles[i] == type) 
@@ -201,7 +207,6 @@ vector<Vector2ul> LevelSystem::findTiles(LevelSystem::Tile type)
             v.push_back({ i % _width, i / _width });
         }
     }
-
     return v;
 }
 
@@ -210,11 +215,12 @@ LevelSystem::Tile LevelSystem::getTileAt(Vector2f v)
     auto a = v - _offset;
     if (a.x < 0 || a.y < 0) 
     {
-        //throw string("Tile out of range ");
+        throw string("Tile out of range ");
         return NOTVALID;
     }
-    else {
-    return getTile(Vector2ul((v - _offset) / (_tileSize)));
+    else 
+    {
+        return getTile(Vector2ul((v - _offset) / (_tileSize)));
     }
 }
 
@@ -225,7 +231,8 @@ Vector2f LevelSystem::getTilePosAt(Vector2f v)
     {
         throw string("Tile out of range ");
     }
-    else {
+    else 
+    {
         return getTilePosition(Vector2ul((v - _offset) / (_tileSize)));
         //return getTile(Vector2ul((v - _offset) / (_tileSize)));
     }
@@ -252,7 +259,8 @@ void LevelSystem::setOffset(const Vector2f& _offset)
     buildSprites();
 }
 
-void LevelSystem::unload() {
+void LevelSystem::unload()
+{
     cout << "LevelSystem unloading\n";
     _textures.clear();
     _sprites.clear();
@@ -266,6 +274,7 @@ const Vector2f& LevelSystem::getOffset() { return _offset; }
 
 float LevelSystem::getTileSize() { return _tileSize; }
 
-bool ls::isWall(Tile t) {
+bool ls::isWall(Tile t) 
+{
     return (t == HOUSE || t == HOUSE_R || t == WALL || t == BROKEN || t == BROKEN_R || t == NOTVALID);
 }

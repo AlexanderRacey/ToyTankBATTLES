@@ -63,7 +63,7 @@ void MenuScene::SetBackground()
     Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
     float scaleX2 = (float)windowSizeLevel1.x / BackgroundSize.x;
     float scaleY2 = (float)windowSizeLevel1.y / BackgroundSize.y;
-    BackgroundSprite = make_unique<sf::Sprite>();
+    BackgroundSprite = make_unique<Sprite>();
     BackgroundSprite->setTexture(*Background);
     BackgroundSprite->setPosition(0, 0);
     BackgroundSprite->setScale(scaleX2, scaleY2);

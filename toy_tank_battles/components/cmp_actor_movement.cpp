@@ -81,10 +81,12 @@ void PlayerMovementComponent::update(double dt)
 
     if (Keyboard::isKeyPressed(Keyboard::Space))
     {
-        if (firetimer > 0) {
+        if (firetimer > 0) 
+        {
             firetimer -= dt;
         }
-        else {
+        else 
+        {
             fire();
         }      
     }
@@ -136,34 +138,38 @@ float PlayerMovementComponent::getRotation()
 }
 
 
-bool PlayerMovementComponent::isBlocked(Vector2f pos) {
-    if (ls::isWall(ls::getTileAt(pos))) {
+bool PlayerMovementComponent::isBlocked(Vector2f pos) 
+{
+    if (ls::isWall(ls::getTileAt(pos)))
+    {
 
-        if(ls::getTileAt(pos) == ls::BROKEN || ls::getTileAt(pos) == ls::BROKEN_R){
-
-        vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
+        if(ls::getTileAt(pos) == ls::BROKEN || ls::getTileAt(pos) == ls::BROKEN_R)
+        {
+            vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
             for (auto t : potTargets)
             {
                 auto sp = t->GetCompatibleComponent<SpriteComponent>();
-                    auto bounds = sp[0]->getSprite().getGlobalBounds();
-                    //cheating the left detection by making width much wider for now
-                    bounds = FloatRect(bounds.left - 50.f, bounds.top - 50.f, bounds.width + 120.f, bounds.height + 50.f);
+                auto bounds = sp[0]->getSprite().getGlobalBounds();
+                //cheating the left detection by making width much wider for now
+                bounds = FloatRect(bounds.left - 50.f, bounds.top - 50.f, bounds.width + 120.f, bounds.height + 50.f);
 
-                    if (bounds.contains(pos))
+                if (bounds.contains(pos))
+                {
+                    if (t->isAlive())
                     {
-                        if (t->isAlive())
-                        {
-                            return true;
-                        }
+                        return true;
                     }
+                }
             }
-        return false;
+            return false;
         }
-        else {
+        else 
+        {
             return true;
         }
     }
-    else {
+    else 
+    {
         return false;
     }
 }
@@ -174,7 +180,6 @@ bool PlayerMovementComponent::isBlocked(Vector2f pos) {
 static const Vector2i directions[] = { {1,0}, {0,1}, {0, -1}, {-1, 0} };
 const float rotations[] = { 90.f, 180.f, 0.f, 270.f};
 
-
 EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(30.f)
 {
     ChangeDirection();
@@ -182,7 +187,7 @@ EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _stat
     setRotation(rotations[index]);
 };
 
-void EnemyAiComponent::move(const sf::Vector2f& pos)
+void EnemyAiComponent::move(const Vector2f& pos)
 {
     _parent->setPosition(pos);
 }
@@ -201,46 +206,46 @@ void EnemyAiComponent::update(double dt)
     switch (_state)
     {
         case EnemyAiComponent::MOVING:
-           if (validMove(testPos))
+            if (validMove(testPos))
             {
-            shared_ptr<Entity> player = Engine::findEntity("player")[0];
-            FloatRect pBounds = player->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
-            FloatRect eBounds = _parent->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
-            switch (index)
-            {
-            case 0:
-                //move right
-                eBounds = FloatRect(eBounds.left, eBounds.top - 50.f, eBounds.width + 100.f, eBounds.height + 50.f);
-                break;
-            case 1:
-                //Move down
-                eBounds = FloatRect(eBounds.left - 50.f, eBounds.top, eBounds.width + 50.f, eBounds.height + 100.f);
-                break;
-            case 2:
-                //Move Up
-                eBounds = FloatRect(eBounds.left - 50.f, eBounds.top - 100.f, eBounds.width + 50.f, eBounds.height);
-                break;
-            case 3:
-                //Move left
-                eBounds = FloatRect(eBounds.left - 100.f, eBounds.top -50.f, eBounds.width, eBounds.height + 50.f);
-                break;
-            }
-
-                if (eBounds.intersects(pBounds)) {
-                        target = player;
-                        fireTimer = 0.5f;
-                        _state = AIMING;
+                shared_ptr<Entity> player = Engine::findEntity("player")[0];
+                FloatRect pBounds = player->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
+                FloatRect eBounds = _parent->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
+                switch (index)
+                {
+                    case 0:
+                        //move right
+                        eBounds = FloatRect(eBounds.left, eBounds.top - 50.f, eBounds.width + 100.f, eBounds.height + 50.f);
                         break;
-
+                    case 1:
+                        //Move down
+                        eBounds = FloatRect(eBounds.left - 50.f, eBounds.top, eBounds.width + 50.f, eBounds.height + 100.f);
+                        break;
+                    case 2:
+                        //Move Up
+                        eBounds = FloatRect(eBounds.left - 50.f, eBounds.top - 100.f, eBounds.width + 50.f, eBounds.height);
+                        break;
+                    case 3:
+                        //Move left
+                        eBounds = FloatRect(eBounds.left - 100.f, eBounds.top -50.f, eBounds.width, eBounds.height + 50.f);
+                        break;
                 }
-                else {
+
+                if (eBounds.intersects(pBounds)) 
+                {
+                    target = player;
+                    fireTimer = 0.5f;
+                    _state = AIMING;
+                    break;
+                }
+                else 
+                {
                     move(newpos);
                 }
 
             }
-            else if (ls::BROKEN == ls::getTileAt(testPos) ||
-                 ls::BROKEN_R == ls::getTileAt(testPos)) {
-
+            else if (ls::BROKEN == ls::getTileAt(testPos) || ls::BROKEN_R == ls::getTileAt(testPos)) 
+            {
                 vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
                 for (auto t : potTargets)
                 {
@@ -260,11 +265,11 @@ void EnemyAiComponent::update(double dt)
                             break;
                         }
                     }
-                    if (!blocked) {
+                    if (!blocked) 
+                    {
                         move(newpos);
-                  }
+                    }
                 }
-
             }
             else
             {
@@ -273,26 +278,32 @@ void EnemyAiComponent::update(double dt)
             }
             break;
         case EnemyAiComponent::SHOTING:
-        //    if (target->isAlive() && target->getTags().find("brokenHouse") != target->getTags().end()) {
-        //maybe other entities like, player and enemy should have breakable comp as well
-            if (target->isAlive()) {
-             auto breakable = target->GetCompatibleComponent<BreakableComponent>();
-                if (!breakable.empty()) {
-                    if (!breakable[0]->isExploded()) {
+            //if (target->isAlive() && target->getTags().find("brokenHouse") != target->getTags().end()) {
+            //maybe other entities like, player and enemy should have breakable comp as well
+            if (target->isAlive()) 
+            {
+                auto breakable = target->GetCompatibleComponent<BreakableComponent>();
+                if (!breakable.empty()) 
+                {
+                    if (!breakable[0]->isExploded()) 
+                    {
                         fireTimer -= dt;
-                        if (fireTimer <= 0) {
+                        if (fireTimer <= 0) 
+                        {
                             fire();
                             fireTimer = 3.f;
-                            }
+                        }
                     }
-                  //  else {
-                   //     blocked
-                   // }
-                    }
-            }else{
-     //       fire();
-            _state = MOVING;
-            blocked = false;
+                    //else {
+                    //blocked
+                    //}
+                }
+            }
+            else
+            {
+                //fire();
+                _state = MOVING;
+                blocked = false;
             }
             break;
         case EnemyAiComponent::WAIT:
@@ -533,8 +544,8 @@ float EnemyAiComponent::getTurrentRotation()
     }
 }
 
-void EnemyAiComponent::fire() {
-
+void EnemyAiComponent::fire() 
+{
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
@@ -548,7 +559,7 @@ void EnemyAiComponent::fire() {
         break;
     case 1:
         //facing downwards
-       // bulletcomp->setDirection(_direction + Vector2f(0, angle));
+        //bulletcomp->setDirection(_direction + Vector2f(0, angle));
         bulletcomp->setDirection(_direction);
         break;
     case 2:
@@ -564,7 +575,6 @@ void EnemyAiComponent::fire() {
     auto spriteB = bullet->addComponent<SpriteComponent>();
     // Texture bulletTexture = Resources::load<Texture>("enemyBullet.png");
     spriteB->setTexture(Resources::load<Texture>("enemyBullet.png"));
-    spriteB->getSprite().setScale(Vector2f(0.6, 0.6));
     auto bounds = spriteB->getSprite().getGlobalBounds();
     spriteB->getSprite().setOrigin(Vector2f(bounds.getSize().x / 2, bounds.getSize().y));
     // float inverse = fmod((getTurrentRotation() + 180.f), 360);  //Sets rotation of bullet to be inverse of ship rotation, using fancy maths.
