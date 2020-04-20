@@ -31,7 +31,14 @@ void ActorMovementComponent::move(const Vector2f& pos)
 };
 
 void ActorMovementComponent::move(float x, float y) { move(Vector2f(x, y)); }
+
+void ActorMovementComponent::increaseSpeed(float sp)
+{
+    _speed += sp;
+}
+
 float ActorMovementComponent::getSpeed() const { return _speed; }
+
 void ActorMovementComponent::setSpeed(float speed) { _speed = speed; }
 
 
@@ -107,6 +114,11 @@ void PlayerMovementComponent::render()
     ActorMovementComponent::render();
 }
 
+void PlayerMovementComponent::addDamage(float dam)
+{
+    damage += dam;
+}
+
 void PlayerMovementComponent::move(const Vector2f& p)
 {
     auto pp = _parent->getPosition() + p;
@@ -121,7 +133,7 @@ void PlayerMovementComponent::fire()
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<PlayerBullet>();
-    bulletcomp->setDamage(50.f);
+    bulletcomp->setDamage(damage);
     bulletcomp->setDirection(direction);
 
     auto spriteB = bullet->addComponent<SpriteComponent>();
@@ -555,6 +567,7 @@ void EnemyAiComponent::fire()
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
     bulletcomp->setTarget(target);
+    bulletcomp->setDamage(40.f);
     float angle = tAngle / 100;
     switch (index)
     {

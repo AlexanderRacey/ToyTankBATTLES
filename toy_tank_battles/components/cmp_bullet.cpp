@@ -23,8 +23,9 @@ void BulletComponent::update(double dt)
             {
                 if (_target == Engine::findEntity("player")[0]) 
                 {
-                    _target->setAlive(false);
-                    /*auto health = _target->GetCompatibleComponent<HealthComponent>();
+                    
+                    //_target->setAlive(false);
+                    auto health = _target->GetCompatibleComponent<HealthComponent>();
 
                     if (health[0]->getHealth() < 0) 
                     {
@@ -38,7 +39,7 @@ void BulletComponent::update(double dt)
                     {
                         health[0]->deductHealth(_damage);
                         _parent->setForDelete();
-                    }*/
+                    }
                 }
                 else
                 {
@@ -81,7 +82,7 @@ bool BulletComponent::checkCollision()
     if (_target->isAlive()) 
     {
         FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
-        //would not work for animation,need to implement new check.
+
         FloatRect targetBounds;
         if (_target == Engine::findEntity("player")[0])
         {
@@ -115,6 +116,11 @@ PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage)
 void BulletComponent::setDamage(float dam)
 {
     _damage = dam;
+}
+
+void BulletComponent::addDamage(float dam)
+{
+    _damage += dam;
 }
 
 void PlayerBullet::update(double dt)

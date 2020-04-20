@@ -26,7 +26,7 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	tankAnimation->setFrameTime(0.06f);
 
 	player->addComponent<PlayerMovementComponent>();
-	//player->addComponent<HealthComponent>();
+	player->addComponent<HealthComponent>();
 	player->addComponent<BreakableComponent>();
 
 	return player;

@@ -244,7 +244,6 @@ Vector2f LevelSystem::getTilePosAt(Vector2f v)
     else 
     {
         return getTilePosition(Vector2ul((v - _offset) / (_tileSize)));
-        //return getTile(Vector2ul((v - _offset) / (_tileSize)));
     }
 }
 

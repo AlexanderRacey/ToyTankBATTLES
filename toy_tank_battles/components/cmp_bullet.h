@@ -27,6 +27,7 @@ class BulletComponent : public Component
         void setTarget(shared_ptr<Entity> tar);
         bool checkCollision();
         void setDamage(float dam);
+        void addDamage(float dam);
 };
 
 
