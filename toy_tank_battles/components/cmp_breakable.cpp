@@ -13,14 +13,10 @@ BreakableComponent::BreakableComponent(Entity* p) : Component(p), _exploded(fals
 
 void BreakableComponent::update(double dt)
 {
-
 	if (_exploded)
 	{
-
 		_parent->setForDelete();
-
 	}
-
 }
 
 //Set exploded when bullet destroys house

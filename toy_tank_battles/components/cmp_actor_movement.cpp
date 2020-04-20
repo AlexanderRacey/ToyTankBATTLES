@@ -14,16 +14,18 @@ using namespace std;
 // -- Actor movement --
 void ActorMovementComponent::update(double dt) {};
 
-bool ActorMovementComponent::validMove(const sf::Vector2f& pos)
+bool ActorMovementComponent::validMove(const Vector2f& pos)
 {
+    //return (LevelSystem::getTileAt(pos) != LevelSystem::WALL);
     return (!ls::isWall(ls::getTileAt(pos)));
 };
 
 ActorMovementComponent::ActorMovementComponent(Entity* p) : _speed(50.0f), Component(p) {};
 
-void ActorMovementComponent::move(const sf::Vector2f& pos)
+void ActorMovementComponent::move(const Vector2f& pos)
 {
-    if (validMove(pos)) {
+    if (validMove(pos))
+    {
         _parent->setPosition(pos);
     }
 };
@@ -67,7 +69,7 @@ void PlayerMovementComponent::update(double dt)
         setRotation(180.0f);
         move(Vector2f(0, _speed * dt));
         direction = { 0, 1 };
-        
+
     }
     if (Keyboard::isKeyPressed(Keyboard::A))
     {
@@ -77,7 +79,7 @@ void PlayerMovementComponent::update(double dt)
         direction = { -1, 0 };
     }
     if (Keyboard::isKeyPressed(Keyboard::D)){
-    
+
         //_offset = Vector2f(getBounds().getSize().x + 30, 50);
         _offset = Vector2f(-(getBounds().getSize().x -10), 0);
         setRotation(90.0f);
@@ -87,14 +89,14 @@ void PlayerMovementComponent::update(double dt)
 
     if (Keyboard::isKeyPressed(Keyboard::Space))
     {
-        if (firetimer > 0) 
+        if (firetimer > 0)
         {
             firetimer -= dt;
         }
-        else 
+        else
         {
             fire();
-        }      
+        }
     }
 
     ActorMovementComponent::update(dt);
@@ -114,8 +116,8 @@ void PlayerMovementComponent::move(const Vector2f& p)
     }
 }
 
-void PlayerMovementComponent::fire() {
-
+void PlayerMovementComponent::fire()
+{
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<PlayerBullet>();
@@ -128,23 +130,24 @@ void PlayerMovementComponent::fire() {
 
     bullet->setRotation(getRotation());
     firetimer = 0.7f;
-
 }
 
 float PlayerMovementComponent::getRotation()
 {
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
-    if (!animation.empty()) {
+    if (!animation.empty())
+    {
         return animation[0]->getRotation();
     }
-    else {
+    else
+    {
         return 0.f;
     }
 }
 
 
-bool PlayerMovementComponent::isBlocked(Vector2f pos) 
+bool PlayerMovementComponent::isBlocked(Vector2f pos)
 {
     if (ls::isWall(ls::getTileAt(pos, _offset)))
     {
@@ -169,12 +172,12 @@ bool PlayerMovementComponent::isBlocked(Vector2f pos)
             }
             return false;
         }
-        else 
+        else
         {
             return true;
         }
     }
-    else 
+    else
     {
         return false;
     }
@@ -237,20 +240,20 @@ void EnemyAiComponent::update(double dt)
                         break;
                 }
 
-                if (eBounds.intersects(pBounds)) 
+                if (eBounds.intersects(pBounds))
                 {
                     target = player;
                     fireTimer = 0.5f;
                     _state = AIMING;
                     break;
                 }
-                else 
+                else
                 {
                     move(newpos);
                 }
 
             }
-            else if (ls::BROKEN == ls::getTileAt(testPos) || ls::BROKEN_R == ls::getTileAt(testPos)) 
+            else if (ls::BROKEN == ls::getTileAt(testPos) || ls::BROKEN_R == ls::getTileAt(testPos))
             {
                 vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
                 for (auto t : potTargets)
@@ -271,7 +274,7 @@ void EnemyAiComponent::update(double dt)
                             break;
                         }
                     }
-                    if (!blocked) 
+                    if (!blocked)
                     {
                         move(newpos);
                     }
@@ -284,15 +287,15 @@ void EnemyAiComponent::update(double dt)
             }
             break;
         case EnemyAiComponent::SHOTING:
-            if (target->isAlive()) 
+            if (target->isAlive())
             {
                 auto breakable = target->GetCompatibleComponent<BreakableComponent>();
-                if (!breakable.empty()) 
+                if (!breakable.empty())
                 {
-                    if (!breakable[0]->isExploded()) 
+                    if (!breakable[0]->isExploded())
                     {
                         fireTimer -= dt;
-                        if (fireTimer <= 0) 
+                        if (fireTimer <= 0)
                         {
                             fire();
                             fireTimer = 3.f;
@@ -454,10 +457,12 @@ float EnemyAiComponent::getRotation()
 {
     auto animation = _parent->GetCompatibleComponent<AnimationComponent>();
 
-    if (!animation.empty()) {
+    if (!animation.empty())
+    {
        return animation[0]->getRotation();
     }
-    else {
+    else
+    {
         return 0.f;
     }
 }
@@ -484,7 +489,7 @@ void EnemyAiComponent::aimTurrent(Vector2f Pos)
     float m2 = 0.f;
     float form = 0.f;
     tAngle = 0.f;
-   // Vector2f tilePos = ls::getTilePosAt(Pos);
+    //Vector2f tilePos = ls::getTilePosAt(Pos);
     Vector2f tilePos = target->getPosition();
     switch (index) {
     case 0:
@@ -544,7 +549,7 @@ float EnemyAiComponent::getTurrentRotation()
     }
 }
 
-void EnemyAiComponent::fire() 
+void EnemyAiComponent::fire()
 {
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());

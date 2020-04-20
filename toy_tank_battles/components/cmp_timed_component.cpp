@@ -2,13 +2,14 @@
 
 TimedComponent::TimedComponent(Entity* p, float timer) : Component(p), _timer(timer) {};
 
-void TimedComponent::update(double dt){
-
-  if (_timer > 0)
-  {
-    _timer -= dt;
-  }else{
-    _parent->setForDelete();
-  }
-
+void TimedComponent::update(double dt)
+{
+    if (_timer > 0)
+    {
+        _timer -= dt;
+    }
+    else
+    {
+        _parent->setForDelete();
+    }
 }
