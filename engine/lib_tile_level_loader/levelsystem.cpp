@@ -224,11 +224,14 @@ LevelSystem::Tile LevelSystem::getTileAt(Vector2f v)
 
 LevelSystem::Tile LevelSystem::getTileAt(Vector2f v,  Vector2f offset)
 {
-    auto a = v - offset;
+    auto off = _offset - Vector2f(_tileSize / 2, _tileSize / 2);
+    off = off + offset;
+    auto a = v - off;
     if (a.x < 0 || a.y < 0) {
+
         throw string("Tile out of range ");
     }
-    return getTile(Vector2ul((v - offset) / (_tileSize)));
+    return getTile(Vector2ul((v - off) / (_tileSize)));
 }
 
 Vector2f LevelSystem::getTilePosAt(Vector2f v)
@@ -260,9 +263,9 @@ bool LevelSystem::isOnGrid(Vector2f v)
     return true;
 }
 
-void LevelSystem::setOffset(const Vector2f& _offset) 
+void LevelSystem::setOffset(const Vector2f& offset) 
 {
-   // LevelSystem::_offset = _offset + Vector2f(_tileSize/2, _tileSize/2);
+    LevelSystem::_offset = offset + Vector2f(_tileSize/2, _tileSize/2);
     buildSprites();
 }
 
