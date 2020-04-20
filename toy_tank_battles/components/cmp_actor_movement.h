@@ -22,7 +22,7 @@ class ActorMovementComponent : public Component
         void move(const Vector2f& pos);
         void move(float x, float y);
         void increaseSpeed(float sp);
-
+		FloatRect getBounds();
         void render() override {}
         void update(double dt) override;
 };
@@ -35,6 +35,7 @@ class PlayerMovementComponent : public ActorMovementComponent
 	//	bool validMove(const Vector2f&);
 	private:
 		Vector2f direction = { 0,-1 };
+		Vector2f _offset;
 		float firetimer = 0;
 		bool isBlocked(Vector2f pos);
     public:
@@ -42,7 +43,7 @@ class PlayerMovementComponent : public ActorMovementComponent
 		explicit PlayerMovementComponent(Entity* p);
 		void setRotation(float rot);
 		float getRotation();
-
+	
 		void move(const Vector2f& pos);
 		void update(double dt) override;
 		void render() override;
@@ -77,7 +78,7 @@ class EnemyAiComponent : public ActorMovementComponent
 		float getRotation();
 		void move(const Vector2f& pos);
 		void update(double dt);
-		FloatRect getBounds();
+		//FloatRect getBounds();
 		void aimTurrent(Vector2f pos);
 		void setTurrentRotation(float rot);
 		void fire();
