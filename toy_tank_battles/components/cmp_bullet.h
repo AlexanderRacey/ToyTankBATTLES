@@ -35,7 +35,7 @@ class PlayerBullet : public BulletComponent
 {
     public:
         void update(double dt) override;
-        explicit PlayerBullet(Entity* p, float lifetime = 5.f, float speed = 1.f, float damage = 1.f);
+        explicit PlayerBullet(Entity* p, float lifetime = 3.f, float speed = 1.f, float damage = 1.f);
         PlayerBullet() = delete;
 
         bool checkCollision();

@@ -4,7 +4,7 @@
 #include <SFML/Audio/Music.hpp>
 #include "../components/cmp_music.h"
 
-#define MAX_NUMBER_OF_GOMSGS 1
+#define MAX_NUMBER_OF_GOMSGS 2
 
 // Create level1 scene from class Scene
 class GameOverScene : public Scene 

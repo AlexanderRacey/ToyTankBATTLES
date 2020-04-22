@@ -30,3 +30,4 @@ extern MusicPlayer s3;
 // HUD items
 extern int playerScore;
 extern int playerHealth;
+extern int playerHighScore;
