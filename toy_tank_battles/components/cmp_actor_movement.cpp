@@ -146,7 +146,7 @@ void PlayerMovementComponent::fire()
     spriteB->setTexture(Resources::load<Texture>("playerBullet.png"));
 
     bullet->setRotation(getRotation());
-    firetimer = 0.7f;
+    firetimer = 0.4f;
 }
 
 float PlayerMovementComponent::getRotation()
@@ -573,7 +573,7 @@ void EnemyAiComponent::fire()
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
     bulletcomp->setTarget(target);
-    bulletcomp->setDamage(40.f);
+    bulletcomp->setDamage(20.f);
     float angle = tAngle / 100;
     switch (index)
     {

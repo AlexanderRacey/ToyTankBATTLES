@@ -16,7 +16,10 @@ class TextComponent : public Component
 
       ~TextComponent() override = default;
 
-      void SetText(const string& str);
+      void setPosition(Vector2f pos);
+      void setColour(Color col);
+      void SetText(const string& str, bool timed);
+      void setShow(bool show);
       Text& getText();
 
     protected:
@@ -24,4 +27,8 @@ class TextComponent : public Component
       string _string;
       Text _text;
       Color _color;
+      bool _show = false;
+      bool _timed = false;
+      float timer = 0;
+      Vector2f textOffset;
 };
