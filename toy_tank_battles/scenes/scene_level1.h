@@ -14,4 +14,8 @@ class Level1Scene : public Scene
       void SetPickups();
       void SetBreakables();
       void SetBackground();
+
+    private:
+        Font font;
+        Text HUDtext;
 };

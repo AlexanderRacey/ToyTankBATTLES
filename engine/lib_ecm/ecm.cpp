@@ -1,21 +1,25 @@
-// ECM Class file 
 #include "ecm.h"
 
+using namespace sf;
 using namespace std;
 
-Entity::Entity(Scene* const s)
-    : _position({ 0, 0 }), _rotation(0), _alive(true), _visible(true),
-    scene(s), _fordeletion(false) {}
 
-void Entity::addTag(const std::string& t) { _tags.insert(t); }
-const std::set<std::string>& Entity::getTags() const { return _tags; }
+Entity::Entity(Scene* const s) : _position({ 0, 0 }), _rotation(0), _alive(true), _visible(true), scene(s), _fordeletion(false), _points(0) {}
 
-void Entity::update(double dt) {
-    if (!_alive) {
+void Entity::addTag(const string& t) { _tags.insert(t); }
+
+const set<string>& Entity::getTags() const { return _tags; }
+
+void Entity::update(double dt)
+{
+    if (!_alive)
+    {
         return;
     }
-    for (size_t i = 0; i < _components.size(); i++) {
-        if (_components[i]->is_fordeletion()) {
+    for (size_t i = 0; i < _components.size(); i++) 
+    {
+        if (_components[i]->is_fordeletion()) 
+        {
             _components.erase(_components.begin() + i);
             --i;
         }
@@ -48,7 +52,8 @@ bool Entity::isAlive() const { return _alive; }
 
 void Entity::setAlive(bool _alive) { Entity::_alive = _alive; }
 
-void Entity::setForDelete() {
+void Entity::setForDelete() 
+{
     _fordeletion = true;
     _alive = false;
     _visible = false;
@@ -57,6 +62,16 @@ void Entity::setForDelete() {
 bool Entity::isVisible() const { return _visible; }
 
 void Entity::setVisible(bool _visible) { Entity::_visible = _visible; }
+
+void Entity::setPoints(int p)
+{
+    _points += p;
+}
+
+int Entity::getPoints()
+{
+    return _points;
+}
 
 Component::Component(Entity* const p) : _parent(p), _fordeletion(false) {}
 

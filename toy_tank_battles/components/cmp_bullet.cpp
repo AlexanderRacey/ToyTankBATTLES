@@ -4,6 +4,7 @@
 #include "../animation.h"
 #include "cmp_health.h"
 #include <levelsystem.h>
+#include "../game.h"
 
 using namespace std;
 using namespace sf;
@@ -22,21 +23,21 @@ void BulletComponent::update(double dt)
             if (checkCollision()) 
             {
                 if (_target == Engine::findEntity("player")[0]) 
-                {
-                    
-                    //_target->setAlive(false);
+                {                    
                     auto health = _target->GetCompatibleComponent<HealthComponent>();
 
                     if (health[0]->getHealth() < 0) 
                     {
                         auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
-                        if (!breakable.empty()) {
+                        if (!breakable.empty()) 
+                        {
                             breakable[0]->setExploded();
                             _parent->setForDelete();
                         }
                     }
                     else
                     {
+                        playerHealth -= 25;
                         health[0]->deductHealth(_damage);
                         _parent->setForDelete();
                     }
@@ -72,7 +73,7 @@ void BulletComponent::setDirection(Vector2f dir)
 
 void BulletComponent::move(double dt)
 {
-    _speed = 50.f;
+    _speed = 100.f;
     Vector2f newPos = _parent->getPosition() + (direction * (float) (dt * _speed));
     _parent->setPosition(newPos);
 }
@@ -93,7 +94,6 @@ bool BulletComponent::checkCollision()
             targetBounds = _target->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
         }
 
-
         if (bulletBounds.intersects(targetBounds))
         {
             return true;
@@ -109,9 +109,7 @@ bool BulletComponent::checkCollision()
     }
 }
 
-PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage) : BulletComponent(p, lifetime, speed, damage)
-{
-}
+PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage) : BulletComponent(p, lifetime, speed, damage) {}
 
 void BulletComponent::setDamage(float dam)
 {
@@ -159,6 +157,7 @@ bool PlayerBullet::checkCollision()
             {
                 if (t->isAlive())
                 {
+                    playerScore += 25;
                     t->GetCompatibleComponent<BreakableComponent>()[0]->setExploded();
                     return true;
                 }
@@ -190,6 +189,7 @@ bool PlayerBullet::checkCollision()
                             }
                             else 
                             {
+                                playerScore += 100;
                                 t->GetCompatibleComponent<BreakableComponent>()[0]->setExploded();
                             }
                             return true;

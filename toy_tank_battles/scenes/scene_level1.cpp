@@ -6,6 +6,7 @@
 #include <system_resources.h>
 #include <levelsystem.h>
 #include <iostream>
+#include <fstream>
 #include <thread>
 #include "../components/cmp_pickup.h"
 #include "../components/cmp_sprite.h"
@@ -13,13 +14,20 @@
 #include "../components/cmp_actor_movement.h"
 #include "../components/cmp_physics.h"
 #include "../components/cmp_music.h"
+#include "../components/cmp_health.h"
+#include "../components/cmp_breakable.h"
 #include "scene_level1.h"
 #include "system_renderer.h"
 #include "../add_entity.h"
-#include "../components/cmp_breakable.h"
+
 
 using namespace std;
 using namespace sf;
+
+
+// Player HUD
+int playerScore = 0;
+int playerHealth = 100;
 
 
 // Display background
@@ -82,8 +90,8 @@ void Level1Scene::SetBreakables()
 		auto e = makeEntity();
 		e->setPosition(pos);
 		e->addTag("brokenHouse");
-		//ADD Breakable Component
 		e->addComponent<BreakableComponent>();
+
 		//ADD house sprite
 		e->addComponent<SpriteComponent>();
 		if (type == 0) {
@@ -105,21 +113,14 @@ void Level1Scene::SetBreakables()
 
 void Level1Scene::Load()
 {
-	// Play music 
-	s1.stop();
-	s3.stop();
-	s2.play2(1, true);
-
-	// Load level
-	cout << " Scene 1 Load" << endl;
-	ls::loadLevelFile("res/level1test.txt", 90.0f);
-	SetBackground();
-
 	// Get window size
 	float x2 = Engine::getWindowSize().x;
 	float y2 = Engine::getWindowSize().y;
 	Engine::GetWindow().setSize(Vector2u(x2, y2));
 	Engine::GetWindow().display();
+
+	// Load level
+	ls::loadLevelFile("res/level1test.txt", 90.0f);
 
 	//Set level to appear at middle of window
 	//this is not the middle anymore will need to figure somethings out
@@ -130,6 +131,22 @@ void Level1Scene::Load()
 	// Create player object
 	player = AddEntity::makePlayer(this, Vector2f(x2 / 2, y2 / 2));
 
+	// Play music 
+	s1.stop();
+	s3.stop();
+	s2.play2(1, true);
+
+	if (!font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf")) 
+	{
+		cout << "Cannot load font!" << endl;
+	}
+
+	HUDtext.setString("Health: " + to_string(playerHealth) + "%         " + "Score :  " + to_string(playerScore));
+	HUDtext.setFont(font);
+	HUDtext.setCharacterSize(50);
+	HUDtext.setPosition(200, 0);
+	HUDtext.setFillColor(Color::Black);
+
 	// Create enemies
 	auto enp = ls::findTiles(ls::ENEMY);
 	for (auto e : enp)
@@ -137,10 +154,13 @@ void Level1Scene::Load()
 		auto pos = ls::getTilePosition(e);
 		auto enemy = AddEntity::makeEnemy(this, pos);
 	}
+
+	// Load resources
+	SetBackground();
 	SetPickups();
 	SetBreakables();
 
-	//Simulate long loading times
+	// Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
 	cout << " Scene 1 Load Done" << endl;
 	setLoaded(true);
@@ -167,6 +187,9 @@ void Level1Scene::UnLoad()
 
 void Level1Scene::Update(const double& dt)
 {
+	// Update HUD
+	HUDtext.setString("Health: " + to_string(playerHealth) + "%         " + "Score :  " + to_string(playerScore));
+
 	// Get player position
 	const auto pp = player->getPosition();
 	if (ls::getTileAt(pp) == ls::END)
@@ -199,6 +222,7 @@ void Level1Scene::Update(const double& dt)
 void Level1Scene::Render()
 {
 	Renderer::queue(BackgroundSprite.get());
+	Renderer::queue(&HUDtext);
 	for (auto& s : ls::_sprites)
 	{
 		Renderer::queue(s.get());

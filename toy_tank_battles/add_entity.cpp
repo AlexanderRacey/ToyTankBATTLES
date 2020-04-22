@@ -38,13 +38,14 @@ shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
 	auto enemy = scene->makeEntity();
 	enemy->setPosition(pos);
 	enemy->addTag("enemy");
-	enemy->addComponent<HealthComponent>();
+
 	auto animation = enemy->addComponent<EnemyAnimationComp>(Vector2f(57.5f, 55.0f));
 	shared_ptr<Texture> s = Resources::load<Texture>("enemySpritesheet.png");
 	animation->setSpritesheet(*s);
 	animation->setFrameCount(8);
 	animation->setFrameTime(0.06f);
 
+	enemy->addComponent<HealthComponent>();
 	enemy->addComponent<EnemyAiComponent>();
 	enemy->addComponent<BreakableComponent>();
 

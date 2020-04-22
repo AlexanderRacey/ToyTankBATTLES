@@ -8,6 +8,7 @@
 #include "../add_entity.h"
 #include "cmp_breakable.h"
 #include "cmp_sound.h"
+#include "../game.h"
 
 using namespace sf;
 using namespace std;
@@ -20,7 +21,6 @@ void ActorMovementComponent::update(double dt) {};
 
 bool ActorMovementComponent::validMove(const Vector2f& pos)
 {
-    //return (LevelSystem::getTileAt(pos) != LevelSystem::WALL);
     return (!ls::isWall(ls::getTileAt(pos)));
 };
 
@@ -162,7 +162,6 @@ float PlayerMovementComponent::getRotation()
         return 0.f;
     }
 }
-
 
 bool PlayerMovementComponent::isBlocked(Vector2f pos)
 {

@@ -2,11 +2,14 @@
 
 void HealthComponent::update(double dt)
 {
-    if (invincible) {
-        if (timer > 0) {
+    if (invincible) 
+    {
+        if (timer > 0) 
+        {
             timer -= dt;
         }
-        else {
+        else 
+        {
             invincible = false;
         }
     }

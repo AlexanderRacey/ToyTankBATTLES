@@ -19,7 +19,7 @@ class BulletComponent : public Component
     public:
         void update(double dt) override;
         void render() override {};
-        explicit BulletComponent(Entity* p, float lifetime = 3.f, float speed = 1.f, float damage = 1.f);
+        explicit BulletComponent(Entity* p, float lifetime = 3.f, float speed = 1.0f, float damage = 1.f);
         BulletComponent() = delete;
 
         void setDirection(Vector2f dir);
@@ -33,14 +33,12 @@ class BulletComponent : public Component
 
 class PlayerBullet : public BulletComponent
 {
+    public:
+        void update(double dt) override;
+        explicit PlayerBullet(Entity* p, float lifetime = 5.f, float speed = 1.f, float damage = 1.f);
+        PlayerBullet() = delete;
 
-public:
-    void update(double dt) override;
-    explicit PlayerBullet(Entity* p, float lifetime = 3.f, float speed = 1.f, float damage = 1.f);
-    PlayerBullet() = delete;
-
- 
-    bool checkCollision();
+        bool checkCollision();
 };
 
 // Create base bullet component from class Component
@@ -54,7 +52,7 @@ class BaseBulletComponent : public Component
     public:
         void update(double dt) override;
         void render() override {}
-        explicit BaseBulletComponent(Entity* p, float lifetime = 3.f, float speed = 500);
+        explicit BaseBulletComponent(Entity* p, float lifetime = 3.f, float speed = 700);
         BaseBulletComponent() = delete;
 
         float getSpeed();

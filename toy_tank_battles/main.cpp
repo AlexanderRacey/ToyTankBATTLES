@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "scenes/scene_menu.h"
 #include "engine.h"
 #include "game.h"
@@ -16,6 +17,7 @@ Level1Scene level1;
 Level2Scene level2;
 HighScoresScene highscores;
 GameOverScene gameover;
+
 
 // Start game
 int main()

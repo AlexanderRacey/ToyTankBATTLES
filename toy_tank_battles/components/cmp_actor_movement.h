@@ -32,13 +32,16 @@ class ActorMovementComponent : public Component
 class PlayerMovementComponent : public ActorMovementComponent
 {
 	protected:
-	//	bool validMove(const Vector2f&);
+		//bool validMove(const Vector2f&);
+		int _points;
+
 	private:
 		Vector2f direction = { 0,-1 };
 		Vector2f _offset;
 		float firetimer = 0;
 		float damage = 20.f;
 		bool isBlocked(Vector2f pos);
+
     public:
 		PlayerMovementComponent() = delete;
 		explicit PlayerMovementComponent(Entity* p);
@@ -50,6 +53,8 @@ class PlayerMovementComponent : public ActorMovementComponent
 		void render() override;
 		void addDamage(float dam);
 		void fire();
+		int getPoints() const;
+		void setPoints(int pts);
 };
 
 

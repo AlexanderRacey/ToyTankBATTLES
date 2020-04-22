@@ -2,7 +2,6 @@
 #include "engine.h"
 #include "SFML/Graphics.hpp"
 #include <SFML/Audio/Music.hpp>
-#include "SFML/Graphics.hpp"
 #include "../components/cmp_music.h"
 
 // Variable for items on menu
