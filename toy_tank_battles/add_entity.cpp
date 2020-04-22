@@ -8,6 +8,7 @@
 #include "components/cmp_health.h"
 #include "components/cmp_breakable.h"
 #include "components/cmp_timed_component.h"
+#include "components/cmp_text.h"
 
 using namespace sf;
 using namespace std;
@@ -28,6 +29,9 @@ shared_ptr<Entity> AddEntity::makePlayer(Scene* scene, const Vector2f& pos)
 	player->addComponent<PlayerMovementComponent>();
 	player->addComponent<HealthComponent>();
 	player->addComponent<BreakableComponent>();
+	auto text = player->addComponent<TextComponent>("Player");
+	text->setPosition({ -20, -70.f });
+
 
 	return player;
 }
@@ -48,6 +52,9 @@ shared_ptr<Entity> AddEntity::makeEnemy(Scene* scene, const Vector2f& pos)
 	enemy->addComponent<HealthComponent>();
 	enemy->addComponent<EnemyAiComponent>();
 	enemy->addComponent<BreakableComponent>();
+
+	auto text = enemy->addComponent<TextComponent>("Enemy");
+	text->setPosition({ -25, -70.f });
 
 	return enemy;
 }

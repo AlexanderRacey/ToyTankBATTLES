@@ -5,6 +5,7 @@
 #include "cmp_health.h"
 #include "cmp_actor_movement.h"
 #include "cmp_bullet.h"
+#include "cmp_text.h"
 
 using namespace sf;
 using namespace std;
@@ -31,7 +32,9 @@ void PickupComponent::update(double dt)
 					case 0:
 						//
 						//example speed up player
-						player[0]->GetCompatibleComponent<PlayerMovementComponent>()[0]->increaseSpeed(1.f);
+						player[0]->GetCompatibleComponent<PlayerMovementComponent>()[0]->increaseSpeed(2.f);
+						player[0]->GetCompatibleComponent<TextComponent>()[0]->SetText("Faster ++", true);
+						player[0]->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Blue);
 						break;
 					case 1:
 						//better health 
@@ -40,10 +43,14 @@ void PickupComponent::update(double dt)
 					case 2:
 						//better damage
 						player[0]->GetCompatibleComponent<PlayerMovementComponent>()[0]->addDamage(5.f);
+						player[0]->GetCompatibleComponent<TextComponent>()[0]->SetText("Damage Increased ++", true);
+						player[0]->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Blue);
 						break;
 					case 3:
 						//full health
 						player[0]->GetCompatibleComponent<HealthComponent>()[0]->setHealth(100);
+						player[0]->GetCompatibleComponent<TextComponent>()[0]->SetText("Full Health ++", true);
+						player[0]->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Magenta);
 						break;
 					case 4:
 						///parrot
