@@ -176,7 +176,7 @@ void MenuScene::Update(const double& dt)
         {
             case 0:
                 sound2.play();
-                playerScore = 0;
+              //  playerScore = 0;
                 Engine::ChangeScene(&level1);
                 break;
             case 1:

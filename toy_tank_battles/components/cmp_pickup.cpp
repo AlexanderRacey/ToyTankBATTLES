@@ -40,14 +40,6 @@ void PickupComponent::update(double dt)
 					case 1:
 						//better health 
 						player[0]->GetCompatibleComponent<HealthComponent>()[0]->addHealth(10);
-				/*	if (playerHealth < 91)
-						{
-				//			playerHealth += 10;
-						}
-						else
-						{
-				//			playerHealth = 100;
-						}*/
 						break;
 					case 2:
 						//better damage

@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 
 // Create level2 scene from class Scene
+/*
 class Level2Scene : public Scene 
 {
     public:
@@ -12,4 +13,14 @@ class Level2Scene : public Scene
       void Render() override;
       void SetTitle();
       void SetBackground();
-};
+};*/
+
+
+// Create level1 scene from class Scene
+/*
+class Level2Scene : public Level1Scene
+{
+public:
+    void Load();
+
+};*/

@@ -26,26 +26,25 @@ using namespace sf;
 
 
 // Player HUD
-int playerScore = 0;
-int playerHealth = 100;
 int playerHighScore;
+int playerScore;
 
 
 // Display background
 void Level1Scene::SetBackground()
 {
-	Background = Resources::load<Texture>("background.png");
+	_Background = Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().x;
-	Vector2u BackgroundSize = Background->getSize();
+	Vector2u BackgroundSize = _Background->getSize();
 	Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
 	float scaleX2 = (float)windowSizeLevel1.x / BackgroundSize.x;
 	float scaleY2 = (float)windowSizeLevel1.y / BackgroundSize.y;
-	BackgroundSprite = make_unique<sf::Sprite>();
-	BackgroundSprite->setTexture(*Background);
-	BackgroundSprite->setPosition(0, 0);
-	BackgroundSprite->setScale(scaleX2, scaleY2);
-	BackgroundSprite->setOrigin(0, 0);
+	_BackgroundSprite = make_unique<sf::Sprite>();
+	_BackgroundSprite->setTexture(*_Background);
+	_BackgroundSprite->setPosition(0, 0);
+	_BackgroundSprite->setScale(scaleX2, scaleY2);
+	_BackgroundSprite->setOrigin(0, 0);
 }
 
 void Level1Scene::SetPickups() 
@@ -112,6 +111,7 @@ void Level1Scene::SetBreakables()
 	}
 }
 
+
 void Level1Scene::Load()
 {
 	// Get window size
@@ -121,7 +121,7 @@ void Level1Scene::Load()
 	Engine::GetWindow().display();
 
 	// Load level
-	ls::loadLevelFile("res/level1test.txt", 90.0f);
+	ls::loadLevelFile("res/level_1.txt", 90.0f);
 
 	//Set level to appear at middle of window
 	//this is not the middle anymore will need to figure somethings out
@@ -142,7 +142,7 @@ void Level1Scene::Load()
 		cout << "Cannot load font!" << endl;
 	}
 
-	HUDtext.setString("Health: " + to_string(playerHealth) + " / 100                                 " + "Score :  " + to_string(playerScore));
+	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(playerScore));
 	HUDtext.setFont(font);
 	HUDtext.setCharacterSize(50);
 	HUDtext.setPosition(wid + 200, 10);
@@ -177,8 +177,8 @@ void Level1Scene::UnLoad()
 	player.reset();
 	playerTurret.reset();
 	//picks.clear();
-	Background.reset();
-	BackgroundSprite.reset();
+	_Background.reset();
+	_BackgroundSprite.reset();
 
 	// Finish Unload
 	ls::unload();
@@ -190,23 +190,25 @@ void Level1Scene::Update(const double& dt)
 {
 	auto player = Engine::findEntity("player")[0];
 	int health = player->GetCompatibleComponent<HealthComponent>()[0]->getHealth();
-	playerHealth = health;
+	_playerHealth = health;
+	_playerScore = playerScore;
 	// Update HUD
-	HUDtext.setString("Health: " + to_string(playerHealth) + " / 100                                 " + "Score :  " + to_string(playerScore));
+	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(_playerScore));
 
-	// Get player position
-	const auto pp = player->getPosition();
-	if (ls::getTileAt(pp) == ls::END)
+	vector<shared_ptr<Entity>> enemies = Engine::findEntity("enemy");
+
+	if (enemies.empty())
 	{
+		UnLoad();
 		Engine::ChangeScene((Scene*)&level2);
 	}
-	else if (playerHealth < 1)
+	else if (_playerHealth < 1)
 	{
 		// Plays gameOver scene if player is dead
 		this_thread::sleep_for(chrono::milliseconds(200));
 		Engine::ChangeScene((Scene*)&gameover);
 		playerScore = playerHighScore;
-		playerHealth = 100;
+		_playerHealth = 100;
 	}
 
 	// Reset scene
@@ -227,7 +229,7 @@ void Level1Scene::Update(const double& dt)
 
 void Level1Scene::Render()
 {
-	Renderer::queue(BackgroundSprite.get());
+	Renderer::queue(_BackgroundSprite.get());
 	Renderer::queue(&HUDtext);
 	for (auto& s : ls::_sprites)
 	{

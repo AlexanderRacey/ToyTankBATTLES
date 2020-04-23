@@ -27,7 +27,8 @@ extern MusicPlayer s1;
 extern MusicPlayer s2;
 extern MusicPlayer s3;
 
+
 // HUD items
 extern int playerScore;
-extern int playerHealth;
+//extern int playerHealth;
 extern int playerHighScore;

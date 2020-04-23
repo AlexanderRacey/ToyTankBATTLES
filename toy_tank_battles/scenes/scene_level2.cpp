@@ -6,33 +6,75 @@
 #include <thread>
 #include "engine.h"
 #include "maths.h"
-#include "scene_level2.h"
+#include "scene_level1.h"
 #include "system_renderer.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
 #include "../add_entity.h"
 #include "../game.h"
+#include "../components/cmp_health.h"
+#include "../components/cmp_breakable.h"
+#include "../components/cmp_pickup.h"
 
 using namespace std;
 using namespace sf;
 
-/*Texture* house;
-Sprite houseSprite;*/
+void Level2Scene::Load()
+{
+	// Get window size
+	float x2 = Engine::getWindowSize().x;
+	float y2 = Engine::getWindowSize().y;
+	Engine::GetWindow().setSize(Vector2u(x2, y2));
+	Engine::GetWindow().display();
+
+	// Load level
+	ls::loadLevelFile("res/level_2.txt", 90.0f);
+
+	//Set level to appear at middle of window
+	//this is not the middle anymore will need to figure somethings out
+	auto ho = (Engine::getWindowSize().y / 2) - ((ls::getHeight() * ls::getTileSize()) / 2);
+	auto wid = (Engine::getWindowSize().x / 2) - ((ls::getWidth() * ls::getTileSize()) / 2);
+	ls::setOffset(Vector2f(wid, ho));
+
+	// Create player object
+	player = AddEntity::makePlayer(this, Vector2f(x2 / 2, y2 / 2));
+
+	// Play music 
+	s1.stop();
+	s3.stop();
+	s2.play2(1, true);
+
+	if (!font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf"))
+	{
+		cout << "Cannot load font!" << endl;
+	}
+
+	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(playerScore));
+	HUDtext.setFont(font);
+	HUDtext.setCharacterSize(50);
+	HUDtext.setPosition(wid + 200, 10);
+	HUDtext.setFillColor(Color(0, 168, 243, 255));
+
+	// Create enemies
+	auto enp = ls::findTiles(ls::ENEMY);
+	for (auto e : enp)
+	{
+		auto pos = ls::getTilePosition(e);
+		auto enemy = AddEntity::makeEnemy(this, pos);
+	}
+
+	// Load resources
+	SetBackground();
+	SetPickups();
+	SetBreakables();
+
+	// Simulate long loading times
+	this_thread::sleep_for(chrono::milliseconds(3000));
+	cout << " Scene 1 Load Done" << endl;
+	setLoaded(true);
+}
 
 /*
-Texture blueTank2;
-Sprite playerTank2;
-
-Sprite backgroundSprite4;
-Texture backgroundTexture4;
-Vector2u backgroundSize4;
-Vector2u windowSizeLevel1;
-
-vector<shared_ptr<Texture>> picks;
-*/
-//shared_ptr<Entity> player;
-
-
 //Display background
 void Level2Scene::SetBackground()
 {
@@ -108,3 +150,5 @@ void Level2Scene::Render()
 	}
 	Scene::Render();
 }
+
+*/

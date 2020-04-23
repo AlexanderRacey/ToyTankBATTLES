@@ -29,6 +29,8 @@ Vector2f gameOverTargetCoords;
 Vector2u gameOverTextureSize;
 Vector2u windowSizeGameOver;
 
+int playerHighScore;
+
 // Display menu title
 void GameOverScene::SetTitle()
 {
@@ -81,6 +83,7 @@ void GameOverScene::Load()
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
 	// Create game over menu
+	
 	gameOverMenu[0].setFont(font);
 	gameOverMenu[0].setFillColor(Color(0, 168, 243, 255));
 	gameOverMenu[0].setString("High Score: " + playerHighScore);
@@ -90,7 +93,7 @@ void GameOverScene::Load()
 	gameOverMenu[1].setFillColor(Color(0, 168, 243, 255));
 	gameOverMenu[1].setString("Press ENTER to Return to Menu");
 	gameOverMenu[1].setPosition(Vector2f((x2 / 2) - 165, (y2 / 2) + 120));
-
+	
 	selectedItemIndex4 = 0;
 	setLoaded(true);
 }
