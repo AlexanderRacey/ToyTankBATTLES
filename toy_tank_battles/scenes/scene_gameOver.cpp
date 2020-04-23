@@ -29,7 +29,6 @@ Vector2f gameOverTargetCoords;
 Vector2u gameOverTextureSize;
 Vector2u windowSizeGameOver;
 
-int playerHighScore;
 
 // Display menu title
 void GameOverScene::SetTitle()
