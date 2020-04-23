@@ -38,12 +38,22 @@ TextComponent::TextComponent(Entity* const p, const string& str) : Component(p),
 
 Text& TextComponent::getText() { return _text; }
 
+void TextComponent::Flash() {
+    if (_show) {
+        _show = false;
+    }
+    else {
+        _show = true;
+    }
+}
+
 void TextComponent::SetText(const string& str, bool timed)
 {
     if (timed) {
-        timer = 0.7f;
-        _timed = timed;
+        timer = 0.7f;   
     }
+    _timed = timed;
+
     _string = str;
     _text.setString(_string);
     _show = true;

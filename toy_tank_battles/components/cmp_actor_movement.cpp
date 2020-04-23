@@ -554,7 +554,6 @@ void EnemyAiComponent::setTurrentRotation(float rot)
 
     if (!animation.empty())
     {
-      //  cout << "index " + to_string(index) +  "ROtation " + to_string(rot);
         animation[0]->setTurretRotation(getRotation() + rot);
     }
 }
@@ -576,7 +575,7 @@ void EnemyAiComponent::fire()
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
     bulletcomp->setTarget(target);
-    bulletcomp->setDamage(1.f);
+    bulletcomp->setDamage(20.f);
     float angle = tAngle / 100;
    
     switch (index)

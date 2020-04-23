@@ -21,6 +21,7 @@ class TextComponent : public Component
       void SetText(const string& str, bool timed);
       void setShow(bool show);
       Text& getText();
+      void Flash();
 
     protected:
       shared_ptr<Font> _font;

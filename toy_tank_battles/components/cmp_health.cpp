@@ -31,9 +31,9 @@ void HealthComponent::deductHealth(float malus)
     if (!invincible) {
         _health -= malus;
         healthmalus = round(malus);
+        _parent->GetCompatibleComponent<TextComponent>()[0]->SetText("Health -" + to_string(healthmalus), true);
+        _parent->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Black);
     }
-    _parent->GetCompatibleComponent<TextComponent>()[0]->SetText("Health -" + to_string(healthmalus), true);
-    _parent->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Black);
 }
 
 void HealthComponent::addHealth(float bonus)
@@ -52,8 +52,8 @@ void HealthComponent::addHealth(float bonus)
 void HealthComponent::setInvincible()
 {
     invincible = true;
-    timer = 5.f;
-    _parent->GetCompatibleComponent<TextComponent>()[0]->SetText("Invincible !!", true);
+    timer = 7.f;
+    _parent->GetCompatibleComponent<TextComponent>()[0]->SetText("Invincible !!", false);
     _parent->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Magenta);
 }
 

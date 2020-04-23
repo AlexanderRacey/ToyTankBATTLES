@@ -37,7 +37,7 @@ void BulletComponent::update(double dt)
                     }
                     else
                     {
-                        playerHealth -= 20;
+                       // playerHealth -= 20;
                         health[0]->deductHealth(_damage);
                         _parent->setForDelete();
                     }

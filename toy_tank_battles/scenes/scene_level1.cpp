@@ -188,6 +188,9 @@ void Level1Scene::UnLoad()
 
 void Level1Scene::Update(const double& dt)
 {
+	auto player = Engine::findEntity("player")[0];
+	int health = player->GetCompatibleComponent<HealthComponent>()[0]->getHealth();
+	playerHealth = health;
 	// Update HUD
 	HUDtext.setString("Health: " + to_string(playerHealth) + " / 100                                 " + "Score :  " + to_string(playerScore));
 
