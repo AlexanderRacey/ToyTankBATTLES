@@ -271,11 +271,12 @@ void EnemyAiComponent::update(double dt)
                             break;
                         }
                     }
-                    if (!blocked)
-                    {
-                        move(newpos);
-                    }
                 }
+                if (!blocked)
+                {
+                  move(newpos);
+                }
+               
             }
             else
             {
@@ -288,7 +289,7 @@ void EnemyAiComponent::update(double dt)
             {
                 shared_ptr<Entity> player = Engine::findEntity("player")[0];
                 if (target == player && !PlayerInRange()) {
-                    _state = MOVING;
+                    _state = ROTATING;
                     blocked = false;
                 }else{
                 auto breakable = target->GetCompatibleComponent<BreakableComponent>();
