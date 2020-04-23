@@ -234,34 +234,14 @@ void EnemyAiComponent::update(double dt)
         case EnemyAiComponent::MOVING:
             if (validMove(testPos))
             {
+                
                 shared_ptr<Entity> player = Engine::findEntity("player")[0];
-                FloatRect pBounds = player->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
-                FloatRect eBounds = _parent->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
-                switch (index)
-                {
-                    case 0:
-                        //move right
-                        eBounds = FloatRect(eBounds.left, eBounds.top - 50.f, eBounds.width + 150.f, eBounds.height + 50.f);
-                        break;
-                    case 1:
-                        //Move down
-                        eBounds = FloatRect(eBounds.left - 50.f, eBounds.top, eBounds.width + 50.f, eBounds.height + 150.f);
-                        break;
-                    case 2:
-                        //Move Up
-                        eBounds = FloatRect(eBounds.left - 50.f, eBounds.top - 150.f, eBounds.width + 50.f, eBounds.height);
-                        break;
-                    case 3:
-                        //Move left
-                        eBounds = FloatRect(eBounds.left - 150.f, eBounds.top -50.f, eBounds.width, eBounds.height + 50.f);
-                        break;
-                }
 
-                if (eBounds.intersects(pBounds))
+                if (PlayerInRange())
                 {
                     target = player;
                     fireTimer = 0.5f;
-                    _state = AIMING;
+                    _state = SHOTING;
                     break;
                 }
                 else
@@ -306,6 +286,11 @@ void EnemyAiComponent::update(double dt)
         case EnemyAiComponent::SHOTING:
             if (target->isAlive())
             {
+                shared_ptr<Entity> player = Engine::findEntity("player")[0];
+                if (target == player && !PlayerInRange()) {
+                    _state = MOVING;
+                    blocked = false;
+                }else{
                 auto breakable = target->GetCompatibleComponent<BreakableComponent>();
                 if (!breakable.empty())
                 {
@@ -321,6 +306,7 @@ void EnemyAiComponent::update(double dt)
                         }
                     }
                 }
+            }
             }
             else
             {
@@ -651,5 +637,38 @@ bool EnemyAiComponent::turnTurrentRight(Vector2f targetpos) {
             return false;
         }
         break;
+    }
+}
+
+bool EnemyAiComponent::PlayerInRange()
+{
+    shared_ptr<Entity> player = Engine::findEntity("player")[0];
+    FloatRect pBounds = player->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
+    FloatRect eBounds = _parent->GetCompatibleComponent<AnimationComponent>()[0]->getSprite().getGlobalBounds();
+    switch (index)
+    {
+    case 0:
+        //move right
+        eBounds = FloatRect(eBounds.left, eBounds.top - 50.f, eBounds.width + 150.f, eBounds.height + 50.f);
+        break;
+    case 1:
+        //Move down
+        eBounds = FloatRect(eBounds.left - 50.f, eBounds.top, eBounds.width + 50.f, eBounds.height + 150.f);
+        break;
+    case 2:
+        //Move Up
+        eBounds = FloatRect(eBounds.left - 50.f, eBounds.top - 150.f, eBounds.width + 50.f, eBounds.height);
+        break;
+    case 3:
+        //Move left
+        eBounds = FloatRect(eBounds.left - 150.f, eBounds.top - 50.f, eBounds.width, eBounds.height + 50.f);
+        break;
+    }
+
+    if (eBounds.intersects(pBounds)){
+        return true;
+    }
+    else {
+        return false;
     }
 }
