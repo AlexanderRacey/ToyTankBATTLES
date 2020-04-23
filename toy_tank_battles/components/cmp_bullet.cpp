@@ -9,53 +9,8 @@
 using namespace std;
 using namespace sf;
 
-void BulletComponent::update(double dt)
-{
-    _lifetime -= dt;
-    if (_lifetime <= 0.f)
-    {
-        _parent->setForDelete();
-    }
-    else
-    {
-        if (targetset) 
-        {
-            if (checkCollision()) 
-            {
-                if (_target == Engine::findEntity("player")[0]) 
-                {                    
-                    auto health = _target->GetCompatibleComponent<HealthComponent>();
+void BulletComponent::update(double dt) {};
 
-                    if (health[0]->getHealth() < 0) 
-                    {
-                        auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
-                        if (!breakable.empty()) 
-                        {
-                            breakable[0]->setExploded();
-                            _parent->setForDelete();
-                        }
-                    }
-                    else
-                    {
-                       // playerHealth -= 20;
-                        health[0]->deductHealth(_damage);
-                        _parent->setForDelete();
-                    }
-                }
-                else
-                {
-                    auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
-                    if (!breakable.empty()) 
-                    {
-                        breakable[0]->setExploded();
-                        _parent->setForDelete();
-                    }
-                }
-            }
-        }
-        move(dt);
-    }
-}
 
 BulletComponent::BulletComponent(Entity* p, float lifetime, float speed, float damage)
     : Component(p), _lifetime(lifetime),  _speed(speed), _damage(damage) {}
@@ -78,8 +33,12 @@ void BulletComponent::move(double dt)
     _parent->setPosition(newPos);
 }
 
-bool BulletComponent::checkCollision() 
+EnemyBullet::EnemyBullet(Entity* p, float lifetime, float speed, float damage, Vector2f offset)
+    : BulletComponent(p, lifetime, speed, damage), _offset(offset) {};
+
+bool EnemyBullet::checkCollision() 
 {
+
     if (_target->isAlive()) 
     {
         FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
@@ -109,7 +68,83 @@ bool BulletComponent::checkCollision()
     }
 }
 
-PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage) : BulletComponent(p, lifetime, speed, damage) {}
+void EnemyBullet::setDirection(Vector2f dir) {
+    direction = dir;
+    /*
+    FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
+
+    ///right
+    if (dir == Vector2f(1, 0)) {
+        _offset = Vector2f(bulletBounds.getSize().x, 0);
+    }
+    //left
+    else if (dir == Vector2f(-1, 0)) {
+        _offset = Vector2f(-bulletBounds.getSize().x, 0);
+    }
+    //up
+    else if (dir == Vector2f(0, -1)) {
+        _offset = Vector2f(0, -bulletBounds.getSize().y);
+    }
+    //down
+    else if (dir == Vector2f(0, 1)) {
+        _offset = Vector2f(0, bulletBounds.getSize().y);
+    }*/
+}
+
+void EnemyBullet::update(double dt)
+{
+    Vector2f pos = _parent->getPosition();
+
+    _lifetime -= dt;
+    if (_lifetime <= 0.f)
+    {
+        _parent->setForDelete();
+    }
+    else if (ls::isSolidWall(ls::getTileAt(pos))) {
+        _parent->setForDelete();
+    }
+    else
+    {
+        if (targetset)
+        {
+            if (checkCollision())
+            {
+                if (_target == Engine::findEntity("player")[0])
+                {
+                    auto health = _target->GetCompatibleComponent<HealthComponent>();
+
+                    if (health[0]->getHealth() < 0)
+                    {
+                        auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
+                        if (!breakable.empty())
+                        {
+                            breakable[0]->setExploded();
+                            _parent->setForDelete();
+                        }
+                    }
+                    else
+                    {
+                        // playerHealth -= 20;
+                        health[0]->deductHealth(_damage);
+                        _parent->setForDelete();
+                    }
+                }
+                else
+                {
+                    auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
+                    if (!breakable.empty())
+                    {
+                        breakable[0]->setExploded();
+                        _parent->setForDelete();
+                    }
+                }
+            }
+        }
+        move(dt);
+    }
+}
+
+PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage, Vector2f offset) : BulletComponent(p, lifetime, speed, damage), _offset(offset) {}
 
 void BulletComponent::setDamage(float dam)
 {
@@ -165,6 +200,9 @@ bool PlayerBullet::checkCollision()
         }
         return false;
     }
+    else if (ls::isSolidWall(ls::getTileAt(pos, _offset))) {
+        return true;
+    }
     else
     {
         vector<shared_ptr<Entity>> potTargets = Engine::findEntity("enemy");
@@ -199,5 +237,28 @@ bool PlayerBullet::checkCollision()
             }
         }
         return false;
+    }
+}
+
+void PlayerBullet::setDirection(Vector2f dir)
+{
+    direction = dir;
+    FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
+
+    ///right
+    if (dir == Vector2f(1, 0)) {
+        _offset = Vector2f(bulletBounds.getSize().x, 0);
+    }
+    //left
+    else if (dir == Vector2f(-1, 0)) {
+        _offset = Vector2f(-bulletBounds.getSize().x, 0);
+    }
+    //up
+    else if (dir == Vector2f(0, -1)) {
+        _offset = Vector2f(0, -bulletBounds.getSize().y);
+    }
+    //down
+    else if (dir == Vector2f(0, 1)) {
+        _offset = Vector2f(0, bulletBounds.getSize().y);
     }
 }

@@ -91,7 +91,6 @@ void PlayerMovementComponent::update(double dt)
     }
     if (Keyboard::isKeyPressed(Keyboard::D)){
 
-        //_offset = Vector2f(getBounds().getSize().x + 30, 50);
         _offset = Vector2f(-(getBounds().getSize().x -10), 0);
         setRotation(90.0f);
         move(Vector2f(_speed * dt, 0));
@@ -136,17 +135,20 @@ void PlayerMovementComponent::move(const Vector2f& p)
 void PlayerMovementComponent::fire()
 {
     auto bullet = _parent->scene->makeEntity();
-    bullet->setPosition(_parent->getPosition());
-    auto bulletcomp = bullet->addComponent<PlayerBullet>();
-    bulletcomp->setDamage(damage);
-    bulletcomp->setDirection(direction);
+    Vector2f pos = _parent->getPosition() - _offset;
 
     auto spriteB = bullet->addComponent<SpriteComponent>();
 
     spriteB->setTexture(Resources::load<Texture>("playerBullet.png"));
+    bullet->setPosition(pos);
+    auto bulletcomp = bullet->addComponent<PlayerBullet>();
+    bulletcomp->setDamage(damage);
+    bulletcomp->setDirection(direction);
+
+
 
     bullet->setRotation(getRotation());
-    firetimer = 0.4f;
+    firetimer = 0.2f;
 }
 
 float PlayerMovementComponent::getRotation()
@@ -570,10 +572,9 @@ float EnemyAiComponent::getTurrentRotation()
 
 void EnemyAiComponent::fire()
 {
-   // aimTurrent();
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());
-    auto bulletcomp = bullet->addComponent<BulletComponent>();
+    auto bulletcomp = bullet->addComponent<EnemyBullet>();
     bulletcomp->setTarget(target);
     bulletcomp->setDamage(20.f);
     float angle = tAngle / 100;

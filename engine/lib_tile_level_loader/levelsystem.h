@@ -53,6 +53,7 @@ class LevelSystem
         static float getTileSize();
         static vector<unique_ptr<sf::Sprite>> _sprites;
         static bool isWall(Tile t);
+        static bool isSolidWall(Tile t);
     protected:
         static unique_ptr<Tile[]> _tiles;
         static size_t _width;

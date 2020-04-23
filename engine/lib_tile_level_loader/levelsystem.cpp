@@ -287,3 +287,8 @@ bool LevelSystem::isWall(Tile t)
 {
     return (t == HOUSE || t == HOUSE_R || t == WALL || t == BROKEN || t == BROKEN_R || t == NOTVALID);
 }
+
+bool LevelSystem::isSolidWall(Tile t)
+{
+    return (t == HOUSE || t == HOUSE_R || t == WALL || t == NOTVALID);
+}

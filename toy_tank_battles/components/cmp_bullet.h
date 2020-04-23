@@ -25,7 +25,7 @@ class BulletComponent : public Component
         void setDirection(Vector2f dir);
         void move(double dt);
         void setTarget(shared_ptr<Entity> tar);
-        bool checkCollision();
+      //  bool checkCollision();
         void setDamage(float dam);
         void addDamage(float dam);
 };
@@ -35,10 +35,26 @@ class PlayerBullet : public BulletComponent
 {
     public:
         void update(double dt) override;
-        explicit PlayerBullet(Entity* p, float lifetime = 3.f, float speed = 1.f, float damage = 1.f);
+        explicit PlayerBullet(Entity* p, float lifetime = 3.f, float speed = 1.f, float damage = 1.f, Vector2f _offset = {0,0});
         PlayerBullet() = delete;
 
         bool checkCollision();
+        void setDirection(Vector2f dir);
+    private:
+        Vector2f _offset;
+};
+
+class EnemyBullet : public BulletComponent
+{
+public:
+    void update(double dt) override;
+    explicit EnemyBullet(Entity* p, float lifetime = 3.f, float speed = 1.f, float damage = 1.f, Vector2f _offset = { 0,0 });
+    EnemyBullet() = delete;
+
+    bool checkCollision();
+    void setDirection(Vector2f dir);
+private:
+    Vector2f _offset;
 };
 
 // Create base bullet component from class Component
