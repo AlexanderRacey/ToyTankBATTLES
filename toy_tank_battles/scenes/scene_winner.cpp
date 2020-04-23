@@ -13,7 +13,7 @@
 #include "../components/cmp_actor_movement.h"
 #include "../components/cmp_physics.h"
 #include "../components/cmp_music.h"
-#include "scene_gameOver.h"
+#include "scene_winner.h"
 #include "system_renderer.h"
 #include "../add_entity.h"
 #include "../components/cmp_breakable.h"
@@ -23,31 +23,31 @@ using namespace sf;
 
 
 // Resources
-Sprite gameOverSprite;
-Texture gameOverTexture;
-Vector2f gameOverTargetCoords;
-Vector2u gameOverTextureSize;
-Vector2u windowSizeGameOver;
+Sprite winnerSprite;
+Texture winnerTexture;
+Vector2f winnerTargetCoords;
+Vector2u winnerTextureSize;
+Vector2u windowSizeWinner;
 
 
 // Display menu title
-void GameOverScene::SetTitle()
+void WinnerScene::SetTitle()
 {
-	gameOverTexture = *Resources::load<Texture>("titleGameOver.png");
+	winnerTexture = *Resources::load<Texture>("titleWinnner.png");
 	float x = Engine::GetWindow().getSize().x;
 	float y = Engine::GetWindow().getSize().y;
-	gameOverTextureSize = gameOverTexture.getSize();
-	windowSizeGameOver = Engine::GetWindow().getSize();
-	float scaleX = (float)windowSizeGameOver.x / gameOverTextureSize.x;
-	float scaleY = (float)windowSizeGameOver.y / gameOverTextureSize.y;
-	gameOverTargetCoords = { x, y };
-	gameOverSprite.setTexture(gameOverTexture);
-	gameOverSprite.setPosition(windowSizeGameOver.x / 2, windowSizeGameOver.y / 3);
-	gameOverSprite.setOrigin(gameOverTextureSize.x / 2, gameOverTextureSize.y / 2);
+	winnerTextureSize = winnerTexture.getSize();
+	windowSizeWinner = Engine::GetWindow().getSize();
+	float scaleX = (float)windowSizeWinner.x / winnerTextureSize.x;
+	float scaleY = (float)windowSizeWinner.y / winnerTextureSize.y;
+	winnerTargetCoords = { x, y };
+	winnerSprite.setTexture(winnerTexture);
+	winnerSprite.setPosition(windowSizeWinner.x / 2, windowSizeWinner.y / 3);
+	winnerSprite.setOrigin(winnerTextureSize.x / 2, winnerTextureSize.y / 2);
 }
 
 // Display background
-void GameOverScene::SetBackground()
+void WinnerScene::SetBackground()
 {
 	Background = Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
@@ -63,7 +63,7 @@ void GameOverScene::SetBackground()
 	BackgroundSprite->setOrigin(0, 0);
 }
 
-void GameOverScene::Load()
+void WinnerScene::Load()
 {
 	// Play music
 	s1.stop();
@@ -81,27 +81,32 @@ void GameOverScene::Load()
 
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
-	// Create game over menu
-	gameOverHighScoreText.setFont(font);
-	gameOverHighScoreText.setFillColor(Color::Black);
-	gameOverHighScoreText.setString("High Score: " + playerHighScore);
-	gameOverHighScoreText.setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 40));
-	
-	gameOverMenu[0].setFont(font);
-	gameOverMenu[0].setFillColor(Color(0, 168, 243, 255));
-	gameOverMenu[0].setString("Play Again?");
-	gameOverMenu[0].setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 120));
+	// Create game over menu	
+	winnerText.setFont(font);
+	winnerText.setFillColor(Color::Black);
+	winnerText.setString("You defeated all enemy Tanks!");
+	winnerText.setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 40));
 
-	gameOverMenu[1].setFont(font);
-	gameOverMenu[1].setFillColor(Color(255, 127, 39, 255));
-	gameOverMenu[1].setString("Press ENTER to Return to Menu");
-	gameOverMenu[1].setPosition(Vector2f((x2 / 2) - 165, (y2 / 2) + 160));
+	winnerHighScoreText.setFont(font);
+	winnerHighScoreText.setFillColor(Color::Black);
+	winnerHighScoreText.setString("High Score: " + playerHighScore);
+	winnerHighScoreText.setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 80));
+
+	winnerMenu[0].setFont(font);
+	winnerMenu[0].setFillColor(Color(0, 168, 243, 255));
+	winnerMenu[0].setString("Play Again");
+	winnerMenu[0].setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 160));
+
+	winnerMenu[1].setFont(font);
+	winnerMenu[1].setFillColor(Color(255, 127, 39, 255));
+	winnerMenu[1].setString("Return to Main Menu");
+	winnerMenu[1].setPosition(Vector2f((x2 / 2) - 165, (y2 / 2) + 200));
 	
-	selectedItemIndex4 = 0;
+	selectedItemIndex5 = 0;
 	setLoaded(true);
 }
 
-void GameOverScene::UnLoad()
+void WinnerScene::UnLoad()
 {
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().y;
@@ -112,7 +117,7 @@ void GameOverScene::UnLoad()
 	cout << "Game Over Unload" << endl;
 }
 
-void GameOverScene::Update(const double& dt)
+void WinnerScene::Update(const double& dt)
 {
 	Scene::Update(dt);
 
@@ -165,36 +170,36 @@ void GameOverScene::Update(const double& dt)
 	}
 }
 
-void GameOverScene::Render()
+void WinnerScene::Render()
 {
 	Scene::Render();
 
 	Renderer::queue(BackgroundSprite.get());
-	Renderer::queue(&gameOverSprite);
+	Renderer::queue(&winnerSprite);
 
 	// Display settings menu
 	for (int j = 0; j < MAX_NUMBER_OF_GOMSGS; j++)
 	{
-		Renderer::queue(&gameOverMenu[j]);
+		Renderer::queue(&winnerMenu[j]);
 	}
 }
 
-void GameOverScene::MoveUp()
+void WinnerScene::MoveUp()
 {
-	if (selectedItemIndex4 - 1 >= 0)
+	if (selectedItemIndex5 - 1 >= 0)
 	{
-		gameOverMenu[selectedItemIndex4].setFillColor(Color(255, 127, 39, 255));
-		selectedItemIndex4--;
-		gameOverMenu[selectedItemIndex4].setFillColor(Color(0, 168, 243, 255));
+		winnerMenu[selectedItemIndex5].setFillColor(Color(255, 127, 39, 255));
+		selectedItemIndex5--;
+		winnerMenu[selectedItemIndex5].setFillColor(Color(0, 168, 243, 255));
 	}
 }
 
-void GameOverScene::MoveDown()
+void WinnerScene::MoveDown()
 {
-	if (selectedItemIndex4 + 1 < MAX_NUMBER_OF_GOMSGS)
+	if (selectedItemIndex5 + 1 < MAX_NUMBER_OF_GOMSGS)
 	{
-		gameOverMenu[selectedItemIndex4].setFillColor(Color(255, 127, 39, 255));
-		selectedItemIndex4++;
-		gameOverMenu[selectedItemIndex4].setFillColor(Color(0, 168, 243, 255));
+		winnerMenu[selectedItemIndex5].setFillColor(Color(255, 127, 39, 255));
+		selectedItemIndex5++;
+		winnerMenu[selectedItemIndex5].setFillColor(Color(0, 168, 243, 255));
 	}
 }

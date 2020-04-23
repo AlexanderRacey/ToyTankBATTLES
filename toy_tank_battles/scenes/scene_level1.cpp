@@ -1,3 +1,4 @@
+#include "scene_level1.h"
 #include "engine.h"
 #include "../game.h"
 #include <SFML/Graphics.hpp>
@@ -16,7 +17,6 @@
 #include "../components/cmp_music.h"
 #include "../components/cmp_health.h"
 #include "../components/cmp_breakable.h"
-#include "scene_level1.h"
 #include "system_renderer.h"
 #include "../add_entity.h"
 
@@ -163,7 +163,7 @@ void Level1Scene::Load()
 
 	// Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
-	cout << " Scene 1 Load Done" << endl;
+	cout << "Level 1 Load Done" << endl;
 	setLoaded(true);
 }
 
@@ -182,7 +182,7 @@ void Level1Scene::UnLoad()
 
 	// Finish Unload
 	ls::unload();
-	cout << "Scene 1 Unload" << endl;
+	cout << "Level 1 Unload" << endl;
 	Scene::UnLoad();
 }
 

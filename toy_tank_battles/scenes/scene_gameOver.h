@@ -26,4 +26,5 @@ class GameOverScene : public Scene
         int selectedItemIndex4;
         Font font;
         Text gameOverMenu[MAX_NUMBER_OF_GOMSGS];
+        Text gameOverHighScoreText;
 };
