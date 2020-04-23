@@ -39,12 +39,13 @@ void HealthComponent::deductHealth(float malus)
 void HealthComponent::addHealth(float bonus)
 {
     int healthbonus = 0;
-    if (_health < 100.f) {
+    if (_health < 100.f) 
+    {
         _health += bonus;
         int healthbonus = round(bonus);
     }
-        _parent->GetCompatibleComponent<TextComponent>()[0]->SetText("Health +"+ to_string(healthbonus), true);
-        _parent->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Magenta);
+    _parent->GetCompatibleComponent<TextComponent>()[0]->SetText("Health + 1"+ to_string(healthbonus), true);
+    _parent->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Magenta);
     
 }
 

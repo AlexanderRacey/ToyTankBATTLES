@@ -28,6 +28,7 @@ using namespace sf;
 // Player HUD
 int playerScore = 0;
 int playerHealth = 100;
+int playerHighScore;
 
 
 // Display background
@@ -141,11 +142,11 @@ void Level1Scene::Load()
 		cout << "Cannot load font!" << endl;
 	}
 
-	HUDtext.setString("Health: " + to_string(playerHealth) + "%         " + "Score :  " + to_string(playerScore));
+	HUDtext.setString("Health: " + to_string(playerHealth) + " / 100                                 " + "Score :  " + to_string(playerScore));
 	HUDtext.setFont(font);
 	HUDtext.setCharacterSize(50);
-	HUDtext.setPosition(200, 0);
-	HUDtext.setFillColor(Color::Black);
+	HUDtext.setPosition(wid + 200, 10);
+	HUDtext.setFillColor(Color(0, 168, 243, 255));
 
 	// Create enemies
 	auto enp = ls::findTiles(ls::ENEMY);
@@ -188,7 +189,7 @@ void Level1Scene::UnLoad()
 void Level1Scene::Update(const double& dt)
 {
 	// Update HUD
-	HUDtext.setString("Health: " + to_string(playerHealth) + "%         " + "Score :  " + to_string(playerScore));
+	HUDtext.setString("Health: " + to_string(playerHealth) + " / 100                                 " + "Score :  " + to_string(playerScore));
 
 	// Get player position
 	const auto pp = player->getPosition();
@@ -196,11 +197,13 @@ void Level1Scene::Update(const double& dt)
 	{
 		Engine::ChangeScene((Scene*)&level2);
 	}
-	else if (!player->isAlive())
+	else if (playerHealth < 1)
 	{
 		// Plays gameOver scene if player is dead
 		this_thread::sleep_for(chrono::milliseconds(200));
 		Engine::ChangeScene((Scene*)&gameover);
+		playerScore = playerHighScore;
+		playerHealth = 100;
 	}
 
 	// Reset scene

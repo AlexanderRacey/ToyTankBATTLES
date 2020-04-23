@@ -83,8 +83,13 @@ void GameOverScene::Load()
 	// Create game over menu
 	gameOverMenu[0].setFont(font);
 	gameOverMenu[0].setFillColor(Color(0, 168, 243, 255));
-	gameOverMenu[0].setString("Press ENTER to Return to Menu");
-	gameOverMenu[0].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 40));
+	gameOverMenu[0].setString("High Score: " + playerHighScore);
+	gameOverMenu[0].setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 40));
+
+	gameOverMenu[1].setFont(font);
+	gameOverMenu[1].setFillColor(Color(0, 168, 243, 255));
+	gameOverMenu[1].setString("Press ENTER to Return to Menu");
+	gameOverMenu[1].setPosition(Vector2f((x2 / 2) - 165, (y2 / 2) + 120));
 
 	selectedItemIndex4 = 0;
 	setLoaded(true);

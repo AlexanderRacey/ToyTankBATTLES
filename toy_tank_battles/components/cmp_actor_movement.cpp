@@ -167,7 +167,6 @@ bool PlayerMovementComponent::isBlocked(Vector2f pos)
 {
     if (ls::isWall(ls::getTileAt(pos, _offset)))
     {
-
         if(ls::getTileAt(pos, _offset) == ls::BROKEN || ls::getTileAt(pos, _offset) == ls::BROKEN_R)
         {
             vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
