@@ -313,6 +313,7 @@ void EnemyAiComponent::update(double dt)
                         fireTimer -= dt;
                         if (fireTimer <= 0)
                         {
+                            aimTurrent();
                             enemyFireSound.enemyFire(1, false);
                             fire();
                             fireTimer = 3.f;
@@ -367,7 +368,7 @@ void EnemyAiComponent::update(double dt)
             }
             break;
         case EnemyAiComponent::AIMING:
-            aimTurrent(testPos);
+            aimTurrent();
             _state = SHOTING;
             break;
         default:
@@ -498,51 +499,53 @@ FloatRect ActorMovementComponent::getBounds()
     }
 }
 
-void EnemyAiComponent::aimTurrent(Vector2f Pos)
+void EnemyAiComponent::aimTurrent()
 {
     //Aim turrent depending on tank direction it is facing
     //direction order : right, down, up, left
-    float m1 = 0.f;
-    float m2 = 0.f;
-    float form = 0.f;
+    float x1 = 0.f;
+    float x2 = 0.f;
+    float y1 = 0.f;
+    float y2 = 0.f;
+
     tAngle = 0.f;
-    //Vector2f tilePos = ls::getTilePosAt(Pos);
     Vector2f tilePos = target->getPosition();
+   // turrentRight = turnTurrentRight(tilePos);
+    x1 = _parent->getPosition().x;
+    x2 = tilePos.x;
+    y1 = _parent->getPosition().y;
+    y2 = tilePos.y;
+
+    turrentRight = turnTurrentRight(tilePos);
     switch (index) {
     case 0:
         //facing right
-        m1 = _parent->getPosition().x;
-        m2 = tilePos.x;
-        form = (m2 - m1) / (1 + m2 * m1);
-        tAngle = -(atan(form) * 10000);
-        setTurrentRotation(tAngle);
+        tAngle = atan((y2 - y1)/(x2 - x1));
         break;
     case 1:
         //facing downwards
-        m1 = _parent->getPosition().y;
-        m2 = tilePos.y;
-        form = (m2 - m1) / (1 + m2 * m1);
-        tAngle = atan(form) * 10000;
-        setTurrentRotation(tAngle);
-
+        tAngle = atan((x2 - x1) / (y2 - y1));
         break;
     case 2:
         //facing upwards
-        m1 = _parent->getPosition().y;
-        m2 = tilePos.y;
-        form = (m2 - m1) / (1 + m2 * m1);
-        tAngle = -(atan(form) * 10000);
-        setTurrentRotation(tAngle);
+        tAngle = atan((x2 - x1) / (y2 - y1));
         break;
     case 3:
         //facing left
-        m1 = _parent->getPosition().x;
-        m2 = tilePos.x;
-        form = (m2 - m1) / (1 + m2 * m1);
-        tAngle = -(atan(form) * 10000);
-        setTurrentRotation(tAngle);
+        tAngle = atan((y1 - y2) / (x1 - x2));
         break;
     }
+
+    // angle times 10 is perfect for bullet trajectory but turrent is wrong angle
+     tAngle = tAngle * 100;
+    if (!turrentRight && tAngle > 0) {
+        tAngle = -(tAngle);
+    }
+    else if(turrentRight && tAngle < 0) {
+        tAngle = (tAngle) * -1;
+    }
+
+    setTurrentRotation(tAngle);
 
 }
 
@@ -552,7 +555,8 @@ void EnemyAiComponent::setTurrentRotation(float rot)
 
     if (!animation.empty())
     {
-        animation[0]->rotateTurret(rot);
+      //  cout << "index " + to_string(index) +  "ROtation " + to_string(rot);
+        animation[0]->setTurretRotation(getRotation() + rot);
     }
 }
 
@@ -568,29 +572,31 @@ float EnemyAiComponent::getTurrentRotation()
 
 void EnemyAiComponent::fire()
 {
+   // aimTurrent();
     auto bullet = _parent->scene->makeEntity();
     bullet->setPosition(_parent->getPosition());
     auto bulletcomp = bullet->addComponent<BulletComponent>();
     bulletcomp->setTarget(target);
-    bulletcomp->setDamage(20.f);
+    bulletcomp->setDamage(1.f);
     float angle = tAngle / 100;
+   
     switch (index)
     {
     case 0:
         //facing right
-        bulletcomp->setDirection(_direction + Vector2f(-angle, 0));
+            bulletcomp->setDirection(_direction + Vector2f(0, angle));
         break;
     case 1:
         //facing downwards
-        bulletcomp->setDirection(_direction);
+            bulletcomp->setDirection(_direction + Vector2f(-angle, 0));;
         break;
     case 2:
         //facing upwards
-        bulletcomp->setDirection(_direction + Vector2f(angle, 0));;
+            bulletcomp->setDirection(_direction + Vector2f(angle, 0));
         break;
     case 3:
         //facing left
-        bulletcomp->setDirection(_direction + Vector2f(0, -angle));
+            bulletcomp->setDirection(_direction + Vector2f(0, -angle));
         break;
     }
 
@@ -601,4 +607,50 @@ void EnemyAiComponent::fire()
     spriteB->getSprite().setOrigin(Vector2f(bounds.getSize().x / 2, bounds.getSize().y));
 
     bullet->setRotation(getTurrentRotation());
+}
+
+
+bool EnemyAiComponent::turnTurrentRight(Vector2f targetpos) {
+   
+    Vector2f pos = _parent->getPosition();
+    
+    switch (index)
+    {
+    case 0:
+        //facing right
+        if (targetpos.y > pos.y) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        break;
+    case 1:
+        //facing downwards
+        if (targetpos.x > pos.x) {
+            return false;
+        }
+        else {
+            return true;
+        }
+        break;
+    case 2:
+        //facing upwards
+        if (targetpos.x > pos.x) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        break;
+    case 3:
+        //facing left
+        if (targetpos.y < pos.y) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        break;
+    }
 }

@@ -69,10 +69,12 @@ class EnemyAiComponent : public ActorMovementComponent
 		state _state;
 		float gap;
 		bool turnRight = false;
+		bool turrentRight = false;
 		bool blocked = false;
 		shared_ptr<Entity> target;
 		float tAngle;
 		float fireTimer = 0.f;
+		bool turnTurrentRight(Vector2f pos);
 
 	public:
 		explicit EnemyAiComponent(Entity* p);
@@ -84,7 +86,7 @@ class EnemyAiComponent : public ActorMovementComponent
 		float getRotation();
 		void move(const Vector2f& pos);
 		void update(double dt);
-		void aimTurrent(Vector2f pos);
+		void aimTurrent();
 		void setTurrentRotation(float rot);
 		void fire();
 		float getTurrentRotation();
