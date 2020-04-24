@@ -10,6 +10,7 @@
 #include <iostream>
 #include <thread>
 #include "../components/cmp_music.h"
+#include "../components/cmp_sound.h"
 #include "../components/cmp_text.h"
 
 using namespace std;
@@ -93,8 +94,28 @@ void SettingsScene::Load()
 
 	settingsMenu[4].setFont(font);
 	settingsMenu[4].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[4].setString("Return to Menu");
-	settingsMenu[4].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 200));
+	settingsMenu[4].setString("Music Volume Up");
+	settingsMenu[4].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 240));
+
+	settingsMenu[5].setFont(font);
+	settingsMenu[5].setFillColor(Color(255, 127, 39, 255));
+	settingsMenu[5].setString("Music Volume Down");
+	settingsMenu[5].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 280));
+
+	settingsMenu[6].setFont(font);
+	settingsMenu[6].setFillColor(Color(255, 127, 39, 255));
+	settingsMenu[6].setString("Sound Effect Volume Up");
+	settingsMenu[6].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 320));
+
+	settingsMenu[7].setFont(font);
+	settingsMenu[7].setFillColor(Color(255, 127, 39, 255));
+	settingsMenu[7].setString("Sound Effect Volume Down");
+	settingsMenu[7].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 360));
+
+	settingsMenu[8].setFont(font);
+	settingsMenu[8].setFillColor(Color(255, 127, 39, 255));
+	settingsMenu[8].setString("Return to Menu");
+	settingsMenu[8].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 440));
 
 	selectedItemIndex2 = 0;
 	setLoaded(true);
@@ -167,6 +188,18 @@ void SettingsScene::Update(const double& dt)
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 4:
+				MusicPlayer().setVolume(MusicPlayer().getVolume() + 5.0f);
+				break;
+			case 5:
+				MusicPlayer().setVolume(MusicPlayer().getVolume() - 5.0f);
+				break;
+			case 6:
+				//SoundPlayer().setVolume(SoundPlayer().getVolume() + 5.0f);
+				break;
+			case 7:
+				//SoundPlayer().setVolume(SoundPlayer().getVolume() - 5.0f);
+				break;
+			case 8:
 				Engine::ChangeScene(&menu);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;

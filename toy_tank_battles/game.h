@@ -31,6 +31,7 @@ static shared_ptr<Entity> smoke;
 extern MusicPlayer s1;
 extern MusicPlayer s2;
 extern MusicPlayer s3;
+extern MusicPlayer s4;
 
 // HUD items
 extern int playerScore;

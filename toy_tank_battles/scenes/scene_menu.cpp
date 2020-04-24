@@ -28,6 +28,7 @@ Vector2u windowSizeMenu;
 MusicPlayer s1;
 MusicPlayer s2;
 MusicPlayer s3;
+MusicPlayer s4;
 
 SoundBuffer effect1;
 Sound sound1;
@@ -79,6 +80,7 @@ void MenuScene::Load()
         // Play menu music 
         s2.stop();
         s3.stop();
+        s4.stop();
         s1.play1(0, true);
         s1.playing();
 

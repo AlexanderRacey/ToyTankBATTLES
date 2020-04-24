@@ -2,7 +2,7 @@
 #include "engine.h"
 #include "SFML/Graphics.hpp"
 
-#define MAX_NUMBER_OF_SETTINGS 5
+#define MAX_NUMBER_OF_SETTINGS 9
 
 // Create settings scene from class Scene
 class SettingsScene : public Scene 

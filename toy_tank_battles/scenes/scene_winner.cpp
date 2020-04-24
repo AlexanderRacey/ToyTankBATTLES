@@ -30,6 +30,7 @@ Vector2u winnerTextureSize;
 Vector2u windowSizeWinner;
 
 
+
 // Display menu title
 void WinnerScene::SetTitle()
 {
@@ -68,8 +69,8 @@ void WinnerScene::Load()
 	// Play music
 	s1.stop();
 	s2.stop();
-	s3.play3(2, true);
-	s3.playing();
+	s3.stop();
+	s4.play4(3, false);
 
 	// Display settings 
 	cout << "Game Over Load \n";

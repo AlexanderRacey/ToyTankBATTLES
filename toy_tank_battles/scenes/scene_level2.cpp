@@ -135,6 +135,7 @@ void Level2Scene::Load()
 	// Play music 
 	s1.stop();
 	s3.stop();
+	s4.stop();
 	s2.play2(1, true);
 
 	if (!font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf"))

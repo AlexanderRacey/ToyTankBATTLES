@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-MusicPlayer::MusicPlayer() : m_volume(6.0f) {}
+MusicPlayer::MusicPlayer() : m_volume(50.0f) {}
 
 void MusicPlayer::play1(const int title, bool loop)
 {
@@ -57,6 +57,22 @@ void MusicPlayer::play3(const int title, bool loop)
 	}
 }
 
+void MusicPlayer::play4(const int title, bool loop)
+{
+	if (title == 3) {
+		if (m_music.openFromFile("res/sound/winFanfare.ogg"))
+		{
+			m_music.setVolume(m_volume);
+			m_music.setLoop(loop);
+			m_music.play();
+		}
+		else
+		{
+			std::cout << "ERROR with music file." << std::endl;
+		}
+	}
+}
+
 void MusicPlayer::stop()
 {
 	m_music.stop();
@@ -69,10 +85,15 @@ void MusicPlayer::setPaused(bool paused)
 
 bool MusicPlayer::playing() const
 {
-	return (m_music.getStatus() == sf::SoundSource::Playing);
+	return (m_music.getStatus() == SoundSource::Playing);
 }
 
-float MusicPlayer::getVolume() const
+float MusicPlayer::getVolume()
 {
 	return m_volume;
+}
+
+void MusicPlayer::setVolume(float volume)
+{
+	m_volume = volume;
 }

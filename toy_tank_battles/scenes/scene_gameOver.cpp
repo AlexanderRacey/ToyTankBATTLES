@@ -68,6 +68,7 @@ void GameOverScene::Load()
 	// Play music
 	s1.stop();
 	s2.stop();
+	s4.stop();
 	s3.play3(2, true);
 	s3.playing();
 
