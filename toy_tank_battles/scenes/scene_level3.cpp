@@ -1,4 +1,4 @@
-#include "scene_level2.h"
+#include "scene_level3.h"
 #include "engine.h"
 #include "../game.h"
 #include <SFML/Graphics.hpp>
@@ -31,7 +31,7 @@ using namespace sf;
 
 
 // Display background
-void Level2Scene::SetBackground()
+void Level3Scene::SetBackground()
 {
 	_Background = Resources::load<Texture>("background.png");
 	float x2 = Engine::GetWindow().getSize().x;
@@ -47,7 +47,7 @@ void Level2Scene::SetBackground()
 	_BackgroundSprite->setOrigin(0, 0);
 }
 
-void Level2Scene::SetPickups()
+void Level3Scene::SetPickups()
 {
 	//make array of Pickup components based on number represented on map
 	vector<shared_ptr<Texture>> picks = { Resources::load<Texture>("bear.png"), Resources::load<Texture>("giraffe.png"),
@@ -77,7 +77,7 @@ void Level2Scene::SetPickups()
 }
 
 //ADDs breakable houses to tiles
-void Level2Scene::SetBreakables()
+void Level3Scene::SetBreakables()
 {
 	auto brokenHouses = ls::findTiles(ls::BROKEN);
 	auto brokenHouses2 = ls::findTiles(ls::BROKEN_R);
@@ -112,7 +112,7 @@ void Level2Scene::SetBreakables()
 }
 
 
-void Level2Scene::Load()
+void Level3Scene::Load()
 {
 	// Get window size
 	float x2 = Engine::getWindowSize().x;
@@ -121,7 +121,7 @@ void Level2Scene::Load()
 	Engine::GetWindow().display();
 
 	// Load level
-	ls::loadLevelFile("res/level_2.txt", 90.0f);
+	ls::loadLevelFile("res/level_3.txt", 90.0f);
 
 	//Set level to appear at middle of window
 	//this is not the middle anymore will need to figure somethings out
@@ -167,7 +167,7 @@ void Level2Scene::Load()
 	setLoaded(true);
 }
 
-void Level2Scene::UnLoad()
+void Level3Scene::UnLoad()
 {
 	float x2 = Engine::GetWindow().getSize().x;
 	float y2 = Engine::GetWindow().getSize().y;
@@ -186,7 +186,7 @@ void Level2Scene::UnLoad()
 	Scene::UnLoad();
 }
 
-void Level2Scene::Update(const double& dt)
+void Level3Scene::Update(const double& dt)
 {
 	auto player = Engine::findEntity("player")[0];
 	int health = player->GetCompatibleComponent<HealthComponent>()[0]->getHealth();
@@ -196,10 +196,11 @@ void Level2Scene::Update(const double& dt)
 	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(_playerScore));
 
 	vector<shared_ptr<Entity>> enemies = Engine::findEntity("enemy");
+
 	if (enemies.empty())
 	{
 		UnLoad();
-		Engine::ChangeScene((Scene*)&level3);
+		Engine::ChangeScene((Scene*)&winner);
 	}
 	else if (_playerHealth < 1)
 	{
@@ -226,7 +227,7 @@ void Level2Scene::Update(const double& dt)
 	Scene::Update(dt);
 }
 
-void Level2Scene::Render()
+void Level3Scene::Render()
 {
 	Renderer::queue(_BackgroundSprite.get());
 	Renderer::queue(&HUDtext);
@@ -237,6 +238,7 @@ void Level2Scene::Render()
 	Scene::Render();
 }
 
+
 /*#include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
@@ -245,8 +247,8 @@ void Level2Scene::Render()
 #include <thread>
 #include "engine.h"
 #include "maths.h"
-#include "scene_level1.h"
 #include "scene_level2.h"
+#include "scene_level3.h"
 #include "system_renderer.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
@@ -260,8 +262,12 @@ void Level2Scene::Render()
 using namespace std;
 using namespace sf;
 
+// Player HUD
+//int playerHighScore;
+//int playerScore;
 
-void Level2Scene::Load()
+
+void Level3Scene::Load()
 {
 	// Get window size
 	float x2 = Engine::getWindowSize().x;
@@ -270,7 +276,7 @@ void Level2Scene::Load()
 	Engine::GetWindow().display();
 
 	// Load level
-	ls::loadLevelFile("res/level_2.txt", 90.0f);
+	ls::loadLevelFile("res/level_3.txt", 90.0f);
 
 	//Set level to appear at middle of window
 	//this is not the middle anymore will need to figure somethings out
@@ -312,16 +318,17 @@ void Level2Scene::Load()
 
 	// Simulate long loading times
 	this_thread::sleep_for(chrono::milliseconds(3000));
-	cout << "Level 2 Load Done" << endl;
+	cout << "Level 3 Load Done" << endl;
 	setLoaded(true);
 }
 
-void Level2Scene::Update(const double& dt)
+void Level3Scene::Update(const double& dt)
 {
 	auto player = Engine::findEntity("player")[0];
 	int health = player->GetCompatibleComponent<HealthComponent>()[0]->getHealth();
 	_playerHealth = health;
 	_playerScore = playerScore;
+
 	// Update HUD
 	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(_playerScore));
 
@@ -329,7 +336,7 @@ void Level2Scene::Update(const double& dt)
 	if (enemies.empty())
 	{
 		UnLoad();
-		Engine::ChangeScene((Scene*)&level3);
+		Engine::ChangeScene((Scene*)&winner);
 	}
 	else if (_playerHealth < 1)
 	{
