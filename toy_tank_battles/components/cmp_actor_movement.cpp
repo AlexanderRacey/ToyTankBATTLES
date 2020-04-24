@@ -208,7 +208,7 @@ const float rotations[] = { 90.f, 180.f, 0.f, 270.f};
 
 EnemyAiComponent::EnemyAiComponent(Entity* p) : ActorMovementComponent(p), _state(MOVING), _offset(Vector2f(0, 0)), _direction(Vector2f(0, 0)), gap(30.f)
 {
-    ChangeDirection();
+    ChangeDirection(false);
     setSpeed(50.f);
     setRotation(rotations[index]);
 };
@@ -281,40 +281,16 @@ void EnemyAiComponent::update(double dt)
             }
             else
             {
-                ChangeDirection();
+                ChangeDirection(false);
                 _state = ROTATING;
             }
             break;
         case EnemyAiComponent::SHOTING:
             if (target->isAlive())
-            {
+            {   
                 shared_ptr<Entity> player = Engine::findEntity("player")[0];
                 if (target == player && !PlayerInRange()) {
-                    bool turnedSuccess = false;
-                    int posDirections[] = { 0, 1, 2, 3 };
-                    int previndex = index;
-                    for (int i : posDirections) {
-                        if (i != previndex){
-                            index = i;
-                            facePlayer();
-                            if (PlayerInRange()) {
-                                turnedSuccess = true;
-                                break;
-                            }
-                        }
- 
-                    }
-
-                    if (!turnedSuccess) {
-                        index = previndex;
-                        facePlayer();
-                        _state = MOVING;
-                        blocked = false;
-                    }
-                    else {
-                        _state = ROTATING;
-                        blocked = false;
-                    }
+                     facePlayer();
                 }else{
                 auto breakable = target->GetCompatibleComponent<BreakableComponent>();
                 if (!breakable.empty())
@@ -389,16 +365,23 @@ void EnemyAiComponent::update(double dt)
     }
 }
 
-void EnemyAiComponent::ChangeDirection()
+void EnemyAiComponent::ChangeDirection(bool setIndex)
 {
     Vector2f newDir;
     Vector2f newPos;
-    index = 0;
-    do
-    {
-        index = rand() % 4;
+
+    if (!setIndex){
+        index = 0;
+        do
+        {
+            index = rand() % 4;
+            newDir = Vector2f(directions[index]);
+        } while (newDir == _direction);
+
+    }
+    else {
         newDir = Vector2f(directions[index]);
-    } while (newDir == _direction);
+    }
 
     switch (index)
     {
@@ -460,66 +443,32 @@ void EnemyAiComponent::ChangeDirection()
 
 void EnemyAiComponent::facePlayer()
 {
-    Vector2f newDir;
-    Vector2f newPos;
+    shared_ptr<Entity> player = Engine::findEntity("player")[0];
+    bool turnedSuccess = false;
+    int posDirections[] = { 0, 1, 2, 3 };
+    int previndex = index;
+        for (int i : posDirections) {
+            if (i != previndex) {
+                index = i;
+                ChangeDirection(true);
+                if (PlayerInRange()) {
+                    turnedSuccess = true;
+                    break;
+                }
+            }
 
-    newDir = Vector2f(directions[index]);
+        }
 
-    switch (index)
-    {
-    case 0:
-        //move right
-        if (_direction == Vector2f(0, 1))
-        {
-            turnRight = false;
+        if (!turnedSuccess) {
+            index = previndex;
+            ChangeDirection(true);
+            _state = MOVING;
+            blocked = false;
         }
-        else
-        {
-            turnRight = true;
+        else {
+            _state = ROTATING;
+            blocked = false;
         }
-        _offset = Vector2f(-getBounds().height, 0);
-        break;
-    case 1:
-        //Move down
-        //setRotation(0.f);
-        if (_direction == Vector2f(-1, 0))
-        {
-            turnRight = false;
-        }
-        else
-        {
-            turnRight = true;
-        }
-        _offset = Vector2f(0, -getBounds().height);
-        break;
-    case 2:
-        //Move Up
-        //setRotation(0.f);
-        if (_direction == Vector2f(1, 0))
-        {
-            turnRight = false;
-        }
-        else
-        {
-            turnRight = true;
-        }
-        _offset = Vector2f(0, getBounds().height);
-        break;
-    case 3:
-        //Move left
-        //setRotation(90.f);
-        if (_direction == Vector2f(0, -1))
-        {
-            turnRight = false;
-        }
-        else
-        {
-            turnRight = true;
-        }
-        _offset = Vector2f(getBounds().height, 0);
-        break;
-    }
-    _direction = newDir;
 }
 
 
@@ -768,4 +717,10 @@ bool EnemyAiComponent::PlayerInRange()
 
 bool EnemyAiComponent::validMove(Vector2f pos, Vector2f offset) {
     return !(ls::isSolidWall(ls::getTileAt(pos, _offset)));
+}
+
+void EnemyAiComponent::notifyEnemy() {
+    _state = SHOTING;
+
+    facePlayer();
 }

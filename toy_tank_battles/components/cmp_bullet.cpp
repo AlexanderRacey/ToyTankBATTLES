@@ -5,6 +5,7 @@
 #include "cmp_health.h"
 #include <levelsystem.h>
 #include "../game.h"
+#include "cmp_actor_movement.h"
 
 using namespace std;
 using namespace sf;
@@ -210,7 +211,8 @@ bool PlayerBullet::checkCollision()
         for (auto t : potTargets)
         {
             auto sp = t->GetCompatibleComponent<AnimationComponent>();
-            if (!sp.empty())
+            auto movement = t->GetCompatibleComponent<EnemyAiComponent>();
+            if (!sp.empty() && !movement.empty())
             {
                 auto bounds = sp[0]->getSprite().getGlobalBounds();
 
@@ -225,6 +227,7 @@ bool PlayerBullet::checkCollision()
                             if (healtcomp[0]->getHealth() > 0)
                             {
                                 healtcomp[0]->deductHealth(_damage);
+                                movement[0]->notifyEnemy();
                             }
                             else 
                             {

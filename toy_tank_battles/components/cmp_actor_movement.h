@@ -82,7 +82,7 @@ class EnemyAiComponent : public ActorMovementComponent
 	public:
 		explicit EnemyAiComponent(Entity* p);
 		EnemyAiComponent() = delete;
-		void ChangeDirection();
+		void ChangeDirection(bool setIndex);
 		void resetState();
 		void setRotation(float rot);
 		void rotate(float rot);
@@ -93,4 +93,5 @@ class EnemyAiComponent : public ActorMovementComponent
 		void setTurrentRotation(float rot);
 		void fire();
 		float getTurrentRotation();
+		void notifyEnemy();
 };
