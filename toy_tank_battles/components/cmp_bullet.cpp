@@ -160,7 +160,7 @@ bool PlayerBullet::checkCollision()
 {
     Vector2f pos = _parent->getPosition();
 
-    if (ls::getTileAt(pos) == ls::BROKEN || ls::getTileAt(pos) == ls::BROKEN_R) 
+    if (ls::getTileAt(pos, _offset) == ls::BROKEN || ls::getTileAt(pos, _offset) == ls::BROKEN_R)
     {
         vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
         for (auto t : potTargets)
@@ -169,7 +169,9 @@ bool PlayerBullet::checkCollision()
             auto bounds = sp[0]->getSprite().getGlobalBounds();
 
             FloatRect bBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
-            if (bounds.intersects(bBounds))
+         //   bBounds = FloatRect(bBounds.left - 10, bBounds.top - 10, bBounds.width + 20, bBounds.height + 10);
+
+            if (bBounds.intersects(bounds))
             {
                 if (t->isAlive())
                 {

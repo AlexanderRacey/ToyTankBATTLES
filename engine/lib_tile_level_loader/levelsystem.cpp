@@ -47,8 +47,6 @@ void LevelSystem::loadTextures()
     house3 = Resources::load<Texture>("OrangeHouse.png");
     house4 = Resources::load<Texture>("PurpleHouse.png");
     house5 = Resources::load<Texture>("YellowHouse.png");
-   // broken = Resources::load<Texture>("BrokenHouse.png");
-    //broken2 = Resources::load<Texture>("brokenHouse2.png");
     wall = Resources::load<Texture>("GreyWall.png");
     houses = { house1, house2, house3, house4, house5 };
     _textures = { {EMPTY, sand }, {HOUSE, house1}, {WALL, wall} };
@@ -66,7 +64,6 @@ size_t LevelSystem::_height;
 
 float LevelSystem::_tileSize(90.f);
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
-// Vector2f LevelSystem::_offset(0,0);
 
 void LevelSystem::loadLevelFile(const string& path, float tileSize)
 {
@@ -213,7 +210,6 @@ LevelSystem::Tile LevelSystem::getTileAt(Vector2f v)
     auto a = v - _offset;
     if (a.x < 0 || a.y < 0) 
     {
-       // throw string("Tile out of range ");
         return NOTVALID;
     }
     else 

@@ -76,6 +76,7 @@ class EnemyAiComponent : public ActorMovementComponent
 		float fireTimer = 0.f;
 		bool turnTurrentRight(Vector2f pos);
 		bool PlayerInRange();
+		void facePlayer();
 
 	public:
 		explicit EnemyAiComponent(Entity* p);
