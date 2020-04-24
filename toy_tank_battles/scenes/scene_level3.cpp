@@ -25,10 +25,6 @@ using namespace std;
 using namespace sf;
 
 
-// Player HUD
-//int playerHighScore;
-//int playerScore;
-
 
 // Display background
 void Level3Scene::SetBackground()
@@ -200,7 +196,7 @@ void Level3Scene::Update(const double& dt)
 	if (enemies.empty())
 	{
 		UnLoad();
-		Engine::ChangeScene((Scene*)&winner);
+ 		Engine::ChangeScene((Scene*)&winner);
 	}
 	else if (_playerHealth < 1)
 	{

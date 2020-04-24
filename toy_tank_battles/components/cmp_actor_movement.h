@@ -39,7 +39,7 @@ class PlayerMovementComponent : public ActorMovementComponent
 		Vector2f direction = { 0,-1 };
 		Vector2f _offset;
 		float firetimer = 0;
-		float damage = 20.f;
+		float damage = 30.f;
 		bool isBlocked(Vector2f pos);
 
     public:

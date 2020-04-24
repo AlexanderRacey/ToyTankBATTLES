@@ -33,7 +33,7 @@ Vector2u windowSizeWinner;
 // Display menu title
 void WinnerScene::SetTitle()
 {
-	winnerTexture = *Resources::load<Texture>("titleWinnner.png");
+	winnerTexture = *Resources::load<Texture>("titleWinner.png");
 	float x = Engine::GetWindow().getSize().x;
 	float y = Engine::GetWindow().getSize().y;
 	winnerTextureSize = winnerTexture.getSize();
