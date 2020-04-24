@@ -70,6 +70,24 @@ bool EnemyBullet::checkCollision()
 
 void EnemyBullet::setDirection(Vector2f dir) {
     direction = dir;
+    FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
+
+    ///right
+    if (dir == Vector2f(1, 0)) {
+        _offset = Vector2f(bulletBounds.getSize().x, 0);
+    }
+    //left
+    else if (dir == Vector2f(-1, 0)) {
+        _offset = Vector2f(-bulletBounds.getSize().x, 0);
+    }
+    //up
+    else if (dir == Vector2f(0, -1)) {
+        _offset = Vector2f(0, -bulletBounds.getSize().y);
+    }
+    //down
+    else if (dir == Vector2f(0, 1)) {
+        _offset = Vector2f(0, bulletBounds.getSize().y);
+    }
 }
 
 void EnemyBullet::update(double dt)
@@ -81,7 +99,7 @@ void EnemyBullet::update(double dt)
     {
         _parent->setForDelete();
     }
-    else if (ls::isSolidWall(ls::getTileAt(pos))) {
+    else if (ls::isSolidWall(ls::getTileAt(pos, _offset))) {
         _parent->setForDelete();
     }
     else

@@ -226,18 +226,47 @@ void EnemyAiComponent::update(double dt)
     const Vector2f pos = _parent->getPosition();
     //Next position
     Vector2f newpos = pos + _direction * mva;
-    Vector2f testPos = newpos + _offset;
+    Vector2f testPos = newpos + Vector2f((_offset.x/2)*-1, (_offset.y/2)*-1);
    // auto breakable;
 
     switch (_state)
     {
         case EnemyAiComponent::MOVING:
-            if (validMove(testPos))
+            if (validMove(newpos, _offset))
             {
-                
                 shared_ptr<Entity> player = Engine::findEntity("player")[0];
+                if (ls::BROKEN == ls::getTileAt(testPos, _offset) || ls::BROKEN_R == ls::getTileAt(testPos, _offset))
 
-                if (PlayerInRange())
+                {
+                    vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
+                    for (auto t : potTargets)
+                    {
+                        auto sp = t->GetCompatibleComponent<SpriteComponent>();
+                        auto bounds = sp[0]->getSprite().getGlobalBounds();
+                        //cheating the left detection by making width much wider for now
+                        bounds = FloatRect(bounds.left - 50.f, bounds.top - 50.f, bounds.width + 100, bounds.height + 50.f);
+
+                        if (bounds.contains(testPos))
+                        {
+                            if (t->isAlive())
+                            {
+                                target = t;
+                                fireTimer = 0.5f;
+                                _state = AIMING;
+                                blocked = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!blocked)
+                    {
+                        move(newpos);
+                    }
+
+                }
+              
+
+                else if (PlayerInRange())
                 {
                     target = player;
                     fireTimer = 0.5f;
@@ -249,34 +278,6 @@ void EnemyAiComponent::update(double dt)
                     move(newpos);
                 }
 
-            }
-            else if (ls::BROKEN == ls::getTileAt(testPos) || ls::BROKEN_R == ls::getTileAt(testPos))
-            {
-                vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
-                for (auto t : potTargets)
-                {
-                    auto sp = t->GetCompatibleComponent<SpriteComponent>();
-                    auto bounds = sp[0]->getSprite().getGlobalBounds();
-                    //cheating the left detection by making width much wider for now
-                    bounds = FloatRect(bounds.left - 50.f, bounds.top -50.f, bounds.width + 100.f, bounds.height + 50.f);
-
-                    if (bounds.contains(testPos))
-                    {
-                        if (t->isAlive())
-                        {
-                            target = t;
-                            fireTimer = 0.5f;
-                            _state = AIMING;
-                            blocked = true;
-                            break;
-                        }
-                    }
-                }
-                if (!blocked)
-                {
-                  move(newpos);
-                }
-               
             }
             else
             {
@@ -401,58 +402,57 @@ void EnemyAiComponent::ChangeDirection()
 
     switch (index)
     {
-        case 0:
-            //move right
-            //setRotation(90.f);
-            if (_direction == Vector2f(0, 1))
-            {
-                turnRight = false;
-            }
-            else
-            {
-                turnRight = true;
-            }
-            _offset = Vector2f(getBounds().getSize().x + gap, 0);
-            break;
-        case 1:
-            //Move down
-            //setRotation(0.f);
-            if (_direction == Vector2f(-1, 0))
-            {
-                turnRight = false;
-            }
-            else
-            {
-                turnRight = true;
-            }
-            _offset = Vector2f(0, getBounds().getSize().y + gap);
-            break;
-        case 2:
-            //Move Up
-            //setRotation(0.f);
-            if (_direction == Vector2f(1, 0))
-            {
-                turnRight = false;
-            }
-            else
-            {
-                turnRight = true;
-            }
-            _offset = Vector2f(0, 0);
-            break;
-        case 3:
-            //Move left
-            //setRotation(90.f);
-            if (_direction == Vector2f(0, -1))
-            {
-                turnRight = false;
-            }
-            else
-            {
-                turnRight = true;
-            }
-            _offset = Vector2f(0, 0);
-            break;
+    case 0:
+        //move right
+        if (_direction == Vector2f(0, 1))
+        {
+            turnRight = false;
+        }
+        else
+        {
+            turnRight = true;
+        }
+        _offset = Vector2f(-getBounds().height, 0);
+        break;
+    case 1:
+        //Move down
+        //setRotation(0.f);
+        if (_direction == Vector2f(-1, 0))
+        {
+            turnRight = false;
+        }
+        else
+        {
+            turnRight = true;
+        }
+        _offset = Vector2f(0, -getBounds().height);
+        break;
+    case 2:
+        //Move Up
+        //setRotation(0.f);
+        if (_direction == Vector2f(1, 0))
+        {
+            turnRight = false;
+        }
+        else
+        {
+            turnRight = true;
+        }
+        _offset = Vector2f(0, getBounds().height);
+        break;
+    case 3:
+        //Move left
+        //setRotation(90.f);
+        if (_direction == Vector2f(0, -1))
+        {
+            turnRight = false;
+        }
+        else
+        {
+            turnRight = true;
+        }
+        _offset = Vector2f(getBounds().height, 0);
+        break;
     }
 
     _direction = newDir;
@@ -469,7 +469,6 @@ void EnemyAiComponent::facePlayer()
     {
     case 0:
         //move right
-        //setRotation(90.f);
         if (_direction == Vector2f(0, 1))
         {
             turnRight = false;
@@ -478,7 +477,7 @@ void EnemyAiComponent::facePlayer()
         {
             turnRight = true;
         }
-        _offset = Vector2f(getBounds().getSize().x + gap, 0);
+        _offset = Vector2f(-getBounds().height, 0);
         break;
     case 1:
         //Move down
@@ -491,7 +490,7 @@ void EnemyAiComponent::facePlayer()
         {
             turnRight = true;
         }
-        _offset = Vector2f(0, getBounds().getSize().y + gap);
+        _offset = Vector2f(0, -getBounds().height);
         break;
     case 2:
         //Move Up
@@ -504,7 +503,7 @@ void EnemyAiComponent::facePlayer()
         {
             turnRight = true;
         }
-        _offset = Vector2f(0, 0);
+        _offset = Vector2f(0, getBounds().height);
         break;
     case 3:
         //Move left
@@ -517,7 +516,7 @@ void EnemyAiComponent::facePlayer()
         {
             turnRight = true;
         }
-        _offset = Vector2f(0, 0);
+        _offset = Vector2f(getBounds().height, 0);
         break;
     }
     _direction = newDir;
@@ -655,6 +654,15 @@ void EnemyAiComponent::fire()
     bulletcomp->setTarget(target);
     bulletcomp->setDamage(20.f);
     float angle = tAngle / 100;
+
+
+    auto spriteB = bullet->addComponent<SpriteComponent>();
+
+    spriteB->setTexture(Resources::load<Texture>("enemyBullet.png"));
+    auto bounds = spriteB->getSprite().getGlobalBounds();
+    spriteB->getSprite().setOrigin(Vector2f(bounds.getSize().x / 2, bounds.getSize().y));
+
+    bullet->setRotation(getTurrentRotation());
    
     switch (index)
     {
@@ -676,13 +684,6 @@ void EnemyAiComponent::fire()
         break;
     }
 
-    auto spriteB = bullet->addComponent<SpriteComponent>();
-
-    spriteB->setTexture(Resources::load<Texture>("enemyBullet.png"));
-    auto bounds = spriteB->getSprite().getGlobalBounds();
-    spriteB->getSprite().setOrigin(Vector2f(bounds.getSize().x / 2, bounds.getSize().y));
-
-    bullet->setRotation(getTurrentRotation());
 }
 
 
@@ -762,4 +763,9 @@ bool EnemyAiComponent::PlayerInRange()
     else {
         return false;
     }
+}
+
+
+bool EnemyAiComponent::validMove(Vector2f pos, Vector2f offset) {
+    return !(ls::isSolidWall(ls::getTileAt(pos, _offset)));
 }
