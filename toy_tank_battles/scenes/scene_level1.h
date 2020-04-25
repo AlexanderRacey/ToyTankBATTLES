@@ -26,18 +26,3 @@ class Level1Scene : public Scene
    
         Text HUDtext;
 };
-
-
-/*class Level2Scene : public Level1Scene
-{
-    public:
-        void Load() override;
-        void Update(const double& dt) override;
-};
-
-class Level3Scene : public Level1Scene
-{
-    public:
-        void Load() override;
-        void Update(const double& dt) override;
-};*/

@@ -197,11 +197,19 @@ void Level3Scene::Update(const double& dt)
 	if (enemies.empty())
 	{
 		UnLoad();
+		playerScore = _playerScore;
+		if (playerScore > playerHighScore) {
+			playerHighScore = playerScore;
+		}
  		Engine::ChangeScene((Scene*)&winner);
 	}
 	else if (_playerHealth < 1)
 	{
 		// Plays gameOver scene if player is dead
+		playerScore = _playerScore;
+		if (playerScore > playerHighScore) {
+			playerHighScore = playerScore;
+		}
 		this_thread::sleep_for(chrono::milliseconds(200));
 		Engine::ChangeScene((Scene*)&gameover);
 		_playerHealth = 100;

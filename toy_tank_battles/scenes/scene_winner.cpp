@@ -90,7 +90,7 @@ void WinnerScene::Load()
 
 	winnerHighScoreText.setFont(font);
 	winnerHighScoreText.setFillColor(Color::Black);
-	winnerHighScoreText.setString("High Score: " + playerScore);
+	winnerHighScoreText.setString("High Score: " + to_string(playerHighScore) + " Score " + to_string(playerScore));
 	winnerHighScoreText.setPosition(Vector2f((x2 / 2) - 100, (y2 / 2) + 80));
 
 	winnerMenu[0].setFont(font);

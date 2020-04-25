@@ -143,7 +143,7 @@ void Level1Scene::Load()
 		cout << "Cannot load font!" << endl;
 	}
 
-	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(playerScore));
+	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(_playerScore));
 	HUDtext.setFont(font);
 	HUDtext.setCharacterSize(50);
 	HUDtext.setPosition(wid + 200, 10);
@@ -207,6 +207,10 @@ void Level1Scene::Update(const double& dt)
 	{
 		// Plays gameOver scene if player is dead
 		this_thread::sleep_for(chrono::milliseconds(200));
+		playerScore = _playerScore;
+		if (playerScore > playerHighScore) {
+			playerHighScore = playerScore;
+		}
 		Engine::ChangeScene((Scene*)&gameover);
 		_playerHealth = 100;
 	}

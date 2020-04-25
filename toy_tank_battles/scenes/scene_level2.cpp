@@ -205,6 +205,10 @@ void Level2Scene::Update(const double& dt)
 	else if (_playerHealth < 1)
 	{
 		// Plays gameOver scene if player is dead
+		playerScore = _playerScore;
+		if (playerScore > playerHighScore) {
+			playerHighScore = playerScore;
+		}
 		this_thread::sleep_for(chrono::milliseconds(200));
 		Engine::ChangeScene((Scene*)&gameover);
 		_playerHealth = 100;
