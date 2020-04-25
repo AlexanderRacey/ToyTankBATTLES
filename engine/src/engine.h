@@ -22,7 +22,6 @@ class Scene
       virtual void Render();
       bool isLoaded() const;
       shared_ptr<Entity> makeEntity();
-
       EntityManager ents;
 
     protected:
@@ -43,6 +42,8 @@ class Engine
       static RenderWindow& GetWindow();
       static Vector2u getWindowSize();
       static void setVsync(bool b);
+      static void setNewWindowSize(const Vector2u& res, const int wantFullscreen);
+      static std::vector<shared_ptr<Entity>> findEntity(string tag);
 
     private:
       static Scene* _activeScene;

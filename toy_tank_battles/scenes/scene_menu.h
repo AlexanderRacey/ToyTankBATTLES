@@ -1,9 +1,11 @@
 #pragma once
 #include "engine.h"
 #include "SFML/Graphics.hpp"
+#include <SFML/Audio/Music.hpp>
+#include "../components/cmp_music.h"
 
 // Variable for items on menu
-#define MAX_MENU_ITEMS 4
+#define MAX_MENU_ITEMS 5
 
 // Create menu scene from class Scene
 class MenuScene : public Scene 
@@ -13,6 +15,7 @@ class MenuScene : public Scene
       void UnLoad() override;
       void Update(const double& dt) override;
       void Render() override;
+
       void SetTitle();
       void SetBackground();
       void MoveUp();

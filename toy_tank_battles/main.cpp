@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "scenes/scene_menu.h"
 #include "engine.h"
 #include "game.h"
@@ -6,56 +7,22 @@
 using namespace sf;
 using namespace std;
 
-int gameWidth = 1280;
-int gameHeight = 720;
+int gameWidth = 1440;
+int gameHeight = 900;
 
 MenuScene menu;
-Level1Scene level1;
-HighScoresScene highscores;
+HowToPlayScene howtoplay;
 SettingsScene settings;
+Level1Scene level1;
+Level2Scene level2;
+Level3Scene level3;
+HighScoresScene highscores;
+GameOverScene gameover;
+WinnerScene winner;
 
-/*void Render(RenderWindow &window)
-{
-}
 
-void Load()
-{
-
-}
-
-void Update(RenderWindow &window)
-{
-	static Clock clock;
-	float dt = clock.restart().asSeconds();
-
-	Event event;
-	while (window.pollEvent(event))
-	{
-		if (event.type == Event::Closed)
-		{
-			window.close();
-			return;
-		}
-	}
-
-	// Press escape to close window
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
-	{
-		window.close();
-	}
-}*/
-
+// Start game
 int main()
 {
 	Engine::Start(gameWidth, gameHeight, "Toy Tank Battles", &menu);
-	//Load();
-
-	/*while (window.isOpen())
-	{
-		window.clear();
-		Update(window);
-		Render(window);
-		window.display();
-	}
-	return 0;*/
 }

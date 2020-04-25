@@ -1,13 +1,20 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
+#include "engine.h"
 #include "levelsystem.h"
 #include "maths.h"
 #include "system_renderer.h"
 #include "system_resources.h"
 #include "scene_menu.h"
-#include "../components/cmp_text.h"
+#include "scene_settings.h"
+#include "../add_entity.h"
 #include "../game.h"
+#include "../components/cmp_music.h"
+#include "../components/cmp_sprite.h"
+#include "../components/cmp_text.h"
+#include "../components/cmp_sound.h"
 
 using namespace std;
 using namespace sf;
@@ -19,13 +26,16 @@ Vector2f targetCoords;
 Vector2u titleTextureSize;
 Vector2u windowSizeMenu;
 
-Sprite backgroundSprite;
-Texture backgroundTexture;
-Vector2u backgroundSize;
+MusicPlayer s1;
+MusicPlayer s2;
+MusicPlayer s3;
+MusicPlayer s4;
 
-Texture tankTexture;
-IntRect tankSource(0, 0, 400, 300);
-Sprite titleTank(tankTexture, tankSource);
+SoundPlayer menuSelect;
+SoundPlayer menuMove;
+
+Clock clock1;
+
 int fadeCounter = 0;
 
 // Display menu title
@@ -47,17 +57,18 @@ void MenuScene::SetTitle()
 // Display background
 void MenuScene::SetBackground()
 {
-    backgroundTexture = *Resources::load<Texture>("background.png");
-    float x1 = Engine::GetWindow().getSize().x;
-    float y1 = Engine::GetWindow().getSize().x;
-    backgroundSize = backgroundTexture.getSize();
-    windowSizeMenu = Engine::GetWindow().getSize();
-    float scaleX1 = (float)windowSizeMenu.x / backgroundSize.x;
-    float scaleY1 = (float)windowSizeMenu.y / backgroundSize.y;
-    backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setPosition(0, 0);
-    backgroundSprite.setScale(scaleX1, scaleY1);
-    backgroundSprite.setOrigin(0, 0);
+    Background = Resources::load<Texture>("background.png");
+    float x2 = Engine::GetWindow().getSize().x;
+    float y2 = Engine::GetWindow().getSize().x;
+    Vector2u BackgroundSize = Background->getSize();
+    Vector2u windowSizeLevel1 = Engine::GetWindow().getSize();
+    float scaleX2 = (float)windowSizeLevel1.x / BackgroundSize.x;
+    float scaleY2 = (float)windowSizeLevel1.y / BackgroundSize.y;
+    BackgroundSprite = make_unique<Sprite>();
+    BackgroundSprite->setTexture(*Background);
+    BackgroundSprite->setPosition(0, 0);
+    BackgroundSprite->setScale(scaleX2, scaleY2);
+    BackgroundSprite->setOrigin(0, 0);
 }
 
 void MenuScene::Load()
@@ -65,37 +76,46 @@ void MenuScene::Load()
     // Display menu loading to console
     cout << "Menu Load \n";
     {
+        // Play menu music 
+        s2.stop();
+        s3.stop();
+        s4.stop();
+        s1.play1(0, true);
+        s1.playing();
+
         // Get size of window
-        float x2 = Engine::getWindowSize().x;
-        float y2 = Engine::getWindowSize().y;
+        float x3 = Engine::getWindowSize().x;
+        float y3 = Engine::getWindowSize().y;
         SetBackground();
         SetTitle();
-
-        titleTank.setPosition(x2 - 400.0f, 200.0f);
-        tankTexture.loadFromFile("res/img/titleTank.png");
 
         font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
         // Create menu
         menu[0].setFont(font);
-        menu[0].setFillColor(Color::Red);
+        menu[0].setFillColor(Color(0, 168, 243, 255));
         menu[0].setString("New Game");
-        menu[0].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 40));
+        menu[0].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 40));
 
         menu[1].setFont(font);
-        menu[1].setFillColor(Color::White);
-        menu[1].setString("High Scores");
-        menu[1].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 80));
+        menu[1].setFillColor(Color(255, 127, 39, 255));
+        menu[1].setString("How To Play");
+        menu[1].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 80));
 
         menu[2].setFont(font);
-        menu[2].setFillColor(Color::White);
-        menu[2].setString("Settings");
-        menu[2].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 120));
+        menu[2].setFillColor(Color(255, 127, 39, 255));
+        menu[2].setString("High Scores");
+        menu[2].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 120));
 
         menu[3].setFont(font);
-        menu[3].setFillColor(Color::White);
-        menu[3].setString("Quit");
-        menu[3].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 160));
+        menu[3].setFillColor(Color(255, 127, 39, 255));
+        menu[3].setString("Settings");
+        menu[3].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 160));
+
+        menu[4].setFont(font);
+        menu[4].setFillColor(Color(255, 127, 39, 255));
+        menu[4].setString("Quit");
+        menu[4].setPosition(Vector2f((x3 / 2) - 80, (y3 / 2) + 200));
 
         // Refers to currently selected menu item
         selectedItemIndex = 0;
@@ -106,6 +126,9 @@ void MenuScene::Load()
 void MenuScene::Update(const double& dt) 
 {
     Scene::Update(dt);
+
+    float x4 = Engine::getWindowSize().x;
+    float y4 = Engine::getWindowSize().y;
 
     Event event;
     while (Engine::GetWindow().pollEvent(event))
@@ -145,16 +168,26 @@ void MenuScene::Update(const double& dt)
         switch (GetPressedItem())
         {
             case 0:
+                menuSelect.enemyFire(1, false);
                 Engine::ChangeScene(&level1);
                 break;
             case 1:
-                Engine::ChangeScene(&highscores);
+                menuSelect.enemyFire(1, false);
+                Engine::ChangeScene(&howtoplay);
+                this_thread::sleep_for(chrono::milliseconds(170));
                 break;
             case 2:
-                Engine::ChangeScene(&settings);
+                menuSelect.enemyFire(1, false);
+                Engine::ChangeScene(&highscores);
                 this_thread::sleep_for(chrono::milliseconds(170));
                 break;
             case 3:
+                menuSelect.enemyFire(1, false);
+                Engine::ChangeScene(&settings);
+                this_thread::sleep_for(chrono::milliseconds(170));
+                break;
+            case 4:
+                menuSelect.enemyFire(1, false);
                 Engine::GetWindow().close();
                 break;
         }
@@ -166,17 +199,20 @@ void MenuScene::Render()
 {
     Scene::Render();
 
-    if (fadeCounter <= 250) {
+    if (fadeCounter <= 250)
+    {
         titleSprite.setColor(Color(255, 255, 255, fadeCounter));
         fadeCounter++;
-        Renderer::queue(&backgroundSprite);
+        Renderer::queue(BackgroundSprite.get());
         Renderer::queue(&titleSprite);
     }
     else 
     {
+        BackgroundSprite->setColor(Color(255, 255, 255, 255));
         titleSprite.setColor(Color(255, 255, 255, 255));
-        Renderer::queue(&backgroundSprite);
-        Renderer::queue(&titleSprite );
+        Renderer::queue(BackgroundSprite.get());
+        Renderer::queue(&titleSprite);
+
         for (int i = 0; i < MAX_MENU_ITEMS; i++)
         {
             Renderer::queue(&menu[i]);
@@ -185,10 +221,13 @@ void MenuScene::Render()
 }
 
 // Unload scene function
-void MenuScene::UnLoad() {
+void MenuScene::UnLoad()
+{
     float x2 = Engine::GetWindow().getSize().x;
     float y2 = Engine::GetWindow().getSize().y;
     Engine::GetWindow().setView(View(FloatRect(0, 0, x2, y2)));
+    BackgroundSprite.reset();
+    Background.reset();
     Scene::UnLoad();
 }
 
@@ -196,9 +235,10 @@ void MenuScene::MoveUp()
 {
     if (selectedItemIndex - 1 >= 0)
     {
-        menu[selectedItemIndex].setFillColor(Color::White);
+        menuMove.playerFire(0, false);
+        menu[selectedItemIndex].setFillColor(Color(255, 127, 39, 255));
         selectedItemIndex--;
-        menu[selectedItemIndex].setFillColor(Color::Red);
+        menu[selectedItemIndex].setFillColor(Color(0, 168, 243, 255));
     }
 }
 
@@ -206,8 +246,9 @@ void MenuScene::MoveDown()
 {
     if (selectedItemIndex + 1 < MAX_MENU_ITEMS)
     {
-        menu[selectedItemIndex].setFillColor(Color::White);
+        menuMove.playerFire(0, false);
+        menu[selectedItemIndex].setFillColor(Color(255, 127, 39, 255));
         selectedItemIndex++;
-        menu[selectedItemIndex].setFillColor(Color::Red);
+        menu[selectedItemIndex].setFillColor(Color(0, 168, 243, 255));
     }
 }

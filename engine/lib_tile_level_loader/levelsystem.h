@@ -1,4 +1,3 @@
-// LevelSystem Header file
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <map>
@@ -21,41 +20,49 @@ class LevelSystem
 
         typedef unsigned char Tile;
 
-        enum TILES {
+        enum TILES
+        {
             EMPTY = ' ',
             START = 's',
             END = 'e',
-            WALL = 'w',
+            HOUSE = 'w',
+            HOUSE_R = 'r',
             ENEMY = 'n',
-            WAYPOINT = '+'
+            WAYPOINT = '+',
+            PICKUP = 'p',
+            BROKEN = 'b',
+            BROKEN_R = 'q',
+            WALL = 'l',
+            NOTVALID = '!'
         };
 
         static Tile getTile(Vector2ul);
         static Tile getTileAt(Vector2f);
-        static bool isOnGrid(Vector2f);
+        static Tile getTileAt(Vector2f, Vector2f);
         static size_t getWidth();
         static size_t getHeight();
         static Vector2f getTilePosition(Vector2ul);
+        static sf::Vector2f getTilePosAt(sf::Vector2f v);
         static vector<Vector2ul> findTiles(Tile);
-        static Color getColor(Tile t);
-        static void setColor(Tile t, Color c);
+        static shared_ptr<sf::Texture> getTexture(LevelSystem::Tile t);
+        static void loadTextures();
+        static void setTexture(Tile t, shared_ptr<sf::Texture> tex);
         static void setOffset(const Vector2f& _offset);
         static const Vector2f& getOffset();
         static float getTileSize();
-
+        static vector<unique_ptr<sf::Sprite>> _sprites;
+        static bool isWall(Tile t);
+        static bool isSolidWall(Tile t);
     protected:
         static unique_ptr<Tile[]> _tiles;
         static size_t _width;
         static size_t _height;
         static Vector2f _offset;
 
-        static vector<unique_ptr<RectangleShape>> _sprites;
-
-        static void buildSprites(bool optimise = true);
-
+        static void buildSprites();
         static float _tileSize; // for rendering
         static std::map<Tile, sf::Color> _colours;
-
+        static std::map<Tile, shared_ptr<sf::Texture>> _textures;
     private:
         LevelSystem() = delete;
 
