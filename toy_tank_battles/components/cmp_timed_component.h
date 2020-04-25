@@ -1,6 +1,8 @@
 #pragma once
 #include <ecm.h>
 
+//created timed component for entities that disappear after a timer
+//used for smoke animation
 class TimedComponent : public Component {
   private:
     float _timer;

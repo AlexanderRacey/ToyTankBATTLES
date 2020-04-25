@@ -25,7 +25,6 @@ class BulletComponent : public Component
         void setDirection(Vector2f dir);
         void move(double dt);
         void setTarget(shared_ptr<Entity> tar);
-      //  bool checkCollision();
         void setDamage(float dam);
         void addDamage(float dam);
 };
@@ -55,25 +54,4 @@ public:
     void setDirection(Vector2f dir);
 private:
     Vector2f _offset;
-};
-
-// Create base bullet component from class Component
-class BaseBulletComponent : public Component
-{
-    protected:
-        float _lifetime;
-        float _speed;
-        char _type;
-
-    public:
-        void update(double dt) override;
-        void render() override {}
-        explicit BaseBulletComponent(Entity* p, float lifetime = 3.f, float speed = 700);
-        BaseBulletComponent() = delete;
-
-        float getSpeed();
-        void setSpeed(float speed);
-
-        char getType();
-        void setType(char type);
 };

@@ -132,6 +132,7 @@ void PlayerMovementComponent::move(const Vector2f& p)
     }
 }
 
+//fires player bullets
 void PlayerMovementComponent::fire()
 {
     auto bullet = _parent->scene->makeEntity();
@@ -165,10 +166,13 @@ float PlayerMovementComponent::getRotation()
     }
 }
 
+//checks if player is blocked by a type of wall and acts accordingly
 bool PlayerMovementComponent::isBlocked(Vector2f pos)
 {
     if (ls::isWall(ls::getTileAt(pos, _offset)))
     {
+        //checks if tile blocking player is a breakable house,
+       //if house is already destroyed that was on tile, player is not blocked anymore
         if(ls::getTileAt(pos, _offset) == ls::BROKEN || ls::getTileAt(pos, _offset) == ls::BROKEN_R)
         {
             vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
@@ -176,7 +180,7 @@ bool PlayerMovementComponent::isBlocked(Vector2f pos)
             {
                 auto sp = t->GetCompatibleComponent<SpriteComponent>();
                 auto bounds = sp[0]->getSprite().getGlobalBounds();
-                //cheating the left detection by making width much wider for now
+        
                 bounds = FloatRect(bounds.left - 50.f, bounds.top - 40, bounds.width + 120.f, bounds.height + 70.f);
 
                 if (bounds.contains(pos))
@@ -218,6 +222,7 @@ void EnemyAiComponent::move(const Vector2f& pos)
     _parent->setPosition(pos);
 }
 
+//sets enemy actions based on current state
 void EnemyAiComponent::update(double dt)
 {
     //amount to move
@@ -227,23 +232,26 @@ void EnemyAiComponent::update(double dt)
     //Next position
     Vector2f newpos = pos + _direction * mva;
     Vector2f testPos = newpos + Vector2f((_offset.x/2)*-1, (_offset.y/2)*-1);
-   // auto breakable;
 
     switch (_state)
     {
+        
         case EnemyAiComponent::MOVING:
             if (validMove(newpos, _offset))
             {
+                //if moving check if player is in sight or broken house,
+                //if one of them is in sight, sets entity as target and changes state to AIMING
                 shared_ptr<Entity> player = Engine::findEntity("player")[0];
-                if (ls::BROKEN == ls::getTileAt(testPos, _offset) || ls::BROKEN_R == ls::getTileAt(testPos, _offset))
 
+                //if tile moving to is a broken house tile, check if house still exists first and start aiming at it if it is
+                if (ls::BROKEN == ls::getTileAt(testPos, _offset) || ls::BROKEN_R == ls::getTileAt(testPos, _offset))
                 {
                     vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
                     for (auto t : potTargets)
                     {
                         auto sp = t->GetCompatibleComponent<SpriteComponent>();
                         auto bounds = sp[0]->getSprite().getGlobalBounds();
-                        //cheating the left detection by making width much wider for now
+                       
                         bounds = FloatRect(bounds.left - 50.f, bounds.top - 50.f, bounds.width + 100, bounds.height + 50.f);
 
                         if (bounds.contains(testPos))
@@ -265,33 +273,39 @@ void EnemyAiComponent::update(double dt)
 
                 }
               
-
+                //if not blocked by broken house check if player is in range
                 else if (PlayerInRange())
                 {
+                    //target and shoot player
                     target = player;
                     fireTimer = 0.5f;
                     _state = SHOTING;
                     break;
                 }
+                //if no target and enemy can move, move
                 else
                 {
                     move(newpos);
                 }
 
             }
+            //if path is blocked change direction
             else
             {
                 ChangeDirection(false);
                 _state = ROTATING;
             }
             break;
+        //SHoot and aim as long as target is in sight
         case EnemyAiComponent::SHOTING:
             if (target->isAlive())
             {   
                 shared_ptr<Entity> player = Engine::findEntity("player")[0];
+                //check if position can be changed to face player if player moved out of range
                 if (target == player && !PlayerInRange()) {
                      facePlayer();
                 }else{
+                    //else if house is targeted and not broken yet, fire at house
                 auto breakable = target->GetCompatibleComponent<BreakableComponent>();
                 if (!breakable.empty())
                 {
@@ -309,6 +323,7 @@ void EnemyAiComponent::update(double dt)
                 }
             }
             }
+            //move if house is destroyed or target is out of range
             else
             {
                 _state = MOVING;
@@ -356,6 +371,7 @@ void EnemyAiComponent::update(double dt)
                 }
             }
             break;
+            //aim at target
         case EnemyAiComponent::AIMING:
             aimTurrent();
             _state = SHOTING;
@@ -365,6 +381,8 @@ void EnemyAiComponent::update(double dt)
     }
 }
 
+//change direction, based of an index value
+//this sets rotation direction for rotation state
 void EnemyAiComponent::ChangeDirection(bool setIndex)
 {
     Vector2f newDir;
@@ -441,6 +459,7 @@ void EnemyAiComponent::ChangeDirection(bool setIndex)
     _direction = newDir;
 }
 
+//check if player can be put in range by changing direction, if not reset direction
 void EnemyAiComponent::facePlayer()
 {
     shared_ptr<Entity> player = Engine::findEntity("player")[0];
@@ -525,9 +544,10 @@ FloatRect ActorMovementComponent::getBounds()
     }
 }
 
+//Aim turrent depending on tank direction it is facing
 void EnemyAiComponent::aimTurrent()
 {
-    //Aim turrent depending on tank direction it is facing
+   
     //direction order : right, down, up, left
     float x1 = 0.f;
     float x2 = 0.f;
@@ -536,7 +556,6 @@ void EnemyAiComponent::aimTurrent()
 
     tAngle = 0.f;
     Vector2f tilePos = target->getPosition();
-   // turrentRight = turnTurrentRight(tilePos);
     x1 = _parent->getPosition().x;
     x2 = tilePos.x;
     y1 = _parent->getPosition().y;
@@ -562,7 +581,6 @@ void EnemyAiComponent::aimTurrent()
         break;
     }
 
-    // angle times 10 is perfect for bullet trajectory but turrent is wrong angle
      tAngle = tAngle * 100;
     if (!turrentRight && tAngle > 0) {
         tAngle = -(tAngle);
@@ -595,6 +613,7 @@ float EnemyAiComponent::getTurrentRotation()
     }
 }
 
+//fires and sets bullet direction
 void EnemyAiComponent::fire()
 {
     auto bullet = _parent->scene->makeEntity();
@@ -613,6 +632,7 @@ void EnemyAiComponent::fire()
 
     bullet->setRotation(getTurrentRotation());
    
+    //sets direction including turrent angle
     switch (index)
     {
     case 0:
@@ -635,7 +655,7 @@ void EnemyAiComponent::fire()
 
 }
 
-
+//determins in which direction turrent is rotating, to get to desired postion
 bool EnemyAiComponent::turnTurrentRight(Vector2f targetpos) {
    
     Vector2f pos = _parent->getPosition();
@@ -681,6 +701,7 @@ bool EnemyAiComponent::turnTurrentRight(Vector2f targetpos) {
     }
 }
 
+//check if player is in range by using boundary boxes
 bool EnemyAiComponent::PlayerInRange()
 {
     shared_ptr<Entity> player = Engine::findEntity("player")[0];
@@ -714,11 +735,12 @@ bool EnemyAiComponent::PlayerInRange()
     }
 }
 
-
+//returns if enemy is free to move without being blocked by an unbreakable wall
 bool EnemyAiComponent::validMove(Vector2f pos, Vector2f offset) {
     return !(ls::isSolidWall(ls::getTileAt(pos, _offset)));
 }
 
+//notifies enemy if player shoot at enemy tank
 void EnemyAiComponent::notifyEnemy() {
     _state = SHOTING;
 

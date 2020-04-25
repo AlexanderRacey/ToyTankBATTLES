@@ -56,7 +56,7 @@ void PickupComponent::update(double dt)
 						player[0]->GetCompatibleComponent<HealthComponent>()[0]->setHealth(100);
 						player[0]->GetCompatibleComponent<TextComponent>()[0]->SetText("Full Health ++", true);
 						player[0]->GetCompatibleComponent<TextComponent>()[0]->setColour(Color::Magenta);
-						//playerHealth = 100;
+
 						break;
 					case 4:
 						///parrot

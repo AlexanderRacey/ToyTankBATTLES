@@ -39,7 +39,6 @@ class LevelSystem
         static Tile getTile(Vector2ul);
         static Tile getTileAt(Vector2f);
         static Tile getTileAt(Vector2f, Vector2f);
-        static bool isOnGrid(Vector2f);
         static size_t getWidth();
         static size_t getHeight();
         static Vector2f getTilePosition(Vector2ul);

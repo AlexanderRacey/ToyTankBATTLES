@@ -32,7 +32,6 @@ class ActorMovementComponent : public Component
 class PlayerMovementComponent : public ActorMovementComponent
 {
 	protected:
-		//bool validMove(const Vector2f&);
 		int _points;
 
 	private:
@@ -65,7 +64,7 @@ class EnemyAiComponent : public ActorMovementComponent
 		Vector2f _direction;
 		Vector2f _offset;
 		int index;
-		enum state { MOVING, SHOTING, WAIT, ROTATING, AIMING };
+		enum state { MOVING, SHOTING, ROTATING, AIMING };
 		state _state;
 		float gap;
 		bool turnRight = false;

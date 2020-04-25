@@ -73,7 +73,7 @@ void WinnerScene::Load()
 	s4.play4(3, false);
 
 	// Display settings 
-	cout << "Game Over Load \n";
+	cout << "Winner Load \n";
 
 	float x2 = Engine::getWindowSize().x;
 	float y2 = Engine::getWindowSize().y;
@@ -115,7 +115,7 @@ void WinnerScene::UnLoad()
 	BackgroundSprite.reset();
 	Background.reset();
 	Scene::UnLoad();
-	cout << "Game Over Unload" << endl;
+	cout << "Winner unloaded" << endl;
 }
 
 void WinnerScene::Update(const double& dt)

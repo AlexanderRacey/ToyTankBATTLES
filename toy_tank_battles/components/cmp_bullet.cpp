@@ -34,9 +34,23 @@ void BulletComponent::move(double dt)
     _parent->setPosition(newPos);
 }
 
+void BulletComponent::setDamage(float dam)
+{
+    _damage = dam;
+}
+
+void BulletComponent::addDamage(float dam)
+{
+    _damage += dam;
+}
+
+//enemy bullet:-------------
+
 EnemyBullet::EnemyBullet(Entity* p, float lifetime, float speed, float damage, Vector2f offset)
     : BulletComponent(p, lifetime, speed, damage), _offset(offset) {};
 
+
+//checks if enemy bullets colides with its target
 bool EnemyBullet::checkCollision() 
 {
 
@@ -69,6 +83,7 @@ bool EnemyBullet::checkCollision()
     }
 }
 
+//sets direction and offset
 void EnemyBullet::setDirection(Vector2f dir) {
     direction = dir;
     FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
@@ -91,10 +106,11 @@ void EnemyBullet::setDirection(Vector2f dir) {
     }
 }
 
+//updates bullet and deletes it eventually
 void EnemyBullet::update(double dt)
 {
     Vector2f pos = _parent->getPosition();
-
+    
     _lifetime -= dt;
     if (_lifetime <= 0.f)
     {
@@ -105,12 +121,14 @@ void EnemyBullet::update(double dt)
     }
     else
     {
+        //if bullet has target checks collision, if collides with target interact with target
         if (targetset)
         {
             if (checkCollision())
             {
                 if (_target == Engine::findEntity("player")[0])
                 {
+                    //deduct healthpoints if hit player, if health points depleted, explode player
                     auto health = _target->GetCompatibleComponent<HealthComponent>();
 
                     if (health[0]->getHealth() < 0)
@@ -124,13 +142,13 @@ void EnemyBullet::update(double dt)
                     }
                     else
                     {
-                        // playerHealth -= 20;
                         health[0]->deductHealth(_damage);
                         _parent->setForDelete();
                     }
                 }
                 else
                 {
+                    //explode broken house if collision is true
                     auto breakable = _target->GetCompatibleComponent<BreakableComponent>();
                     if (!breakable.empty())
                     {
@@ -144,17 +162,11 @@ void EnemyBullet::update(double dt)
     }
 }
 
+//player bullet:-----------
+
 PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage, Vector2f offset) : BulletComponent(p, lifetime, speed, damage), _offset(offset) {}
 
-void BulletComponent::setDamage(float dam)
-{
-    _damage = dam;
-}
 
-void BulletComponent::addDamage(float dam)
-{
-    _damage += dam;
-}
 
 void PlayerBullet::update(double dt)
 {
@@ -174,11 +186,12 @@ void PlayerBullet::update(double dt)
 }
 
 
-
+//checks collision of player bullet and acts accordingly
 bool PlayerBullet::checkCollision()
 {
     Vector2f pos = _parent->getPosition();
 
+    //if tile at position is a broken house and it is not exploded yet, explode house
     if (ls::getTileAt(pos, _offset) == ls::BROKEN || ls::getTileAt(pos, _offset) == ls::BROKEN_R)
     {
         vector<shared_ptr<Entity>> potTargets = Engine::findEntity("brokenHouse");
@@ -188,7 +201,6 @@ bool PlayerBullet::checkCollision()
             auto bounds = sp[0]->getSprite().getGlobalBounds();
 
             FloatRect bBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
-         //   bBounds = FloatRect(bBounds.left - 10, bBounds.top - 10, bBounds.width + 20, bBounds.height + 10);
 
             if (bBounds.intersects(bounds))
             {
@@ -201,12 +213,13 @@ bool PlayerBullet::checkCollision()
             }
         }
         return false;
-    }
+    }//if bullet collides with a solid wall just return true to delete the bullet
     else if (ls::isSolidWall(ls::getTileAt(pos, _offset))) {
         return true;
     }
     else
     {
+        //else check if bullet collides with an enemy and then deduct health from that enemy
         vector<shared_ptr<Entity>> potTargets = Engine::findEntity("enemy");
         for (auto t : potTargets)
         {
@@ -231,6 +244,7 @@ bool PlayerBullet::checkCollision()
                             }
                             else 
                             {
+                                //if health depleted add to score and explode enemy
                                 playerScore += 100;
                                 t->GetCompatibleComponent<BreakableComponent>()[0]->setExploded();
                             }
@@ -244,6 +258,7 @@ bool PlayerBullet::checkCollision()
     }
 }
 
+//sets direction and offset
 void PlayerBullet::setDirection(Vector2f dir)
 {
     direction = dir;

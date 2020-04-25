@@ -47,6 +47,7 @@ void Level1Scene::SetBackground()
 	_BackgroundSprite->setOrigin(0, 0);
 }
 
+//Load Pickup components into level
 void Level1Scene::SetPickups() 
 {
 	//make array of Pickup components based on number represented on map
@@ -63,13 +64,11 @@ void Level1Scene::SetPickups()
 		
 		e->addComponent<SpriteComponent>();
 		e->GetCompatibleComponent<SpriteComponent>()[0]->setTexture(picks[type]);
-		//e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(.35f, .35f);
 		Vector2u TextureSize = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getTexture()->getSize();
 		float scaleX = (ls::getTileSize() / TextureSize.x) / 2.5;
 		float scaleY = (ls::getTileSize()/ TextureSize.y) /2.5 ;
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setScale(scaleX, scaleY);
 		auto bounds = e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().getLocalBounds();
-		// not centered... not sure how to fix that
 		e->GetCompatibleComponent<SpriteComponent>()[0]->getSprite().setOrigin(bounds.getSize().x /2, bounds.getSize().y /2 );
 		// Add pickup component
 		e->addComponent<PickupComponent>(type);
@@ -124,7 +123,6 @@ void Level1Scene::Load()
 	ls::loadLevelFile("res/level_1.txt", 90.0f);
 
 	//Set level to appear at middle of window
-	//this is not the middle anymore will need to figure somethings out
 	auto ho = (Engine::getWindowSize().y / 2) - ((ls::getHeight() * ls::getTileSize()) / 2);
 	auto wid = (Engine::getWindowSize().x / 2) - ((ls::getWidth() * ls::getTileSize()) / 2);
 	ls::setOffset(Vector2f(wid, ho));
@@ -177,7 +175,6 @@ void Level1Scene::UnLoad()
 	// Reset player and remove pickups
 	player.reset();
 	playerTurret.reset();
-	//picks.clear();
 	_Background.reset();
 	_BackgroundSprite.reset();
 
@@ -197,6 +194,7 @@ void Level1Scene::Update(const double& dt)
 	// Update HUD
 	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(_playerScore));
 
+	//change into next level if all enemies are defeated
 	vector<shared_ptr<Entity>> enemies = Engine::findEntity("enemy");
 	if (enemies.empty())
 	{
@@ -224,7 +222,9 @@ void Level1Scene::Update(const double& dt)
 
 	if (Keyboard::isKeyPressed(Keyboard::Escape)) 
 	{
-		Engine::ChangeScene(&menu);
+		Engine::ChangeScene(&menu);		
+		this_thread::sleep_for(chrono::milliseconds(170));
+
 	}
 
 	// Update scene
