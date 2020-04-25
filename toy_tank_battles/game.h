@@ -26,6 +26,7 @@ static shared_ptr<Entity> player;
 static shared_ptr<Entity> enemies;
 static shared_ptr<Entity> playerTurret;
 static shared_ptr<Entity> smoke;
+static shared_ptr<Entity> fakeEnemy;
 
 // Sounds
 extern MusicPlayer s1;

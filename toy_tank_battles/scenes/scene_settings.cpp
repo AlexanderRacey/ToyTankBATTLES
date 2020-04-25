@@ -12,10 +12,10 @@
 #include "../components/cmp_music.h"
 #include "../components/cmp_sound.h"
 #include "../components/cmp_text.h"
+#include "../components/cmp_sound.h"
 
 using namespace std;
 using namespace sf;
-
 
 // Resources
 Sprite titleSprite1;
@@ -24,10 +24,8 @@ Vector2f targetCoords1;
 Vector2u titleTextureSize1;
 Vector2u windowSizeSettings;
 
-SoundBuffer settingsEffect1;
-Sound settingsSound1;
-SoundBuffer settingsEffect2;
-Sound settingsSound2;
+SoundPlayer settingsSelect;
+SoundPlayer settingsMove;
 
 // Display settings title
 void SettingsScene::SetTitle()
@@ -72,14 +70,6 @@ void SettingsScene::Load()
 	float y2 = Engine::getWindowSize().y;
 	SetBackground();
 	SetTitle();
-
-	// Load sound effects
-	settingsEffect1.loadFromFile("res/sound/playerFire.ogg");
-	settingsSound1.setBuffer(settingsEffect1);
-	settingsSound1.setVolume(15.0f);
-	settingsEffect2.loadFromFile("res/sound/enemyFire.ogg");
-	settingsSound2.setBuffer(settingsEffect2);
-	settingsSound2.setVolume(15.0f);
 
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
@@ -222,7 +212,7 @@ void SettingsScene::Update(const double& dt)
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 6:
-				settingsSound2.play();
+				settingsSelect.enemyFire(1, false);
 				Engine::ChangeScene(&menu);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
@@ -251,7 +241,7 @@ void SettingsScene::MoveUp()
 {
 	if (selectedItemIndex2 - 1 >= 0)
 	{
-		settingsSound1.play();
+		settingsMove.playerFire(0, false);
 		settingsMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex2--;
 		settingsMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));
@@ -262,7 +252,7 @@ void SettingsScene::MoveDown()
 {
 	if (selectedItemIndex2 + 1 < MAX_NUMBER_OF_SETTINGS)
 	{
-		settingsSound1.play();
+		settingsMove.playerFire(0, false);
 		settingsMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex2++;
 		settingsMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));

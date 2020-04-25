@@ -220,13 +220,6 @@ void Level1Scene::Update(const double& dt)
 		Load();
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::Escape)) 
-	{
-		Engine::ChangeScene(&menu);		
-		this_thread::sleep_for(chrono::milliseconds(170));
-
-	}
-
 	// Update scene
 	Scene::Update(dt);
 }

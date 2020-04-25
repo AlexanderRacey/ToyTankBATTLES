@@ -195,7 +195,8 @@ void Level3Scene::Update(const double& dt)
 	{
 		UnLoad();
 		playerScore = _playerScore;
-		if (playerScore > playerHighScore) {
+		if (playerScore > playerHighScore) 
+		{
 			playerHighScore = playerScore;
 		}
  		Engine::ChangeScene((Scene*)&winner);
@@ -217,11 +218,6 @@ void Level3Scene::Update(const double& dt)
 	{
 		UnLoad();
 		Load();
-	}
-
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
-	{
-		Engine::ChangeScene(&menu);
 	}
 
 	// Update scene

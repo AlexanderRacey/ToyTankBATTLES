@@ -17,6 +17,7 @@
 #include "system_renderer.h"
 #include "../add_entity.h"
 #include "../components/cmp_breakable.h"
+#include "../components/cmp_sound.h"
 
 using namespace std;
 using namespace sf;
@@ -29,10 +30,8 @@ Vector2f gameOverTargetCoords;
 Vector2u gameOverTextureSize;
 Vector2u windowSizeGameOver;
 
-SoundBuffer gameOverEffect1;
-Sound gameOverSound1;
-SoundBuffer gameOverEffect2;
-Sound gameOverSound2;
+SoundPlayer GOSelect;
+SoundPlayer GOMove;
 
 // Display menu title
 void GameOverScene::SetTitle()
@@ -75,14 +74,6 @@ void GameOverScene::Load()
 	s4.stop();
 	s3.play3(2, true);
 	s3.playing();
-
-	// Load sound effects
-	gameOverEffect1.loadFromFile("res/sound/playerFire.ogg");
-	gameOverSound1.setBuffer(gameOverEffect1);
-	gameOverSound1.setVolume(15.0f);
-	gameOverEffect2.loadFromFile("res/sound/enemyFire.ogg");
-	gameOverSound2.setBuffer(gameOverEffect2);
-	gameOverSound2.setVolume(15.0f);
 
 	// Display settings 
 	cout << "Game Over Load \n";
@@ -167,12 +158,13 @@ void GameOverScene::Update(const double& dt)
 		switch (GetPressedItem())
 		{
 			case 0:
-				gameOverSound2.play();
+				GOSelect.enemyFire(1, false);
 				playerScore = 0;
 				Engine::ChangeScene(&level1);
 				break;
 			case 1:
-				gameOverSound2.play();
+				GOSelect.enemyFire(1, false);
+				playerScore = 0;
 				Engine::ChangeScene(&menu);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
@@ -199,7 +191,7 @@ void GameOverScene::MoveUp()
 {
 	if (selectedItemIndex4 - 1 >= 0)
 	{
-		gameOverSound1.play();
+		GOMove.playerFire(0, false);
 		gameOverMenu[selectedItemIndex4].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex4--;
 		gameOverMenu[selectedItemIndex4].setFillColor(Color(0, 168, 243, 255));
@@ -210,7 +202,7 @@ void GameOverScene::MoveDown()
 {
 	if (selectedItemIndex4 + 1 < MAX_NUMBER_OF_GOMSGS)
 	{
-		gameOverSound1.play();
+		GOMove.playerFire(0, false);
 		gameOverMenu[selectedItemIndex4].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex4++;
 		gameOverMenu[selectedItemIndex4].setFillColor(Color(0, 168, 243, 255));

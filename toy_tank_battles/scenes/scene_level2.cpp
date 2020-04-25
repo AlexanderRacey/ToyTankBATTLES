@@ -25,11 +25,6 @@ using namespace std;
 using namespace sf;
 
 
-// Player HUD
-//int playerHighScore;
-//int playerScore;
-
-
 // Display background
 void Level2Scene::SetBackground()
 {
@@ -220,12 +215,6 @@ void Level2Scene::Update(const double& dt)
 	{
 		UnLoad();
 		Load();
-	}
-
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
-	{
-		Engine::ChangeScene(&menu);
-		this_thread::sleep_for(chrono::milliseconds(200));
 	}
 
 	// Update scene

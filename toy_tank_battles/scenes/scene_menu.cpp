@@ -14,6 +14,7 @@
 #include "../components/cmp_music.h"
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
+#include "../components/cmp_sound.h"
 
 using namespace std;
 using namespace sf;
@@ -30,10 +31,8 @@ MusicPlayer s2;
 MusicPlayer s3;
 MusicPlayer s4;
 
-SoundBuffer effect1;
-Sound sound1;
-SoundBuffer effect2;
-Sound sound2;
+SoundPlayer menuSelect;
+SoundPlayer menuMove;
 
 Clock clock1;
 
@@ -83,14 +82,6 @@ void MenuScene::Load()
         s4.stop();
         s1.play1(0, true);
         s1.playing();
-
-        // Load sound effects
-        effect1.loadFromFile("res/sound/playerFire.ogg");
-        sound1.setBuffer(effect1);
-        sound1.setVolume(15.0f);
-        effect2.loadFromFile("res/sound/enemyFire.ogg");
-        sound2.setBuffer(effect2);
-        sound2.setVolume(15.0f);
 
         // Get size of window
         float x3 = Engine::getWindowSize().x;
@@ -177,25 +168,26 @@ void MenuScene::Update(const double& dt)
         switch (GetPressedItem())
         {
             case 0:
-                sound2.play();
+                menuSelect.enemyFire(1, false);
                 Engine::ChangeScene(&level1);
                 break;
             case 1:
-                sound2.play();
+                menuSelect.enemyFire(1, false);
                 Engine::ChangeScene(&howtoplay);
                 this_thread::sleep_for(chrono::milliseconds(170));
                 break;
             case 2:
-                sound2.play();
+                menuSelect.enemyFire(1, false);
                 Engine::ChangeScene(&highscores);
+                this_thread::sleep_for(chrono::milliseconds(170));
                 break;
             case 3:
-                sound2.play();
+                menuSelect.enemyFire(1, false);
                 Engine::ChangeScene(&settings);
                 this_thread::sleep_for(chrono::milliseconds(170));
                 break;
             case 4:
-                sound2.play();
+                menuSelect.enemyFire(1, false);
                 Engine::GetWindow().close();
                 break;
         }
@@ -243,7 +235,7 @@ void MenuScene::MoveUp()
 {
     if (selectedItemIndex - 1 >= 0)
     {
-        sound1.play();
+        menuMove.playerFire(0, false);
         menu[selectedItemIndex].setFillColor(Color(255, 127, 39, 255));
         selectedItemIndex--;
         menu[selectedItemIndex].setFillColor(Color(0, 168, 243, 255));
@@ -254,7 +246,7 @@ void MenuScene::MoveDown()
 {
     if (selectedItemIndex + 1 < MAX_MENU_ITEMS)
     {
-        sound1.play();
+        menuMove.playerFire(0, false);
         menu[selectedItemIndex].setFillColor(Color(255, 127, 39, 255));
         selectedItemIndex++;
         menu[selectedItemIndex].setFillColor(Color(0, 168, 243, 255));

@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-SoundPlayer::SoundPlayer() : m_volume(8.0f) {}
+SoundPlayer::SoundPlayer() : m_volume(6.0f) {}
 
 // Player fire
 void SoundPlayer::playerFire(const int title, bool loop)
@@ -75,6 +75,41 @@ void SoundPlayer::toySqueak(const int title, bool loop)
 		}
 	}
 }
+
+// Enemy pop
+void SoundPlayer::pop(const int title, bool loop)
+{
+	if (title == 4)
+	{
+		if (m_music.openFromFile("res/sound/pop.ogg"))
+		{
+			m_music.setVolume(m_volume);
+			m_music.play();
+		}
+		else
+		{
+			cout << "ERROR with music file." << endl;
+		}
+	}
+}
+
+// Player pop
+void SoundPlayer::playerPop(const int title, bool loop)
+{
+	if (title == 5)
+	{
+		if (m_music.openFromFile("res/sound/playerPop.ogg"))
+		{
+			m_music.setVolume(m_volume);
+			m_music.play();
+		}
+		else
+		{
+			cout << "ERROR with music file." << endl;
+		}
+	}
+}
+
 
 void SoundPlayer::stop()
 {

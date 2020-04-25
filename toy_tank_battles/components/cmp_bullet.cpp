@@ -6,12 +6,16 @@
 #include <levelsystem.h>
 #include "../game.h"
 #include "cmp_actor_movement.h"
+#include "cmp_sound.h"
 
 using namespace std;
 using namespace sf;
 
-void BulletComponent::update(double dt) {};
+// Sound
+SoundPlayer popSound;
+SoundPlayer playerPopSound;
 
+void BulletComponent::update(double dt) {};
 
 BulletComponent::BulletComponent(Entity* p, float lifetime, float speed, float damage)
     : Component(p), _lifetime(lifetime),  _speed(speed), _damage(damage) {}
@@ -53,7 +57,6 @@ EnemyBullet::EnemyBullet(Entity* p, float lifetime, float speed, float damage, V
 //checks if enemy bullets colides with its target
 bool EnemyBullet::checkCollision() 
 {
-
     if (_target->isAlive()) 
     {
         FloatRect bulletBounds = _parent->GetCompatibleComponent<SpriteComponent>()[0]->getBounds();
@@ -142,6 +145,7 @@ void EnemyBullet::update(double dt)
                     }
                     else
                     {
+                        popSound.pop(4, false);
                         health[0]->deductHealth(_damage);
                         _parent->setForDelete();
                     }
@@ -166,8 +170,6 @@ void EnemyBullet::update(double dt)
 
 PlayerBullet::PlayerBullet(Entity* p, float lifetime, float speed, float damage, Vector2f offset) : BulletComponent(p, lifetime, speed, damage), _offset(offset) {}
 
-
-
 void PlayerBullet::update(double dt)
 {
     _lifetime -= dt;
@@ -184,7 +186,6 @@ void PlayerBullet::update(double dt)
         move(dt);
     }
 }
-
 
 //checks collision of player bullet and acts accordingly
 bool PlayerBullet::checkCollision()
@@ -239,6 +240,7 @@ bool PlayerBullet::checkCollision()
                         {
                             if (healtcomp[0]->getHealth() > 0)
                             {
+                                playerPopSound.playerPop(5, false);
                                 healtcomp[0]->deductHealth(_damage);
                                 movement[0]->notifyEnemy();
                             }

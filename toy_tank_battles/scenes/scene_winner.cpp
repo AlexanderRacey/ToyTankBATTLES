@@ -30,10 +30,8 @@ Vector2f winnerTargetCoords;
 Vector2u winnerTextureSize;
 Vector2u windowSizeWinner;
 
-SoundBuffer winnerEffect1;
-Sound winnerSound1;
-SoundBuffer winnerEffect2;
-Sound winnerSound2;
+SoundPlayer winnerSelect;
+SoundPlayer winnerMove;
 
 
 // Display menu title
@@ -76,14 +74,6 @@ void WinnerScene::Load()
 	s2.stop();
 	s3.stop();
 	s4.play4(3, false);
-
-	// Load sound effects
-	winnerEffect1.loadFromFile("res/sound/playerFire.ogg");
-	winnerSound1.setBuffer(winnerEffect1);
-	winnerSound1.setVolume(15.0f);
-	winnerEffect2.loadFromFile("res/sound/enemyFire.ogg");
-	winnerSound2.setBuffer(winnerEffect2);
-	winnerSound2.setVolume(15.0f);
 
 	// Display settings 
 	cout << "Winner Load \n";
@@ -173,12 +163,13 @@ void WinnerScene::Update(const double& dt)
 		switch (GetPressedItem())
 		{
 			case 0:
-				winnerSound2.play();
+				winnerSelect.enemyFire(1, false);
 				playerScore = 0;
 				Engine::ChangeScene(&level1);
 				break;
 			case 1:
-				winnerSound2.play();
+				winnerSelect.enemyFire(1, false);
+				playerScore = 0;
 				Engine::ChangeScene(&menu);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
@@ -206,7 +197,7 @@ void WinnerScene::MoveUp()
 {
 	if (selectedItemIndex5 - 1 >= 0)
 	{
-		winnerSound1.play();
+		winnerMove.playerFire(0, false);
 		winnerMenu[selectedItemIndex5].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex5--;
 		winnerMenu[selectedItemIndex5].setFillColor(Color(0, 168, 243, 255));
@@ -217,7 +208,7 @@ void WinnerScene::MoveDown()
 {
 	if (selectedItemIndex5 + 1 < MAX_NUMBER_OF_GOMSGS)
 	{
-		winnerSound1.play();
+		winnerMove.playerFire(0, false);
 		winnerMenu[selectedItemIndex5].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex5++;
 		winnerMenu[selectedItemIndex5].setFillColor(Color(0, 168, 243, 255));

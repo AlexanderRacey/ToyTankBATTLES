@@ -19,6 +19,8 @@ class SoundPlayer final : private NonCopyable
 		void enemyFire(const int file, bool loop = false);
 		void smokeExplosion(const int file, bool loop = false);
 		void toySqueak(const int file, bool loop = false);
+		void pop(const int file, bool loop = false);
+		void playerPop(const int file, bool loop = false);
 		void stop();
 		void setPaused(bool paused);
 		bool playing() const;
