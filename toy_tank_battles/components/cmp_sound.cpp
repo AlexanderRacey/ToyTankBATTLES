@@ -59,6 +59,23 @@ void SoundPlayer::smokeExplosion(const int title, bool loop)
 	}
 }
 
+// Smoke explosion
+void SoundPlayer::toySqueak(const int title, bool loop)
+{
+	if (title == 3)
+	{
+		if (m_music.openFromFile("res/sound/squeakyToy.ogg"))
+		{
+			m_music.setVolume(m_volume);
+			m_music.play();
+		}
+		else
+		{
+			cout << "ERROR with music file." << endl;
+		}
+	}
+}
+
 void SoundPlayer::stop()
 {
 	m_music.stop();

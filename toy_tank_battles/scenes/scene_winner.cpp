@@ -86,22 +86,22 @@ void WinnerScene::Load()
 	winnerText.setFont(font);
 	winnerText.setFillColor(Color::Black);
 	winnerText.setString("You defeated all enemy Tanks!");
-	winnerText.setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 40));
+	winnerText.setPosition(Vector2f((x2 / 2) - 120, (y2 / 2) + 40));
 
 	winnerHighScoreText.setFont(font);
 	winnerHighScoreText.setFillColor(Color::Black);
-	winnerHighScoreText.setString("High Score: " + playerHighScore);
-	winnerHighScoreText.setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 80));
+	winnerHighScoreText.setString("High Score: " + playerScore);
+	winnerHighScoreText.setPosition(Vector2f((x2 / 2) - 100, (y2 / 2) + 80));
 
 	winnerMenu[0].setFont(font);
 	winnerMenu[0].setFillColor(Color(0, 168, 243, 255));
 	winnerMenu[0].setString("Play Again");
-	winnerMenu[0].setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 160));
+	winnerMenu[0].setPosition(Vector2f((x2 / 2) - 50, (y2 / 2) + 160));
 
 	winnerMenu[1].setFont(font);
 	winnerMenu[1].setFillColor(Color(255, 127, 39, 255));
-	winnerMenu[1].setString("Return to Main Menu");
-	winnerMenu[1].setPosition(Vector2f((x2 / 2) - 165, (y2 / 2) + 200));
+	winnerMenu[1].setString("Return to Menu");
+	winnerMenu[1].setPosition(Vector2f((x2 / 2) - 70, (y2 / 2) + 200));
 	
 	selectedItemIndex5 = 0;
 	setLoaded(true);
@@ -177,6 +177,8 @@ void WinnerScene::Render()
 
 	Renderer::queue(BackgroundSprite.get());
 	Renderer::queue(&winnerSprite);
+	Renderer::queue(&winnerText);
+	Renderer::queue(&winnerHighScoreText);
 
 	// Display settings menu
 	for (int j = 0; j < MAX_NUMBER_OF_GOMSGS; j++)

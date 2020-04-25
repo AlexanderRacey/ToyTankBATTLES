@@ -29,6 +29,10 @@ Vector2f gameOverTargetCoords;
 Vector2u gameOverTextureSize;
 Vector2u windowSizeGameOver;
 
+SoundBuffer gameOverEffect1;
+Sound gameOverSound1;
+SoundBuffer gameOverEffect2;
+Sound gameOverSound2;
 
 // Display menu title
 void GameOverScene::SetTitle()
@@ -72,6 +76,14 @@ void GameOverScene::Load()
 	s3.play3(2, true);
 	s3.playing();
 
+	// Load sound effects
+	gameOverEffect1.loadFromFile("res/sound/playerFire.ogg");
+	gameOverSound1.setBuffer(gameOverEffect1);
+	gameOverSound1.setVolume(15.0f);
+	gameOverEffect2.loadFromFile("res/sound/enemyFire.ogg");
+	gameOverSound2.setBuffer(gameOverEffect2);
+	gameOverSound2.setVolume(15.0f);
+
 	// Display settings 
 	cout << "Game Over Load \n";
 
@@ -85,18 +97,18 @@ void GameOverScene::Load()
 	// Create game over menu
 	gameOverHighScoreText.setFont(font);
 	gameOverHighScoreText.setFillColor(Color::Black);
-	gameOverHighScoreText.setString("High Score: " + playerHighScore);
-	gameOverHighScoreText.setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 40));
+	gameOverHighScoreText.setString("High Score: " + playerScore);
+	gameOverHighScoreText.setPosition(Vector2f((x2 / 2) - 50, (y2 / 2) + 40));
 	
 	gameOverMenu[0].setFont(font);
 	gameOverMenu[0].setFillColor(Color(0, 168, 243, 255));
 	gameOverMenu[0].setString("Play Again?");
-	gameOverMenu[0].setPosition(Vector2f((x2 / 2) - 155, (y2 / 2) + 120));
+	gameOverMenu[0].setPosition(Vector2f((x2 / 2) - 50, (y2 / 2) + 120));
 
 	gameOverMenu[1].setFont(font);
 	gameOverMenu[1].setFillColor(Color(255, 127, 39, 255));
-	gameOverMenu[1].setString("Press ENTER to Return to Menu");
-	gameOverMenu[1].setPosition(Vector2f((x2 / 2) - 165, (y2 / 2) + 160));
+	gameOverMenu[1].setString("Return to Menu");
+	gameOverMenu[1].setPosition(Vector2f((x2 / 2) - 70, (y2 / 2) + 160));
 	
 	selectedItemIndex4 = 0;
 	setLoaded(true);
@@ -155,10 +167,12 @@ void GameOverScene::Update(const double& dt)
 		switch (GetPressedItem())
 		{
 			case 0:
+				gameOverSound2.play();
 				playerScore = 0;
 				Engine::ChangeScene(&level1);
 				break;
 			case 1:
+				gameOverSound2.play();
 				Engine::ChangeScene(&menu);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
@@ -172,6 +186,7 @@ void GameOverScene::Render()
 
 	Renderer::queue(BackgroundSprite.get());
 	Renderer::queue(&gameOverSprite);
+	Renderer::queue(&gameOverHighScoreText);
 
 	// Display settings menu
 	for (int j = 0; j < MAX_NUMBER_OF_GOMSGS; j++)
@@ -184,6 +199,7 @@ void GameOverScene::MoveUp()
 {
 	if (selectedItemIndex4 - 1 >= 0)
 	{
+		gameOverSound1.play();
 		gameOverMenu[selectedItemIndex4].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex4--;
 		gameOverMenu[selectedItemIndex4].setFillColor(Color(0, 168, 243, 255));
@@ -194,6 +210,7 @@ void GameOverScene::MoveDown()
 {
 	if (selectedItemIndex4 + 1 < MAX_NUMBER_OF_GOMSGS)
 	{
+		gameOverSound1.play();
 		gameOverMenu[selectedItemIndex4].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex4++;
 		gameOverMenu[selectedItemIndex4].setFillColor(Color(0, 168, 243, 255));

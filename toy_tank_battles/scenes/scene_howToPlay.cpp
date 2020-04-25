@@ -10,6 +10,7 @@
 #include <iostream>
 #include <thread>
 #include "../components/cmp_text.h"
+#include "../components/cmp_sound.h"
 
 using namespace std;
 using namespace sf;
@@ -19,11 +20,10 @@ Sprite titleSprite2;
 Texture titleTexture2;
 Vector2f targetCoords2;
 Vector2u titleTextureSize2;
-/*
-Sprite backgroundSprite2;
-Texture backgroundTexture2;
-Vector2u backgroundSize2;*/
 Vector2u windowSizeHowToPlay;
+
+SoundPlayer moveSound;
+SoundPlayer selectSound;
 
 // Display settings title
 void HowToPlayScene::SetTitle()
@@ -63,6 +63,7 @@ void HowToPlayScene::Load()
 {
 	s2.stop();
 	s3.stop();
+	s4.stop();
 	s1.playing();
 
 	// Display settings 
@@ -154,6 +155,7 @@ void HowToPlayScene::Update(const double& dt)
 	// Select options from menu
 	else if (Keyboard::isKeyPressed(Keyboard::Enter)) 
 	{
+		selectSound.enemyFire(1, false);
 		Engine::ChangeScene(&menu);
 		this_thread::sleep_for(chrono::milliseconds(170));
 	}
@@ -177,6 +179,7 @@ void HowToPlayScene::MoveUp()
 {
 	if (selectedItemIndex3 - 1 >= 0)
 	{
+		moveSound.playerFire(0, false);
 		instructionMenu[selectedItemIndex3].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex3--;
 		instructionMenu[selectedItemIndex3].setFillColor(Color(0, 168, 243, 255));

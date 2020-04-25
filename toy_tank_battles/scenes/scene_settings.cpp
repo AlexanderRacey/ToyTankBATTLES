@@ -22,8 +22,12 @@ Sprite titleSprite1;
 Texture titleTexture1;
 Vector2f targetCoords1;
 Vector2u titleTextureSize1;
-
 Vector2u windowSizeSettings;
+
+SoundBuffer settingsEffect1;
+Sound settingsSound1;
+SoundBuffer settingsEffect2;
+Sound settingsSound2;
 
 // Display settings title
 void SettingsScene::SetTitle()
@@ -69,6 +73,14 @@ void SettingsScene::Load()
 	SetBackground();
 	SetTitle();
 
+	// Load sound effects
+	settingsEffect1.loadFromFile("res/sound/playerFire.ogg");
+	settingsSound1.setBuffer(settingsEffect1);
+	settingsSound1.setVolume(15.0f);
+	settingsEffect2.loadFromFile("res/sound/enemyFire.ogg");
+	settingsSound2.setBuffer(settingsEffect2);
+	settingsSound2.setVolume(15.0f);
+
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
 	// Create settings menu
@@ -104,18 +116,8 @@ void SettingsScene::Load()
 
 	settingsMenu[6].setFont(font);
 	settingsMenu[6].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[6].setString("Sound Effect Volume Up");
-	settingsMenu[6].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 320));
-
-	settingsMenu[7].setFont(font);
-	settingsMenu[7].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[7].setString("Sound Effect Volume Down");
-	settingsMenu[7].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 360));
-
-	settingsMenu[8].setFont(font);
-	settingsMenu[8].setFillColor(Color(255, 127, 39, 255));
-	settingsMenu[8].setString("Return to Menu");
-	settingsMenu[8].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 440));
+	settingsMenu[6].setString("Return to Menu");
+	settingsMenu[6].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 360));
 
 	selectedItemIndex2 = 0;
 	setLoaded(true);
@@ -172,34 +174,43 @@ void SettingsScene::Update(const double& dt)
 		switch (GetPressedItem())
 		{
 			case 0:
+				settingsSound2.play();
 				Engine::setNewWindowSize(Vector2u(1440, 900), 2);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 1:
+				settingsSound2.play();
 				Engine::setNewWindowSize(Vector2u(1504, 864), 2);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 2:
+				settingsSound2.play();
 				Engine::setNewWindowSize(Vector2u(1920, 1080), 2);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 3:
+				settingsSound2.play();
 				Engine::setNewWindowSize(Vector2u(1920, 1080), 1);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 4:
-				MusicPlayer().setVolume(MusicPlayer().getVolume() + 5.0f);
+				settingsSound2.play();
+				s1.setVolume(s1.getVolume() + 1.0f);
+				s2.setVolume(s2.getVolume() + 1.0f);
+				s3.setVolume(s3.getVolume() + 1.0f);
+				s4.setVolume(s4.getVolume() + 1.0f);
+				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 5:
-				MusicPlayer().setVolume(MusicPlayer().getVolume() - 5.0f);
+				settingsSound2.play();
+				s1.setVolume(s1.getVolume() - 1.0f);
+				s2.setVolume(s2.getVolume() - 1.0f);
+				s3.setVolume(s3.getVolume() - 1.0f);
+				s4.setVolume(s4.getVolume() - 1.0f);
+				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 6:
-				//SoundPlayer().setVolume(SoundPlayer().getVolume() + 5.0f);
-				break;
-			case 7:
-				//SoundPlayer().setVolume(SoundPlayer().getVolume() - 5.0f);
-				break;
-			case 8:
+				settingsSound2.play();
 				Engine::ChangeScene(&menu);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
@@ -225,6 +236,7 @@ void SettingsScene::MoveUp()
 {
 	if (selectedItemIndex2 - 1 >= 0)
 	{
+		settingsSound1.play();
 		settingsMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex2--;
 		settingsMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));
@@ -235,6 +247,7 @@ void SettingsScene::MoveDown()
 {
 	if (selectedItemIndex2 + 1 < MAX_NUMBER_OF_SETTINGS)
 	{
+		settingsSound1.play();
 		settingsMenu[selectedItemIndex2].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex2++;
 		settingsMenu[selectedItemIndex2].setFillColor(Color(0, 168, 243, 255));

@@ -193,11 +193,11 @@ void Level1Scene::Update(const double& dt)
 	int health = player->GetCompatibleComponent<HealthComponent>()[0]->getHealth();
 	_playerHealth = health;
 	_playerScore = playerScore;
+
 	// Update HUD
 	HUDtext.setString("Health: " + to_string(_playerHealth) + " / 100                                 " + "Score :  " + to_string(_playerScore));
 
 	vector<shared_ptr<Entity>> enemies = Engine::findEntity("enemy");
-
 	if (enemies.empty())
 	{
 		UnLoad();
@@ -208,7 +208,6 @@ void Level1Scene::Update(const double& dt)
 		// Plays gameOver scene if player is dead
 		this_thread::sleep_for(chrono::milliseconds(200));
 		Engine::ChangeScene((Scene*)&gameover);
-		playerScore = playerHighScore;
 		_playerHealth = 100;
 	}
 

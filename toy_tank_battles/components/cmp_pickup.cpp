@@ -7,9 +7,13 @@
 #include "cmp_bullet.h"
 #include "cmp_text.h"
 #include "../game.h"
+#include <SFML/Audio.hpp>
+#include "cmp_sound.h"
 
 using namespace sf;
 using namespace std;
+
+SoundPlayer toySqueak;
 
 PickupComponent::PickupComponent(Entity* p, int t) : Component(p), type(t) {};
 
@@ -28,10 +32,10 @@ void PickupComponent::update(double dt)
 			//delete pickup and give player power ups depending on type
 			if (boundingBox.intersects(playerBounds))
 			{
+				toySqueak.toySqueak(3, false);
 				switch (type)
 				{
 					case 0:
-						//
 						//example speed up player
 						player[0]->GetCompatibleComponent<PlayerMovementComponent>()[0]->increaseSpeed(50.f);
 						player[0]->GetCompatibleComponent<TextComponent>()[0]->SetText("Faster ++", true);

@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-MusicPlayer::MusicPlayer() : m_volume(50.0f) {}
+MusicPlayer::MusicPlayer() : m_volume(8.0f) {}
 
 void MusicPlayer::play1(const int title, bool loop)
 {
@@ -24,6 +24,7 @@ void MusicPlayer::play1(const int title, bool loop)
 		}
 	}
 }
+
 void MusicPlayer::play2(const int title, bool loop)
 {
 	if (title == 1) 
@@ -43,7 +44,8 @@ void MusicPlayer::play2(const int title, bool loop)
 
 void MusicPlayer::play3(const int title, bool loop)
 {
-	if (title == 2) {
+	if (title == 2)
+	{
 		if (m_music.openFromFile("res/sound/gameOver.ogg"))
 		{
 			m_music.setVolume(m_volume);
@@ -52,14 +54,15 @@ void MusicPlayer::play3(const int title, bool loop)
 		}
 		else
 		{
-			std::cout << "ERROR with music file." << std::endl;
+			cout << "ERROR with music file." << endl;
 		}
 	}
 }
 
 void MusicPlayer::play4(const int title, bool loop)
 {
-	if (title == 3) {
+	if (title == 3)
+	{
 		if (m_music.openFromFile("res/sound/winFanfare.ogg"))
 		{
 			m_music.setVolume(m_volume);
@@ -68,7 +71,7 @@ void MusicPlayer::play4(const int title, bool loop)
 		}
 		else
 		{
-			std::cout << "ERROR with music file." << std::endl;
+			cout << "ERROR with music file." << endl;
 		}
 	}
 }
@@ -95,5 +98,6 @@ float MusicPlayer::getVolume()
 
 void MusicPlayer::setVolume(float volume)
 {
-	m_volume = volume;
+	this->m_volume = volume;
+	this->m_music.setVolume(this->m_volume);
 }
