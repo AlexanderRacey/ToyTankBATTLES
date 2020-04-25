@@ -97,8 +97,8 @@ void GameOverScene::Load()
 	// Create game over menu
 	gameOverHighScoreText.setFont(font);
 	gameOverHighScoreText.setFillColor(Color::Black);
-	gameOverHighScoreText.setString("High Score: " + to_string(playerHighScore) + " Score " + to_string(playerScore));
-	gameOverHighScoreText.setPosition(Vector2f((x2 / 3) - 50, (y2 / 2) + 40));
+	gameOverHighScoreText.setString("High Score: " + to_string(playerScore));
+	gameOverHighScoreText.setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 40));
 	
 	gameOverMenu[0].setFont(font);
 	gameOverMenu[0].setFillColor(Color(0, 168, 243, 255));
@@ -192,7 +192,7 @@ void GameOverScene::Render()
 	for (int j = 0; j < MAX_NUMBER_OF_GOMSGS; j++)
 	{
 		Renderer::queue(&gameOverMenu[j]);
-	}
+	}//
 }
 
 void GameOverScene::MoveUp()

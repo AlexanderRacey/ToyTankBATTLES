@@ -17,6 +17,7 @@
 #include "system_renderer.h"
 #include "../add_entity.h"
 #include "../components/cmp_breakable.h"
+#include "../components/cmp_sound.h"
 
 using namespace std;
 using namespace sf;
@@ -29,6 +30,10 @@ Vector2f winnerTargetCoords;
 Vector2u winnerTextureSize;
 Vector2u windowSizeWinner;
 
+SoundBuffer winnerEffect1;
+Sound winnerSound1;
+SoundBuffer winnerEffect2;
+Sound winnerSound2;
 
 
 // Display menu title
@@ -72,6 +77,14 @@ void WinnerScene::Load()
 	s3.stop();
 	s4.play4(3, false);
 
+	// Load sound effects
+	winnerEffect1.loadFromFile("res/sound/playerFire.ogg");
+	winnerSound1.setBuffer(winnerEffect1);
+	winnerSound1.setVolume(15.0f);
+	winnerEffect2.loadFromFile("res/sound/enemyFire.ogg");
+	winnerSound2.setBuffer(winnerEffect2);
+	winnerSound2.setVolume(15.0f);
+
 	// Display settings 
 	cout << "Winner Load \n";
 
@@ -90,7 +103,7 @@ void WinnerScene::Load()
 
 	winnerHighScoreText.setFont(font);
 	winnerHighScoreText.setFillColor(Color::Black);
-	winnerHighScoreText.setString("High Score: " + to_string(playerHighScore) + " Score " + to_string(playerScore));
+	winnerHighScoreText.setString("High Score: " + to_string(playerScore));
 	winnerHighScoreText.setPosition(Vector2f((x2 / 2) - 100, (y2 / 2) + 80));
 
 	winnerMenu[0].setFont(font);
@@ -160,10 +173,12 @@ void WinnerScene::Update(const double& dt)
 		switch (GetPressedItem())
 		{
 			case 0:
+				winnerSound2.play();
 				playerScore = 0;
 				Engine::ChangeScene(&level1);
 				break;
 			case 1:
+				winnerSound2.play();
 				Engine::ChangeScene(&menu);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
@@ -191,6 +206,7 @@ void WinnerScene::MoveUp()
 {
 	if (selectedItemIndex5 - 1 >= 0)
 	{
+		winnerSound1.play();
 		winnerMenu[selectedItemIndex5].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex5--;
 		winnerMenu[selectedItemIndex5].setFillColor(Color(0, 168, 243, 255));
@@ -201,6 +217,7 @@ void WinnerScene::MoveDown()
 {
 	if (selectedItemIndex5 + 1 < MAX_NUMBER_OF_GOMSGS)
 	{
+		winnerSound1.play();
 		winnerMenu[selectedItemIndex5].setFillColor(Color(255, 127, 39, 255));
 		selectedItemIndex5++;
 		winnerMenu[selectedItemIndex5].setFillColor(Color(0, 168, 243, 255));

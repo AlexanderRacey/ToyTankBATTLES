@@ -2,7 +2,7 @@
 #include "engine.h"
 #include "SFML/Graphics.hpp"
 
-#define MAX_NUMBER_OF_INSTRUCTIONS 7
+#define MAX_NUMBER_OF_INSTRUCTIONS 1
 
 // Create how to play scene from class Scene
 class HowToPlayScene : public Scene 
@@ -15,8 +15,6 @@ class HowToPlayScene : public Scene
 
       void SetTitle();
       void SetBackground();
-      void MoveUp();
-      void MoveDown();
       int GetPressedItem() { return selectedItemIndex3; }
 
       IntRect uvRect;
@@ -25,4 +23,6 @@ class HowToPlayScene : public Scene
         int selectedItemIndex3;
         Font font;
         Text instructionMenu[MAX_NUMBER_OF_INSTRUCTIONS];
+        Text storyText;
+        Text instructionList;
 };

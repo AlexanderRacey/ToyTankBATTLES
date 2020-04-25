@@ -84,40 +84,55 @@ void SettingsScene::Load()
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
 	// Create settings menu
+	screenSettingsText.setFont(font);
+	screenSettingsText.setFillColor(Color::Black);
+	screenSettingsText.setString("Screen Settings");
+	screenSettingsText.setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) - 60));
+
 	settingsMenu[0].setFont(font);
 	settingsMenu[0].setFillColor(Color(0, 168, 243, 255));
 	settingsMenu[0].setString("1440 x 900");
-	settingsMenu[0].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 40));
+	settingsMenu[0].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) - 20));
 
 	settingsMenu[1].setFont(font);
 	settingsMenu[1].setFillColor(Color(255, 127, 39, 255));
 	settingsMenu[1].setString("1504 x 846");
-	settingsMenu[1].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 80));
+	settingsMenu[1].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 20));
 
 	settingsMenu[2].setFont(font);
 	settingsMenu[2].setFillColor(Color(255, 127, 39, 255));
 	settingsMenu[2].setString("1920 x 1080");
-	settingsMenu[2].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 120));
+	settingsMenu[2].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 60));
 
 	settingsMenu[3].setFont(font);
 	settingsMenu[3].setFillColor(Color(255, 127, 39, 255));
 	settingsMenu[3].setString("Fullscreen");
-	settingsMenu[3].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 160));
+	settingsMenu[3].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 100));
+
+	musicSettingsText.setFont(font);
+	musicSettingsText.setFillColor(Color::Black);
+	musicSettingsText.setString("Music Settings");
+	musicSettingsText.setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 160));
 
 	settingsMenu[4].setFont(font);
 	settingsMenu[4].setFillColor(Color(255, 127, 39, 255));
 	settingsMenu[4].setString("Music Volume Up");
-	settingsMenu[4].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 240));
+	settingsMenu[4].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 200));
 
 	settingsMenu[5].setFont(font);
 	settingsMenu[5].setFillColor(Color(255, 127, 39, 255));
 	settingsMenu[5].setString("Music Volume Down");
-	settingsMenu[5].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 280));
+	settingsMenu[5].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 240));
+
+	musicVolumeText.setFont(font);
+	musicVolumeText.setFillColor(Color::Black);
+	musicVolumeText.setString("Current Volume: " + to_string(s1.getVolume()));
+	musicVolumeText.setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 280));
 
 	settingsMenu[6].setFont(font);
 	settingsMenu[6].setFillColor(Color(255, 127, 39, 255));
 	settingsMenu[6].setString("Return to Menu");
-	settingsMenu[6].setPosition(sf::Vector2f((x2 / 2) - 80, (y2 / 2) + 360));
+	settingsMenu[6].setPosition(Vector2f((x2 / 2) - 80, (y2 / 2) + 330));
 
 	selectedItemIndex2 = 0;
 	setLoaded(true);
@@ -138,6 +153,9 @@ void SettingsScene::UnLoad()
 void SettingsScene::Update(const double& dt)
 {
 	Scene::Update(dt);
+
+	// Update music disply
+	musicVolumeText.setString("Current Volume: " + to_string(s1.getVolume()));
 
 	Event event;
 	while (Engine::GetWindow().pollEvent(event))
@@ -174,27 +192,22 @@ void SettingsScene::Update(const double& dt)
 		switch (GetPressedItem())
 		{
 			case 0:
-				settingsSound2.play();
 				Engine::setNewWindowSize(Vector2u(1440, 900), 2);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 1:
-				settingsSound2.play();
 				Engine::setNewWindowSize(Vector2u(1504, 864), 2);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 2:
-				settingsSound2.play();
 				Engine::setNewWindowSize(Vector2u(1920, 1080), 2);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 3:
-				settingsSound2.play();
 				Engine::setNewWindowSize(Vector2u(1920, 1080), 1);
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 4:
-				settingsSound2.play();
 				s1.setVolume(s1.getVolume() + 1.0f);
 				s2.setVolume(s2.getVolume() + 1.0f);
 				s3.setVolume(s3.getVolume() + 1.0f);
@@ -202,7 +215,6 @@ void SettingsScene::Update(const double& dt)
 				this_thread::sleep_for(chrono::milliseconds(170));
 				break;
 			case 5:
-				settingsSound2.play();
 				s1.setVolume(s1.getVolume() - 1.0f);
 				s2.setVolume(s2.getVolume() - 1.0f);
 				s3.setVolume(s3.getVolume() - 1.0f);
@@ -224,6 +236,9 @@ void SettingsScene::Render()
 
 	Renderer::queue(BackgroundSprite.get());
 	Renderer::queue(&titleSprite1);
+	Renderer::queue(&screenSettingsText);
+	Renderer::queue(&musicSettingsText);
+	Renderer::queue(&musicVolumeText);
 
 	// Display settings menu
 	for (int j = 0; j < MAX_NUMBER_OF_SETTINGS; j++)

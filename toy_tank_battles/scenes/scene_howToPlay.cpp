@@ -76,41 +76,21 @@ void HowToPlayScene::Load()
 
 	font.loadFromFile("res/fonts/OdibeeSans-Regular.ttf");
 
-	// Create settings menu
+	// Create howToPlay list
+	storyText.setFont(font);
+	storyText.setFillColor(Color(255, 127, 39, 255));
+	storyText.setString("The evil orange tanks have take over Toy Town\n           Destroy them all before it's too late!");
+	storyText.setPosition(Vector2f((x2 / 2) - 200, (y2 / 2) - 40));
+
+	instructionList.setFont(font);
+	instructionList.setFillColor(Color::Black);
+	instructionList.setString(" - Use the Up and Down keys to navigate the menus\n - Use ENTER to select an option\n - Use WASD keys to move your tank up, left, down and right\n - Use SPACE to fire your weapon");
+	instructionList.setPosition(Vector2f((x2 / 2) - 200, (y2 / 2) + 60));
+
 	instructionMenu[0].setFont(font);
-	instructionMenu[0].setFillColor(Color(255, 127, 39, 255));
-	instructionMenu[0].setString("You are the Blue Tank");
-	instructionMenu[0].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 40));
-
-	instructionMenu[1].setFont(font);
-	instructionMenu[1].setFillColor(Color(255, 127, 39, 255));
-	instructionMenu[1].setString("Eliminate all Orange Tanks!");
-	instructionMenu[1].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 80));
-
-	instructionMenu[2].setFont(font);
-	instructionMenu[2].setFillColor(Color(255, 127, 39, 255));
-	instructionMenu[2].setString(" ");
-	instructionMenu[2].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 120));
-
-	instructionMenu[3].setFont(font);
-	instructionMenu[3].setFillColor(Color(255, 127, 39, 255));
-	instructionMenu[3].setString(" - Use the WASD keys to move your tank");
-	instructionMenu[3].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 160));
-
-	instructionMenu[4].setFont(font);
-	instructionMenu[4].setFillColor(Color(255, 127, 39, 255));
-	instructionMenu[4].setString(" - Use the SPACE bar to fire your weapon");
-	instructionMenu[4].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 200));
-
-	instructionMenu[5].setFont(font);
-	instructionMenu[5].setFillColor(Color(255, 127, 39, 255));
-	instructionMenu[5].setString(" ");
-	instructionMenu[5].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 240));
-
-	instructionMenu[6].setFont(font);
-	instructionMenu[6].setFillColor(Color(0, 168, 243, 255));
-	instructionMenu[6].setString("Press ENTER to Return to Menu");
-	instructionMenu[6].setPosition(Vector2f((x2 / 2) - 180, (y2 / 2) + 280));
+	instructionMenu[0].setFillColor(Color(0, 168, 243, 255));
+	instructionMenu[0].setString("Press ENTER to return to Menu");
+	instructionMenu[0].setPosition(Vector2f((x2 / 2) - 140, (y2 / 2) + 240));
 
 	selectedItemIndex3 = 0;
 	setLoaded(true);
@@ -167,31 +147,12 @@ void HowToPlayScene::Render()
 
 	Renderer::queue(BackgroundSprite.get());
 	Renderer::queue(&titleSprite2);
+	Renderer::queue(&storyText);
+	Renderer::queue(&instructionList);
 
 	// Display settings menu
 	for (int j = 0; j < MAX_NUMBER_OF_INSTRUCTIONS; j++)
 	{
 		Renderer::queue(&instructionMenu[j]);
-	}
-}
-
-void HowToPlayScene::MoveUp()
-{
-	if (selectedItemIndex3 - 1 >= 0)
-	{
-		moveSound.playerFire(0, false);
-		instructionMenu[selectedItemIndex3].setFillColor(Color(255, 127, 39, 255));
-		selectedItemIndex3--;
-		instructionMenu[selectedItemIndex3].setFillColor(Color(0, 168, 243, 255));
-	}
-}
-
-void HowToPlayScene::MoveDown()
-{
-	if (selectedItemIndex3 + 1 < MAX_NUMBER_OF_INSTRUCTIONS)
-	{
-		instructionMenu[selectedItemIndex3].setFillColor(Color(255, 127, 39, 255));
-		selectedItemIndex3++;
-		instructionMenu[selectedItemIndex3].setFillColor(Color(0, 168, 243, 255));
 	}
 }
