@@ -12,15 +12,16 @@ Contains all coursework done by Alex Racey and Mila Bromm for the Games Engineer
  - Navigate to solution file and open
 
 ### Credit
--Programmed by Alex Racey and Mila Bromm
+- Programmed by Alex Racey and Mila Bromm
 
-Images and Sprites used:
+#### Images and Sprites used
 
-Tank Sprites, Smoke, Background and animal faces by Kenny:
-https://www.kenney.nl/assets/topdown-tanks
-https://www.kenney.nl/assets/animal-pack-redux
+- Tank Sprites, Smoke, Background and animal faces by Kenny:
 
-Sound effects used:
+  https://www.kenney.nl/assets/topdown-tanks
+  https://www.kenney.nl/assets/animal-pack-redux
+
+#### Sound effects used:
 - Background music by GoodByte
   https://freesound.org/s/442911/
 - Menu music by martysonic
