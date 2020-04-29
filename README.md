@@ -10,3 +10,22 @@ Contains all coursework done by Alex Racey and Mila Bromm for the Games Engineer
  - Paste "git submodule init" into git bash
  - Run CMake using source folder
  - Navigate to solution file and open
+
+### Credit
+-Programmed by Alex Racey and Mila Bromm
+
+Images and Sprites used:
+
+Tank Sprites, Smoke, Background and animal faces by Kenny:
+https://www.kenney.nl/assets/topdown-tanks
+https://www.kenney.nl/assets/animal-pack-redux
+
+Sound effects used:
+- Background music by GoodByte
+  https://freesound.org/s/442911/
+- Menu music by martysonic
+  https://freesound.org/s/382054/
+- Player shooting sound by Mattix
+  https://freesound.org/s/441373/
+- enemy shooting
+  https://freesound.org/s/423109/
