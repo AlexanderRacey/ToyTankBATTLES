@@ -8,7 +8,7 @@ A 2D top down tank game created in C++ using SFML.
  - Paste "git submodule add https://github.com/SFML/SFML.git lib/sfml" into git bash
  - Paste "git submodule add https://github.com/dooglz/Box2D.git lib/b2d" into git bash
  - Paste "git submodule init" into git bash
- - Paste "git submodule init" into git bash
+ - Paste "git submodule update" into git bash
  - Run CMake using source folder
  - Navigate to solution file and open
  
@@ -18,6 +18,7 @@ An installer executable can be found within the Installer folder. Simply open th
 ## Resources
 ### Images and Sprites
 - Tank Sprites, Smoke, Background and animal faces by Kenny:
+
   https://www.kenney.nl/assets/topdown-tanks
   https://www.kenney.nl/assets/animal-pack-redux
 
@@ -32,7 +33,7 @@ An installer executable can be found within the Installer folder. Simply open th
   https://freesound.org/s/423109/
   
 ## License
-This project is licensed under the GNU General Public License v3.0 license. See [LICENSE](LICENSE) for details.
+This project is licensed under the GNU General Public License. See [LICENSE](LICENSE) for details.
 
 ## Credit
 Developed by Alexander Racey and Mila Bromm
