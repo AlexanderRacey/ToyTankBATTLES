@@ -1,5 +1,5 @@
-# Games Engineering (SET09121) Group H coursework - ToyTankBATTLES
-Contains all coursework done by Alex Racey and Mila Bromm for the Games Engineering (SET09121) module.
+# ToyTankBATTLES
+A 2D top down tank game created in C++ using SFML.
 
 ### Instructions on how to download repository
  - Download the repo into git bash using github link
@@ -10,12 +10,11 @@ Contains all coursework done by Alex Racey and Mila Bromm for the Games Engineer
  - Paste "git submodule init" into git bash
  - Run CMake using source folder
  - Navigate to solution file and open
+ 
+### Game Installation
+An installer executable can be found within the Installer folder. Simply open the executable and follow the instructions to install the game onto your machine.
 
-### Credit
-- Programmed by Alex Racey and Mila Bromm
-
-#### Images and Sprites used
-
+#### Images and Sprites
 - Tank Sprites, Smoke, Background and animal faces by Kenny:
 
   https://www.kenney.nl/assets/topdown-tanks
@@ -30,3 +29,9 @@ Contains all coursework done by Alex Racey and Mila Bromm for the Games Engineer
   https://freesound.org/s/441373/
 - enemy shooting
   https://freesound.org/s/423109/
+  
+### License
+This project is licensed under the GNU General Public License v3.0 license. See [LICENSE.md](LICENSE.md) for details.
+
+### Credit
+- Programmed by Alex Racey and Mila Bromm
